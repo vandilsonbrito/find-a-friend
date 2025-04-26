@@ -6,15 +6,17 @@
   "scripts": {
     "start:dev": "tsx watch src/server.ts",
     "start": "node build/server.js",
-    "build": "tsup src --out-dir build"
+    "build": "tsup src --out-dir build",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@rocketseat/eslint-config": "2.2.2",
-    "@types/node": "22.13.9", 
+    "@types/node": "22.13.9",
     "eslint": "8.57.1",
+    "husky": "9.1.7",
     "prisma": "6.5.0",
     "tsup": "8.4.0",
     "tsx": "4.19.3",
