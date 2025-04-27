@@ -7,3 +7,70 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Org {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  password_hash String
+  whatsapp      String
+  address       String
+  city          String
+  pets          Pet[]
+  created_at    DateTime @default(now())
+}
+
+model Pet {
+  id                 String      @id @default(uuid())
+  org_id             String
+  name               String
+  description        String?
+  age                Age
+  size               Size
+  energy_level       EnergyLevel
+  independence_level IndependenceLevel
+  environment        Environment
+  city               String
+  is_adopted         Boolean     @default(false)
+  created_at         DateTime    @default(now())
+
+  org               Org         @relation(fields: [org_id], references: [id])
+  photos            PetPhoto[]
+}
+
+model PetPhoto {
+  id     String  @id @default(uuid())
+  pet_id  String
+  url    String
+
+  pet    Pet     @relation(fields: [pet_id], references: [id])
+}
+
+enum Age {
+  puppy
+  adult
+  senior
+}
+
+enum Size {
+  small
+  medium
+  large
+}
+
+enum EnergyLevel {
+  low
+  medium
+  high
+}
+
+enum IndependenceLevel {
+  low
+  medium
+  high
+}
+
+enum Environment {
+  small
+  medium
+  large
+}
