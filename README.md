@@ -2,7 +2,7 @@
 
 #### RFs (Requisitos Funcionais - funcionalidades da aplicação, o que o usuário pode fazer na aplicação).
 
-- [ ] - Deve ser possível se cadastrar como uma ORG;
+- [X] - Deve ser possível se cadastrar como uma ORG;
 
 - [ ] - Deve ser possível realizar login como uma ORG;
 
@@ -37,9 +37,9 @@
   
 #### RNFs (Requisitos Não-Funcionais - pensado pelo desenvolvedor, quais tecnologias e estratégias usar)
 
-- [ ] - A senha do usuário precisa estar criptografada;
+- [X] - A senha do usuário precisa estar criptografada;
 
-- [ ] - Os dados da aplicação precisam estar persistidos em um banco PostgreSQL;
+- [X] - Os dados da aplicação precisam estar persistidos em um banco PostgreSQL;
 
 - [ ] - Todas listas de dados precisam estar paginadas com 20 itens por página;
 
