@@ -3,7 +3,7 @@ import { Org } from '@prisma/client'
 import { IOrgsRepository } from '@/repositories/orgs-repository'
 import { OrgAlreadyExistsError } from '../errors/org-already-exists-error'
 
-interface RegisterUseCaseRequest {
+interface RegisterOrgUseCaseRequest {
   name: string
   email: string
   password: string
@@ -12,11 +12,11 @@ interface RegisterUseCaseRequest {
   city: string
 }
 
-interface RegisterUseCaseResponse {
+interface RegisterOrgUseCaseResponse {
   org: Org
 }
 
-export class RegisterUseCase {
+export class RegisterOrgUseCase {
   private orgsRepository: IOrgsRepository
 
   constructor(orgsRepository: IOrgsRepository) {
@@ -30,7 +30,7 @@ export class RegisterUseCase {
     whatsapp,
     address,
     city,
-  }: RegisterUseCaseRequest): Promise<RegisterUseCaseResponse> {
+  }: RegisterOrgUseCaseRequest): Promise<RegisterOrgUseCaseResponse> {
     const orgWithTheSameEmail = await this.orgsRepository.findEmail(email)
 
     if (orgWithTheSameEmail) {
