@@ -25,7 +25,7 @@ describe('Authenticate Org Use Case', () => {
 
     const { org } = await sut.execute({
       email: 'org1@example.com',
-      password_hash: '123456',
+      password: '123456',
     })
 
     expect(org.id).toEqual(expect.any(String))
@@ -35,7 +35,7 @@ describe('Authenticate Org Use Case', () => {
     await expect(() => {
       return sut.execute({
         email: 'email@example.com',
-        password_hash: '123456',
+        password: '123456',
       })
     }).rejects.toBeInstanceOf(InvalidCredentialsError)
   })
@@ -53,7 +53,7 @@ describe('Authenticate Org Use Case', () => {
     await expect(() => {
       return sut.execute({
         email: 'org1@example.com',
-        password_hash: '123',
+        password: '123',
       })
     }).rejects.toBeInstanceOf(InvalidCredentialsError)
   })

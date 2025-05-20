@@ -5,7 +5,7 @@ import { InvalidCredentialsError } from '../errors/invalid-credentials-error'
 
 interface AuthenticateOrgUseCaseRequest {
   email: string
-  password_hash: string
+  password: string
 }
 
 interface AuthenticateOrgUseCaseResponse {
@@ -20,16 +20,14 @@ export class AuthenticateOrgUseCase {
 
   async execute({
     email,
-    password_hash,
+    password,
   }: AuthenticateOrgUseCaseRequest): Promise<AuthenticateOrgUseCaseResponse> {
     const org = await this.orgsRepository.findEmail(email)
-
     if (!org) {
       throw new InvalidCredentialsError()
     }
 
-    const isPasswordCorrect = await compare(password_hash, org.password_hash)
-
+    const isPasswordCorrect = await compare(password, org.password_hash)
     if (!isPasswordCorrect) {
       throw new InvalidCredentialsError()
     }
