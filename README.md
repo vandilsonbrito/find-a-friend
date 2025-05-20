@@ -4,11 +4,11 @@
 
 - [X] - Deve ser possível se cadastrar como uma ORG;
 
-- [ ] - Deve ser possível realizar login como uma ORG;
+- [X] - Deve ser possível realizar login como uma ORG;
 
-- [ ] - Deve ser possível cadastrar um pet;
+- [X] - Deve ser possível cadastrar um pet;
 
-- [ ] - Deve ser possí­vel adicionar fotos do pet;
+- [X] - Deve ser possí­vel adicionar fotos do pet;
 
 - [ ] - Deve ser possível listar todos os pets disponíveis (não adotados) para adoção em uma cidade;
 
@@ -24,13 +24,13 @@
 
 - [ ] - Para listar os pets, obrigatoriamente é preciso informar a cidade;
 
-- [ ] - Uma ORG precisa ter um endereço e um número de WhatsApp;
+- [X] - Uma ORG precisa ter um endereço e um número de WhatsApp;
 
-- [ ] - Um pet deve estar ligado a uma ORG;
+- [X] - Um pet deve estar ligado a uma ORG;
 
-- [ ] - Um pet pode ter status "disponível" ou "adotado";
+- [X] - Um pet pode ter status "disponível" ou "adotado";
 
-- [ ] - O usuário que quer adotar, entrará em contato com a ORG via WhatsApp;
+- [X] - O usuário que quer adotar, entrará em contato com a ORG via WhatsApp;
 
 - [ ] - Todos os filtros, além da cidade, são opcionais;
 
@@ -43,7 +43,7 @@
 
 - [ ] - Todas listas de dados precisam estar paginadas com 20 itens por página;
 
-- [ ] - O usuário deve ser identificado por um JWT (JSON Web Token);
+- [X] - O usuário deve ser identificado por um JWT (JSON Web Token);
 
 - [ ] - Implementar Rate Limiting para proteger contra abusos na API;
 
