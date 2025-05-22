@@ -21,7 +21,7 @@ interface EdiPetUseCaseRequest {
   city?: string
 }
 interface EdiPetUseCaseResponse {
-  pet: Pet
+  petUpdated: Pet
 }
 
 export class EdiPetUseCase {
@@ -37,17 +37,18 @@ export class EdiPetUseCase {
       throw new PetsNotFoundError()
     }
 
-    pet.name = data.name || pet.name
-    pet.description = data.description || pet.description
-    pet.age = data.age || pet.age
-    pet.size = data.size || pet.size
-    pet.energy_level = data.energy_level || pet.energy_level
-    pet.independence_level = data.independence_level || pet.independence_level
-    pet.environment = data.environment || pet.environment
-    pet.city = data.city || pet.city
+    const petUpdated = await this.petsRepository.update({
+      id: data.petId,
+      name: data.name || pet.name,
+      description: data.description || pet.description,
+      age: data.age || pet.age,
+      size: data.size || pet.size,
+      energy_level: data.energy_level || pet.energy_level,
+      independence_level: data.independence_level || pet.independence_level,
+      environment: data.environment || pet.environment,
+      city: data.city || pet.city,
+    })
 
-    await this.petsRepository.save(pet)
-
-    return { pet }
+    return { petUpdated }
   }
 }
