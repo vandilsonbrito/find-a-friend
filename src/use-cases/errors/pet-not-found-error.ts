@@ -1,5 +1,5 @@
-export class PetNotFoundError extends Error {
+export class PetsNotFoundError extends Error {
   constructor() {
-    super('Pet not found.')
+    super('Pet(s) not found.')
   }
 }
