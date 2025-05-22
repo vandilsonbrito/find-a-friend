@@ -59,15 +59,15 @@ describe('Edit Pet Use Case', () => {
       ],
     })
 
-    const { pet } = await sut.execute({
+    const { petUpdated } = await sut.execute({
       petId: createdPet.id,
       name: 'Rex',
       environment: 'large',
     })
 
-    expect(pet.id).toEqual(createdPet.id)
-    expect(pet.name).toBe('Rex')
-    expect(pet.environment).toBe('large')
+    expect(petUpdated.id).toEqual(createdPet.id)
+    expect(petUpdated.name).toBe('Rex')
+    expect(petUpdated.environment).toBe('large')
   })
 
   it('should throw PetNotFoundError if pet does not exist', async () => {
