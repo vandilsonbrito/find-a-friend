@@ -3,9 +3,29 @@ import { IPetsRepository } from '../pets-repository'
 import { randomUUID } from 'node:crypto'
 import { GetPetsAvailableForAdoptionUseCaseRequest } from '@/@types/get-pets-available-for-adoption-use-case'
 import { normalizeCityName } from '@/utils/normalizeCityName'
+import { PetsNotFoundError } from '@/use-cases/errors/pet-not-found-error'
 
 export class InMemoryPetsRepository implements IPetsRepository {
   public pets: Pet[] = []
+
+  async delete(petId: string) {
+    const pet = this.pets.find((pet) => pet.id === petId)
+
+    if (!pet) {
+      throw new PetsNotFoundError()
+    }
+    this.pets = this.pets.filter((pet) => pet.id !== petId)
+  }
+
+  async save(pet: Pet) {
+    const petIndex = this.pets.findIndex((p) => p.id === pet.id)
+
+    if (petIndex >= 0) {
+      this.pets[petIndex] = pet
+    }
+
+    return pet
+  }
 
   async findById(petId: string) {
     const pet = this.pets.find((pet) => pet.id === petId)

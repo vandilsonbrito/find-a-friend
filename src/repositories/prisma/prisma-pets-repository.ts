@@ -21,6 +21,25 @@ export class PrismaPetsRepository implements IPetsRepository {
     return pet
   }
 
+  async save(pet: Pet): Promise<Pet> {
+    const petUpdated = await prisma.pet.update({
+      where: {
+        id: pet.id,
+      },
+      data: pet,
+    })
+
+    return petUpdated
+  }
+
+  async delete(petId: string): Promise<void> {
+    await prisma.pet.delete({
+      where: {
+        id: petId,
+      },
+    })
+  }
+
   async findManyByCityAndFilters(
     data: GetPetsAvailableForAdoptionUseCaseRequest,
   ): Promise<Pet[]> {
