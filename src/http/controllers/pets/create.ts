@@ -13,7 +13,7 @@ export async function createPet(request: FastifyRequest, reply: FastifyReply) {
     independence_level: z.enum(['low', 'medium', 'high']),
     environment: z.enum(['small', 'medium', 'large']),
     city: z.string(),
-    org_id: z.string(),
+    org_id: z.string().uuid(),
   })
 
   const body: Record<string, string> = {}
