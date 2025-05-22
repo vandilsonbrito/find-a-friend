@@ -4,6 +4,10 @@ import { env } from './env'
 import { ZodError } from 'zod'
 import fastifyJwt from '@fastify/jwt'
 import fastifyCookie from '@fastify/cookie'
+import fastifyMultipart from '@fastify/multipart'
+import { petRoutes } from './http/controllers/pets/routes'
+import { PetsNotFoundError } from './use-cases/errors/pet-not-found-error'
+import { OrgNotFoundError } from './use-cases/errors/org-not-found-error'
 
 export const app = fastify()
 
@@ -16,8 +20,15 @@ app.register(fastifyJwt, {
 })
 
 app.register(fastifyCookie)
+app.register(fastifyMultipart, {
+  attachFieldsToBody: false,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5mb
+  },
+})
 
 app.register(orgsRoutes)
+app.register(petRoutes)
 
 app.setErrorHandler((error, _request, reply) => {
   if (error instanceof ZodError) {
@@ -25,8 +36,15 @@ app.setErrorHandler((error, _request, reply) => {
       .status(400)
       .send({ message: 'Validation error.', issues: error.format() })
   }
-
+  if (error instanceof PetsNotFoundError || error instanceof OrgNotFoundError) {
+    return reply.status(404).send({ message: error.message })
+  }
+  if (error instanceof ZodError) {
+    return reply.status(400).send({ message: error.format() })
+  }
   if (env.NODE_ENV !== 'production') {
     console.error(error)
   }
+
+  return reply.status(500).send({ message: 'Internal server error.' })
 })
