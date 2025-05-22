@@ -1,4 +1,11 @@
-import { Pet, Prisma } from '@prisma/client'
+import {
+  Age,
+  EnergyLevel,
+  Environment,
+  Pet,
+  Prisma,
+  Size,
+} from '@prisma/client'
 import { IPetsRepository } from '../pets-repository'
 import { randomUUID } from 'node:crypto'
 import { GetPetsAvailableForAdoptionUseCaseRequest } from '@/@types/get-pets-available-for-adoption-use-case'
@@ -23,6 +30,26 @@ export class InMemoryPetsRepository implements IPetsRepository {
     if (petIndex >= 0) {
       this.pets[petIndex] = pet
     }
+
+    return pet
+  }
+
+  async update(data: Prisma.PetUpdateInput) {
+    const pet = this.pets.find((pet) => pet.id === data.id)
+
+    if (!pet) {
+      throw new PetsNotFoundError()
+    }
+
+    pet.name = (data.name as string) ?? pet.name
+    pet.description = (data.description as string) ?? pet.description
+    pet.city = (data.city as string) ?? pet.city
+    pet.age = (data.age as Age) ?? pet.age
+    pet.size = (data.size as Size) ?? pet.size
+    pet.energy_level = (data.energy_level as EnergyLevel) ?? pet.energy_level
+    pet.independence_level =
+      (data.independence_level as EnergyLevel) ?? pet.independence_level
+    pet.environment = (data.environment as Environment) ?? pet.environment
 
     return pet
   }
