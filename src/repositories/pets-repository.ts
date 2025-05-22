@@ -2,6 +2,7 @@ import { GetPetsAvailableForAdoptionUseCaseRequest } from '@/@types/get-pets-ava
 import { Pet, Prisma } from '@prisma/client'
 
 export interface IPetsRepository {
+  update(data: Prisma.PetUpdateInput): Promise<Pet>
   delete(petId: string): Promise<void>
   save(pet: Pet): Promise<Pet>
   findById(petId: string): Promise<Pet | null>
