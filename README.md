@@ -20,7 +20,7 @@
 
 #### RNs (Regras de Negócio - condições aplicadas às funcionalidades. Quando/como tal funcionalidade deve acontecer).
 
-- [ ] - Para uma ORG acessar a aplicação como admin (cadastrar, editar ou remover seus pets), ela precisa estar logada;
+- [X] - Para uma ORG acessar a aplicação como admin (cadastrar, editar ou remover seus pets), ela precisa estar logada;
 
 - [X] - Para listar os pets, obrigatoriamente é preciso informar a cidade;
 
