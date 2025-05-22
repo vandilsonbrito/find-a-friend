@@ -8,8 +8,13 @@ import {
 import { IPetsRepository } from '@/repositories/pets-repository'
 import { IPetPhotosRepository } from '@/repositories/pet-photos-repository'
 import { IStorageProviderRepository } from '@/repositories/storage-provider-repository'
+import { CreatePetError } from '../errors/create-pet-error'
+import { OrgNotFoundError } from '../errors/org-not-found-error'
+import { IOrgsRepository } from '@/repositories/orgs-repository'
+import { normalizeCityName } from '@/utils/normalizeCityName'
 
 interface CreatePetUseCaseRequest {
+  id?: string
   name: string
   description: string
   age: Age
@@ -23,24 +28,35 @@ interface CreatePetUseCaseRequest {
 }
 
 export class CreatePetUseCase {
+  private orgsRepository: IOrgsRepository
+
   private petsRepository: IPetsRepository
   private petPhotosRepository: IPetPhotosRepository
   private storageService: IStorageProviderRepository
 
   constructor(
+    orgsRepository: IOrgsRepository,
     petsRepository: IPetsRepository,
     petPhotosRepository: IPetPhotosRepository,
     storageService: IStorageProviderRepository,
   ) {
+    this.orgsRepository = orgsRepository
     this.petsRepository = petsRepository
     this.petPhotosRepository = petPhotosRepository
     this.storageService = storageService
   }
 
   async execute(data: CreatePetUseCaseRequest) {
-    const { photos, ...petData } = data
+    const org = await this.orgsRepository.findById(data.org_id)
+
+    if (!org) {
+      throw new OrgNotFoundError()
+    }
+
+    const { city, photos, ...petData } = data
 
     const pet = await this.petsRepository.create({
+      city: normalizeCityName(city),
       ...petData,
       org: { connect: { id: petData.org_id } },
     })
@@ -54,6 +70,10 @@ export class CreatePetUseCase {
         pet_id: pet.id,
         url,
       })
+    }
+
+    if (!pet) {
+      throw new CreatePetError()
     }
 
     return { pet }
