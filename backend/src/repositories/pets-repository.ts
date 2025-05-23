@@ -1,4 +1,4 @@
-import { GetPetsAvailableForAdoptionUseCaseRequest } from 'backend/src/@types/get-pets-available-for-adoption-use-case'
+import { GetPetsAvailableForAdoptionUseCaseRequest } from '../@types/get-pets-available-for-adoption-use-case'
 import { Pet, Prisma } from '@prisma/client'
 
 export interface IPetsRepository {

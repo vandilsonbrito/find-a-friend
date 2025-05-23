@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from 'cloudinary'
 import { Readable } from 'stream'
-import { IStorageProviderRepository } from '../../../repositories/storage-provider-repository'
+import { IStorageProviderRepository } from '../repositories/storage-provider-repository'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
