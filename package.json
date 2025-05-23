@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "description": "Find a Friend API.",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "start:dev": "tsx watch src/server.ts",
     "start": "node build/server.js",
     "build": "tsup src --out-dir build",
     "prepare": "husky",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "lint": "eslint src/**/*.ts"
   },
   "keywords": [],
   "author": "",

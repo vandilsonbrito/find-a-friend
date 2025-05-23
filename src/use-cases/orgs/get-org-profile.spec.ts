@@ -27,7 +27,6 @@ describe('Get Org Profile Use Case', () => {
     const { org } = await sut.execute({
       orgId: createdOrg.id,
     })
-    console.log('Org', org)
     expect(org.id).toEqual(expect.any(String))
   })
 
