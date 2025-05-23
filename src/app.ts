@@ -8,8 +8,17 @@ import fastifyMultipart from '@fastify/multipart'
 import { petRoutes } from './http/controllers/pets/routes'
 import { PetsNotFoundError } from './use-cases/errors/pet-not-found-error'
 import { OrgNotFoundError } from './use-cases/errors/org-not-found-error'
+import fastifyRateLimit from '@fastify/rate-limit'
 
 export const app = fastify()
+
+app.register(fastifyRateLimit, {
+  max: 100,
+  timeWindow: '1 minute',
+  errorResponseBuilder: () => {
+    return { message: 'Too many requests. Please try again later.' }
+  },
+})
 
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
