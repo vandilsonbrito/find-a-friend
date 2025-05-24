@@ -4,7 +4,7 @@ import Footer from '../components/layout/Footer'
 import PetCard, { type PetCardProps } from '../components/pets/PetsCard'
 import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
-import { Button } from '../components/ui/Button'
+import { Button } from '../components/ui/button'
 import { Search, Filter, X } from 'lucide-react'
 import {
   Select,

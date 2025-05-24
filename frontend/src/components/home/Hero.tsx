@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from '../ui/Button'
+import { Button } from '../ui/button'
 import { Search } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
@@ -7,7 +7,6 @@ const Hero: React.FC = () => {
   return (
     <section className="relative py-16 md:py-24 overflow-hidden">
       <div className="container-custom flex flex-col md:flex-row items-center">
-        {/* Left Content */}
         <div className="flex-1 mb-10 md:mb-0">
           <h1 className="heading-1 text-center md:text-left mb-6">
             <span className="text-brand-500">Encontre</span> o amigo perfeito{' '}
@@ -47,10 +46,9 @@ const Hero: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Content - Image */}
         <div className="flex-1 relative">
           <div className="relative w-full h-80 md:h-96 lg:h-[500px]">
-            <div className="absolute w-64 h-64 md:w-80 md:h-80 bg-pet-200 rounded-full top-0 right-0 md:right-12 lg:top-20 animate-bounce-slow"></div>
+            <div className="absolute w-64 h-64 md:w-80 md:h-80 bg-pet-200 rounded-full top-0 right-0 md:right-12 lg:top-14 animate-bounce-slow"></div>
 
             <div className="absolute z-10 w-72 h-72 md:w-96 md:h-96 overflow-hidden rounded-full right-12 bottom-0">
               <img
@@ -73,7 +71,6 @@ const Hero: React.FC = () => {
         </div>
       </div>
 
-      {/* Background Elements */}
       <div className="absolute -top-20 -left-20 w-60 h-60 bg-pet-100 rounded-full opacity-50"></div>
       <div className="absolute bottom-0 right-0 w-40 h-40 bg-pet-100 rounded-full opacity-50"></div>
     </section>

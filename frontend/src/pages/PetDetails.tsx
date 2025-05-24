@@ -1,7 +1,7 @@
 import React from 'react'
 import Navbar from '../components/layout/NavBar'
 import Footer from '../components/layout/Footer'
-import { Button } from '../components/ui/Button'
+import { Button } from '../components/ui/button'
 import { Link, useParams } from 'react-router-dom'
 import {
   ArrowLeft,
