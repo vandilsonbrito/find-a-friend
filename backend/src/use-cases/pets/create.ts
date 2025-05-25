@@ -4,6 +4,8 @@ import {
   EnergyLevel,
   IndependenceLevel,
   Size,
+  Sex,
+  Type,
 } from '@prisma/client'
 import { IPetsRepository } from '../../repositories/pets-repository'
 import { IPetPhotosRepository } from '../../repositories/pet-photos-repository'
@@ -22,6 +24,9 @@ interface CreatePetUseCaseRequest {
   energy_level: EnergyLevel
   independence_level: IndependenceLevel
   environment: Environment
+  sex: Sex
+  breed: string
+  type: Type
   city: string
   org_id: string
   photos: { buffer: Buffer; filename: string }[]

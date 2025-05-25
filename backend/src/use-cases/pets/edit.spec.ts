@@ -40,6 +40,9 @@ describe('Edit Pet Use Case', () => {
       whatsapp: '11999999999',
       address: 'Rua Teste',
       city: 'São Paulo',
+      description: 'Org description',
+      state: 'SP',
+      cep: '12345678',
       created_at: new Date(),
     })
 
@@ -52,6 +55,9 @@ describe('Edit Pet Use Case', () => {
       energy_level: 'low',
       independence_level: 'medium',
       environment: 'medium',
+      breed: 'Golden Retriever',
+      sex: 'male',
+      type: 'dog',
       org_id: org.id,
       city: 'São Paulo',
       photos: [

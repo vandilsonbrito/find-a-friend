@@ -61,6 +61,8 @@ export class PrismaPetsRepository implements IPetsRepository {
       energy_level,
       independence_level,
       environment,
+      type,
+      sex,
       page,
     } = data
     const pets = await prisma.pet.findMany({
@@ -72,6 +74,8 @@ export class PrismaPetsRepository implements IPetsRepository {
         ...(energy_level && { energy_level }),
         ...(independence_level && { independence_level }),
         ...(environment && { environment }),
+        ...(type && { type }),
+        ...(sex && { sex }),
       },
       take: 20,
       skip: (page - 1) * 20,

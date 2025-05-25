@@ -24,9 +24,10 @@ export class GetPetsAvailableForAdoptionUseCase {
       energy_level: data.energy_level,
       independence_level: data.independence_level,
       environment: data.environment,
+      type: data.type,
+      sex: data.sex,
       page: data.page,
     })
-
     if (!pets) {
       throw new PetsNotFoundError()
     }

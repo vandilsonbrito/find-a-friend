@@ -5,7 +5,9 @@ import {
   Environment,
   IndependenceLevel,
   Pet,
+  Sex,
   Size,
+  Type,
 } from '@prisma/client'
 import { PetsNotFoundError } from '../errors/pet-not-found-error'
 
@@ -18,6 +20,9 @@ interface EdiPetUseCaseRequest {
   energy_level?: EnergyLevel
   independence_level?: IndependenceLevel
   environment?: Environment
+  sex?: Sex
+  breed?: string
+  type?: Type
   city?: string
 }
 interface EdiPetUseCaseResponse {
