@@ -20,7 +20,6 @@ export async function authenticate(
       email,
       password,
     })
-    console.log('OrgId', org)
     const token = await reply.jwtSign({
       sign: {
         sub: org.id,
