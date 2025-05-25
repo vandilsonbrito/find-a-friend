@@ -39,6 +39,9 @@ describe('Get Available Pets For Adoption Use Case', () => {
       whatsapp: '11999999999',
       address: 'Rua Teste',
       city: 'São Paulo',
+      description: 'Org description',
+      state: 'SP',
+      cep: '12345678',
       created_at: new Date(),
     })
 
@@ -51,6 +54,9 @@ describe('Get Available Pets For Adoption Use Case', () => {
       energy_level: 'low',
       independence_level: 'medium',
       environment: 'medium',
+      breed: 'Golden Retriever',
+      sex: 'male',
+      type: 'dog',
       org_id: org.id,
       city: 'São Paulo',
       photos: [
@@ -67,6 +73,9 @@ describe('Get Available Pets For Adoption Use Case', () => {
       energy_level: 'high',
       independence_level: 'medium',
       environment: 'medium',
+      breed: 'Golden Retriever',
+      sex: 'male',
+      type: 'dog',
       org_id: org.id,
       city: 'São Paulo',
       photos: [
@@ -98,6 +107,9 @@ describe('Get Available Pets For Adoption Use Case', () => {
       whatsapp: '11999999999',
       address: 'Rua Teste',
       city: 'São Paulo',
+      description: 'Org description',
+      state: 'SP',
+      cep: '12345678',
       created_at: new Date(),
     })
 
@@ -110,6 +122,9 @@ describe('Get Available Pets For Adoption Use Case', () => {
       energy_level: 'low',
       independence_level: 'medium',
       environment: 'medium',
+      breed: 'Golden Retriever',
+      sex: 'male',
+      type: 'dog',
       org_id: org.id,
       city: 'São Paulo',
       photos: [
@@ -125,7 +140,9 @@ describe('Get Available Pets For Adoption Use Case', () => {
       size: 'medium',
       energy_level: 'high',
       independence_level: 'medium',
-      environment: 'medium',
+      environment: 'medium',breed: 'Golden Retriever',
+      sex: 'male',
+      type: 'dog',
       org_id: org.id,
       city: 'São Paulo',
       photos: [
@@ -154,6 +171,9 @@ describe('Get Available Pets For Adoption Use Case', () => {
       whatsapp: '11999999999',
       address: 'Rua Teste',
       city: 'São Paulo',
+      description: 'Org description',
+      state: 'SP',
+      cep: '12345678',
       created_at: new Date(),
     })
 
@@ -166,6 +186,9 @@ describe('Get Available Pets For Adoption Use Case', () => {
       energy_level: 'low',
       independence_level: 'medium',
       environment: 'medium',
+      breed: 'Golden Retriever',
+      sex: 'male',
+      type: 'dog',
       org_id: org.id,
       city: 'São Paulo',
       photos: [
@@ -182,6 +205,9 @@ describe('Get Available Pets For Adoption Use Case', () => {
       energy_level: 'high',
       independence_level: 'medium',
       environment: 'medium',
+      breed: 'Golden Retriever',
+      sex: 'male',
+      type: 'dog',
       org_id: org.id,
       city: 'São Paulo',
       photos: [

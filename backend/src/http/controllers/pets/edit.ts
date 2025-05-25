@@ -15,6 +15,9 @@ export async function editPet(request: FastifyRequest, reply: FastifyReply) {
     energy_level: z.enum(['low', 'medium', 'high']).optional(),
     independence_level: z.enum(['low', 'medium', 'high']).optional(),
     environment: z.enum(['small', 'medium', 'large']).optional(),
+    sex: z.enum(['male', 'female']).optional(),
+    type: z.enum(['dog', 'cat']).optional(),
+    breed: z.string().optional(),
     city: z.string().optional(),
   })
 

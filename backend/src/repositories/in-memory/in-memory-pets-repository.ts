@@ -4,7 +4,9 @@ import {
   Environment,
   Pet,
   Prisma,
+  Sex,
   Size,
+  Type,
 } from '@prisma/client'
 import { IPetsRepository } from '../pets-repository'
 import { randomUUID } from 'node:crypto'
@@ -50,6 +52,9 @@ export class InMemoryPetsRepository implements IPetsRepository {
     pet.independence_level =
       (data.independence_level as EnergyLevel) ?? pet.independence_level
     pet.environment = (data.environment as Environment) ?? pet.environment
+    pet.sex = (data.sex as Sex) ?? pet.sex
+    pet.breed = (data.breed as string) ?? pet.breed
+    pet.type = (data.type as Type) ?? pet.type
 
     return pet
   }
@@ -96,7 +101,10 @@ export class InMemoryPetsRepository implements IPetsRepository {
       )
         return false
       if (data.environment && pet.environment !== data.environment) return false
+      if(data.type && pet.type !== data.type) return false
+      if(data.sex && pet.sex !== data.sex) return false
       return true
+
     })
   }
 }

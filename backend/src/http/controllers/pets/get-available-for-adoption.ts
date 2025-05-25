@@ -13,6 +13,8 @@ export async function getAvailablePetsForAdoption(
     energy_level: z.enum(['low', 'medium', 'high']).optional(),
     independence_level: z.enum(['low', 'medium', 'high']).optional(),
     environment: z.enum(['small', 'medium', 'large']).optional(),
+    sex: z.enum(['male', 'female']).optional(),
+    type: z.enum(['dog', 'cat']).optional(),
     page: z.coerce.number().default(1),
   })
 
@@ -24,6 +26,8 @@ export async function getAvailablePetsForAdoption(
       energy_level,
       independence_level,
       environment,
+      type,
+      sex,
       page,
     } = getAvailablePetsForAdoptionQuerySchema.parse(request.query)
 
@@ -36,6 +40,8 @@ export async function getAvailablePetsForAdoption(
       energy_level,
       independence_level,
       environment,
+      type,
+      sex,
       page,
     })
 

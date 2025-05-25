@@ -29,11 +29,14 @@ export class InMemoryOrgsRepository implements IOrgsRepository {
     const org = {
       id: randomUUID(),
       name: data.name,
+      description: data.description,
       email: data.email,
       password_hash: data.password_hash,
       whatsapp: data.whatsapp,
       address: data.address,
       city: data.city,
+      state: data.state,
+      cep: data.cep,
       created_at: new Date(),
     }
 

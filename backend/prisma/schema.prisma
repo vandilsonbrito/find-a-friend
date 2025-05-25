@@ -10,11 +10,14 @@ datasource db {
 model Org {
   id            String   @id @default(uuid())
   name          String
+  description   String
   email         String   @unique
   password_hash String
   whatsapp      String
   address       String
   city          String
+  state         String
+  cep           String
   pets          Pet[]
   created_at    DateTime @default(now())
 }
@@ -29,6 +32,9 @@ model Pet {
   energy_level       EnergyLevel
   independence_level IndependenceLevel
   environment        Environment
+  breed              String
+  sex                Sex
+  type               Type
   city               String
   is_adopted         Boolean     @default(false)
   created_at         DateTime    @default(now())
@@ -39,10 +45,10 @@ model Pet {
 
 model PetPhoto {
   id     String  @id @default(uuid())
-  pet_id  String
+  pet_id String
   url    String
 
-  pet    Pet     @relation(fields: [pet_id], references: [id])
+  pet    Pet     @relation(fields: [pet_id], references: [id], onDelete: Cascade)
 }
 
 enum Age {
@@ -73,4 +79,12 @@ enum Environment {
   small
   medium
   large
+}
+enum Sex {
+  male
+  female
+}
+enum Type {
+  dog
+  cat
 }
