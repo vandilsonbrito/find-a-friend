@@ -2,8 +2,11 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../ui/button'
 import { Menu, X } from 'lucide-react'
+import useAuthContext from '../../hooks/useAuthContext'
 
 const Navbar: React.FC = () => {
+  const { isLoggedIn, logoutOrg } = useAuthContext()
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
@@ -16,7 +19,6 @@ const Navbar: React.FC = () => {
           <span className="font-bold text-xl">FindAFriend</span>
         </Link>
 
-        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
           <Link
             to="/pets"
@@ -36,17 +38,31 @@ const Navbar: React.FC = () => {
           >
             Sobre
           </Link>
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" asChild>
-              <Link to="/signin">Entrar</Link>
-            </Button>
-            <Button asChild>
-              <Link to="/signup">Cadastrar</Link>
-            </Button>
-          </div>
+          {isLoggedIn && (
+            <div className="flex items-center gap-3">
+              <Link
+                to="/dashboard"
+                className="text-foreground/80 hover:text-brand-500 transition-colors"
+              >
+                Dashboard
+              </Link>
+              <Button asChild onClick={logoutOrg} className='ml-3 px-7'>
+                <Link to="/signin">Sair</Link>
+              </Button>
+            </div>
+          )}
+          {!isLoggedIn && (
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" asChild className='px-5 text-foreground/80 text-[.94rem]'>
+                <Link to="/signin">Entrar</Link>
+              </Button>
+              <Button asChild className='text-[.94rem]'>
+                <Link to="/signup">Cadastrar</Link>
+              </Button>
+            </div>
+          )}
         </nav>
 
-        {/* Mobile Menu Button */}
         <button
           className="md:hidden"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -59,7 +75,6 @@ const Navbar: React.FC = () => {
         </button>
       </div>
 
-      {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white absolute top-16 left-0 w-full py-4 px-6 flex flex-col gap-4 border-b shadow-lg">
           <Link

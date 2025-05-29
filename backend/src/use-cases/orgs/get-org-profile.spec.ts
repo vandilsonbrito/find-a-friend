@@ -21,6 +21,9 @@ describe('Get Org Profile Use Case', () => {
       whatsapp: '11999999999',
       address: 'Rua Teste',
       city: 'São Paulo',
+      description: 'Org description',
+      state: 'SP',
+      cep: '12345678',
       created_at: new Date(),
     })
 
