@@ -20,29 +20,31 @@ export async function authenticate(
       email,
       password,
     })
-    const token = await reply.jwtSign({
-      sign: {
-        sub: org.id,
-      },
-    })
 
-    const refreshToken = await reply.jwtSign({
-      sign: {
-        sub: org.id,
-        expiresIn: '7d',
-      },
-    })
+    const accessToken = await reply.jwtSign(
+      { sub: org.id },
+      { expiresIn: '15m' }
+    )
+
+    const refreshToken = await reply.jwtSign(
+      { sub: org.id },
+      { expiresIn: '7d' },
+    )
+
+    const isProduction = process.env.NODE_ENV === 'production'
 
     return reply
       .setCookie('refreshToken', refreshToken, {
         path: '/',
-        secure: true,
-        sameSite: true,
         httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       })
       .status(200)
       .send({
-        token,
+        message: 'Authentication successful.',
+        accessToken, 
       })
   } catch (err) {
     if (err instanceof Error) {
