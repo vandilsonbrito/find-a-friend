@@ -16,11 +16,15 @@ describe('Register Use Case', () => {
   it('should be able to register a Organization', async () => {
     const { org } = await sut.execute({
       name: 'John Doe',
+
       email: 'Z6m4I@example.com',
       password: '123456',
       whatsapp: '11999999999',
       address: 'Rua Teste',
       city: 'São Paulo',
+      description: 'Org description',
+      state: 'SP',
+      cep: '12345678',
     })
 
     expect(org.id).toEqual(expect.any(String))
@@ -34,6 +38,9 @@ describe('Register Use Case', () => {
       whatsapp: '11999999999',
       address: 'Rua Teste',
       city: 'São Paulo',
+      description: 'Org description',
+      state: 'SP',
+      cep: '12345678',
     })
 
     const isPasswordCorrectlyHashed = await compare('123456', org.password_hash)
@@ -49,6 +56,9 @@ describe('Register Use Case', () => {
       whatsapp: '11999999999',
       address: 'Rua Teste',
       city: 'São Paulo',
+      description: 'Org description',
+      state: 'SP',
+      cep: '12345678',
     })
 
     await expect(() =>
@@ -59,6 +69,9 @@ describe('Register Use Case', () => {
         whatsapp: '11999999999',
         address: 'Rua Teste',
         city: 'São Paulo',
+        description: 'Org description',
+      state: 'SP',
+      cep: '12345678',
       }),
     ).rejects.toBeInstanceOf(OrgAlreadyExistsError)
   })
