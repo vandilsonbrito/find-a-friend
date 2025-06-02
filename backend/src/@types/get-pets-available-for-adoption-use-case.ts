@@ -10,7 +10,7 @@ import {
 
 export interface GetPetsAvailableForAdoptionUseCaseRequest {
   page: number
-  city: string
+  city?: string
   age?: Age
   size?: Size
   energy_level?: EnergyLevel
