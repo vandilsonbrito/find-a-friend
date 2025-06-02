@@ -59,6 +59,7 @@ describe('Get Available Pets For Adoption Use Case', () => {
       type: 'dog',
       org_id: org.id,
       city: 'São Paulo',
+      state: 'SP',
       photos: [
         { buffer: Buffer.from('fake-file-1.png'), filename: 'fake-file-1.png' },
         { buffer: Buffer.from('fake-file-2.png'), filename: 'fake-file-2.png' },
@@ -78,6 +79,7 @@ describe('Get Available Pets For Adoption Use Case', () => {
       type: 'dog',
       org_id: org.id,
       city: 'São Paulo',
+      state: 'SP',
       photos: [
         { buffer: Buffer.from('fake-file-1.png'), filename: 'fake-file-1.png' },
         { buffer: Buffer.from('fake-file-2.png'), filename: 'fake-file-2.png' },
@@ -127,6 +129,7 @@ describe('Get Available Pets For Adoption Use Case', () => {
       type: 'dog',
       org_id: org.id,
       city: 'São Paulo',
+      state: 'SP',
       photos: [
         { buffer: Buffer.from('fake-file-1.png'), filename: 'fake-file-1.png' },
         { buffer: Buffer.from('fake-file-2.png'), filename: 'fake-file-2.png' },
@@ -145,6 +148,7 @@ describe('Get Available Pets For Adoption Use Case', () => {
       type: 'dog',
       org_id: org.id,
       city: 'São Paulo',
+      state: 'SP',
       photos: [
         { buffer: Buffer.from('fake-file-1.png'), filename: 'fake-file-1.png' },
         { buffer: Buffer.from('fake-file-2.png'), filename: 'fake-file-2.png' },
@@ -191,6 +195,7 @@ describe('Get Available Pets For Adoption Use Case', () => {
       type: 'dog',
       org_id: org.id,
       city: 'São Paulo',
+      state: 'SP',
       photos: [
         { buffer: Buffer.from('fake-file-1.png'), filename: 'fake-file-1.png' },
         { buffer: Buffer.from('fake-file-2.png'), filename: 'fake-file-2.png' },
@@ -210,6 +215,7 @@ describe('Get Available Pets For Adoption Use Case', () => {
       type: 'dog',
       org_id: org.id,
       city: 'São Paulo',
+      state: 'SP',
       photos: [
         { buffer: Buffer.from('fake-file-1.png'), filename: 'fake-file-1.png' },
         { buffer: Buffer.from('fake-file-2.png'), filename: 'fake-file-2.png' },

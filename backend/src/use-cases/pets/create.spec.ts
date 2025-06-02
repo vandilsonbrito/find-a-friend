@@ -55,6 +55,7 @@ describe('Create Pet Use Case', () => {
       type: 'dog',
       org_id: org.id,
       city: 'John Doe',
+      state: 'SP',
       photos: [
         { buffer: Buffer.from('fake-file-1.png'), filename: 'fake-file-1.png' },
         { buffer: Buffer.from('fake-file-2.png'), filename: 'fake-file-2.png' },
@@ -79,6 +80,7 @@ describe('Create Pet Use Case', () => {
         type: 'dog',
         org_id: 'non-existent-org',
         city: 'São Paulo',
+        state: 'SP',
         photos: [],
       }),
     ).rejects.toBeInstanceOf(OrgNotFoundError)
@@ -113,6 +115,7 @@ describe('Create Pet Use Case', () => {
       type: 'dog',
       org_id: org.id,
       city: 'São Paulo',
+      state: 'SP',
       photos: [
         { buffer: Buffer.from('fake-file-1'), filename: 'fake-file-1.png' },
         { buffer: Buffer.from('fake-file-2'), filename: 'fake-file-2.png' },
@@ -162,6 +165,7 @@ describe('Create Pet Use Case', () => {
         type: 'dog',
         org_id: org.id,
         city: 'São Paulo',
+        state: 'SP',
         photos: [{ buffer: Buffer.from('fail-file'), filename: 'fail.png' }],
       }),
     ).rejects.toThrow('Storage Error')
