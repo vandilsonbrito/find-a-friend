@@ -19,6 +19,9 @@ export async function editPet(request: FastifyRequest, reply: FastifyReply) {
     type: z.enum(['dog', 'cat']).optional(),
     breed: z.string().optional(),
     city: z.string().optional(),
+    state: z.string().optional(),
+    is_adopted: z.boolean().optional(),
+    photos: z.array(z.string()).optional(),
   })
 
   const { petId } = editParamsSchema.parse(request.params)
@@ -31,7 +34,7 @@ export async function editPet(request: FastifyRequest, reply: FastifyReply) {
     ...data,
   })
 
-  return reply.status(204).send({
+  return reply.status(200).send({
     pet,
   })
 }
