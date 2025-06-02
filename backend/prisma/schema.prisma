@@ -36,6 +36,7 @@ model Pet {
   sex                Sex
   type               Type
   city               String
+  state              String
   is_adopted         Boolean     @default(false)
   created_at         DateTime    @default(now())
 
