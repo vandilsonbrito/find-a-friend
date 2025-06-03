@@ -1,23 +1,16 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../ui/button'
+import type { PetFromAPI } from '../../@types'
+import { formatCityName } from '../../utils/formatCityName'
 
-export interface PetCardProps {
-  id: string
-  name: string
-  type: 'dog' | 'cat' | 'other'
-  image: string
-  city: string
-  state: string
-}
-
-const PetCard: React.FC<PetCardProps> = ({
+const PetCard: React.FC<PetFromAPI> = ({
   id,
   name,
   type,
-  image,
   city,
   state,
+  photos,
 }) => {
   const getTypeEmoji = (type: string) => {
     switch (type) {
@@ -34,7 +27,7 @@ const PetCard: React.FC<PetCardProps> = ({
     <div className="bg-white rounded-2xl shadow-sm border overflow-hidden transition-transform hover:scale-[1.02] hover:shadow-md">
       <div className="relative h-48 overflow-hidden">
         <img
-          src={image}
+          src={photos[0] || 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'} 
           alt={`${name} - um ${type}`}
           className="w-full h-full object-cover"
         />
@@ -49,7 +42,7 @@ const PetCard: React.FC<PetCardProps> = ({
       <div className="p-4">
         <h3 className="text-xl font-bold mb-1">{name}</h3>
         <p className="text-foreground/70 text-sm mb-4">
-          {city}, {state}
+          {formatCityName(city)}, {state}
         </p>
 
         <Button asChild className="w-full">
