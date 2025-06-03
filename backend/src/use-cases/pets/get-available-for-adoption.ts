@@ -17,8 +17,8 @@ export class GetPetsAvailableForAdoptionUseCase {
   async execute(
     data: GetPetsAvailableForAdoptionUseCaseRequest,
   ): Promise<GetPetsAvailableForAdoptionUseCaseResponse> {
-    const pets = await this.petsRepository.findManyByCityAndFilters({
-      city: normalizeCityName(data.city),
+    const pets = await this.petsRepository.findAvailablePets({
+      city: data?.city && normalizeCityName(data.city),
       age: data.age,
       size: data.size,
       energy_level: data.energy_level,
