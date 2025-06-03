@@ -47,6 +47,7 @@ export interface PetFromAPI {
   state: string
   photos: string[]
   is_adopted: boolean
+  org_id: string
   created_at: string
 }
 
