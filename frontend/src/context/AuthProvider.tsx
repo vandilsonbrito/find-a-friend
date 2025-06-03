@@ -24,8 +24,13 @@ interface RegisterType {
   cep: string
 }
 
+type DataFromAPI = {
+  org: OrgFromAPI
+}
+
 export interface AuthContextProps {
   user: OrgFromAPI | null
+  setUser: (user: OrgFromAPI | null) => void
   accessToken: string | null
   login: (input: LoginType) => Promise<void>
   logout: () => Promise<void>
@@ -46,12 +51,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const isLoggedIn = user !== null && accessToken !== null
 
-  // ✅ Sempre que o accessToken mudar, atualiza o axiosInstance
+  // Always update the current access token - axiosInstance
   useEffect(() => {
     setCurrentAccessToken(accessToken)
   }, [accessToken])
 
-  // ✅ Define o callback de refresh para o interceptor
+  // Define refresh callback to the interceptor
   useEffect(() => {
     setRefreshTokenCallback(async () => {
       const success = await refreshToken()
@@ -68,12 +73,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setAccessToken(newToken)
 
         if (!user) {
-          const userData = await axiosInstance.get<OrgFromAPI>('/me', {
+          const userData = await axiosInstance.get<DataFromAPI>('/me', {
             headers: {
               Authorization: `Bearer ${newToken}`,
             },
           })
-          setUser(userData.data)
+          setUser(userData.data.org)
         }
 
         return true
@@ -120,12 +125,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const { accessToken: newAccessToken } = res.data
         setAccessToken(newAccessToken)
 
-        const userData = await axiosInstance.get<OrgFromAPI>('/me', {
+        const userData = await axiosInstance.get('/me', {
           headers: {
             Authorization: `Bearer ${newAccessToken}`,
           },
         })
-        setUser(userData.data)
+        setUser(userData.data.org as OrgFromAPI)
 
         SuccessToast('Login realizado com sucesso!')
       }
@@ -198,6 +203,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     <AuthContext.Provider
       value={{
         user,
+        setUser,
         accessToken,
         login,
         logout,
