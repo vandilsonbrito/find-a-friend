@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../components/layout/NavBar'
 import Footer from '../components/layout/Footer'
-import PetCard, { type PetCardProps } from '../components/pets/PetsCard'
+import PetCard from '../components/pets/PetsCard'
 import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
 import { Button } from '../components/ui/button'
@@ -13,8 +13,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../components/ui/select'
+import { useGetAvailablePets } from '../services/hooks/useGetAvailablePets'
 
 const Pets: React.FC = () => {
+
+  const { data: petsData } = useGetAvailablePets()
+
   const [city, setCity] = useState('')
   const [filterOpen, setFilterOpen] = useState(false)
   const [filters, setFilters] = useState({
@@ -25,88 +29,13 @@ const Pets: React.FC = () => {
     independence: '',
   })
 
-  const petsList: PetCardProps[] = [
-    {
-      id: '1',
-      name: 'Rex',
-      type: 'dog',
-      image:
-        'https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80',
-      city: 'São Paulo',
-      state: 'SP',
-    },
-    {
-      id: '2',
-      name: 'Luna',
-      type: 'cat',
-      image:
-        'https://images.unsplash.com/photo-1543852786-1cf6624b9987?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80',
-      city: 'Rio de Janeiro',
-      state: 'RJ',
-    },
-    {
-      id: '3',
-      name: 'Bob',
-      type: 'dog',
-      image:
-        'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80',
-      city: 'Curitiba',
-      state: 'PR',
-    },
-    {
-      id: '4',
-      name: 'Mia',
-      type: 'cat',
-      image:
-        'https://images.unsplash.com/photo-1494256997604-768d1f608cac?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80',
-      city: 'Belo Horizonte',
-      state: 'MG',
-    },
-    {
-      id: '5',
-      name: 'Max',
-      type: 'dog',
-      image:
-        'https://images.unsplash.com/photo-1587300003388-59208cc962cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80',
-      city: 'Brasília',
-      state: 'DF',
-    },
-    {
-      id: '6',
-      name: 'Simba',
-      type: 'cat',
-      image:
-        'https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80',
-      city: 'Salvador',
-      state: 'BA',
-    },
-    {
-      id: '7',
-      name: 'Thor',
-      type: 'dog',
-      image:
-        'https://images.unsplash.com/photo-1534361960057-19889db9621e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80',
-      city: 'Florianópolis',
-      state: 'SC',
-    },
-    {
-      id: '8',
-      name: 'Fifi',
-      type: 'cat',
-      image:
-        'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80',
-      city: 'Recife',
-      state: 'PE',
-    },
-  ]
-
   const handleFilterChange = (key: string, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }))
   }
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    // chamada para a API com os filtros aplicados
+    // TODO: Lógica de chamada para a API com os filtros aplicados
   }
 
   const clearFilters = () => {
@@ -118,6 +47,10 @@ const Pets: React.FC = () => {
       independence: '',
     })
   }
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  })
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -287,12 +220,12 @@ const Pets: React.FC = () => {
           <div className="mb-8">
             <h2 className="text-2xl font-bold">Pets disponíveis para adoção</h2>
             <p className="text-foreground/70">
-              {petsList.length} pets encontrados
+              {petsData && petsData.length} pets encontrados
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {petsList.map((pet) => (
+            {petsData && petsData.map((pet) => (
               <PetCard key={pet.id} {...pet} />
             ))}
           </div>
