@@ -29,27 +29,47 @@ const useAuthContext = () => {
     throw new Error('useAuthContext must be used within an AuthProvider')
   }
 
-  const { 
-    user, 
-    accessToken, 
-    login, 
-    logout, 
-    register, 
-    refreshToken, 
-    isLoggedIn, 
-    loadingUser 
+  const {
+    user,
+    setUser,
+    accessToken,
+    login,
+    logout,
+    register,
+    refreshToken,
+    isLoggedIn,
+    loadingUser
   } = context
 
+  // Update token on axios when it changes
   useEffect(() => {
     setCurrentAccessToken(accessToken)
   }, [accessToken])
 
+  // Configure refresh token callback to run once on component mount
   useEffect(() => {
-    setRefreshTokenCallback(async () => {
-      const success = await refreshToken()
-      return success ? accessToken : null
-    })
-  }, [refreshToken, accessToken])
+    const handleRefreshToken = async (): Promise<string | null> => {
+      try {
+        const success = await refreshToken()
+        
+        if (success) {
+          await new Promise(resolve => setTimeout(resolve, 50))
+          return context.accessToken
+        }
+        
+        return null
+      } catch (error) {
+        console.error('Erro no refresh token:', error)
+        return null
+      }
+    }
+
+    setRefreshTokenCallback(handleRefreshToken)
+    
+    return () => {
+      setRefreshTokenCallback(async () => null)
+    }
+  }, []) 
 
   const loginOrg = async (
     input: LoginType,
@@ -88,6 +108,7 @@ const useAuthContext = () => {
 
   const logoutOrg = async () => {
     try {
+      setCurrentAccessToken(null)
       await logout()
       navigate('/signin')
     } catch (error) {
@@ -101,6 +122,7 @@ const useAuthContext = () => {
     logoutOrg,
     registerOrg,
     user,
+    setUser,
     accessToken,
     isLoggedIn,
     loadingUser,
