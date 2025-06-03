@@ -17,6 +17,7 @@ import type { OrgFromAPI } from '../../@types'
 import axiosInstance from '../../axios'
 import { SuccessToast } from '../SuccessToast'
 import { ErrorToast } from '../ErrorToast'
+import { formatCityName } from '../../utils/formatCityName'
 
 
 const OrganizationProfile: React.FC = () => {
@@ -111,7 +112,7 @@ const OrganizationProfile: React.FC = () => {
           <div className="space-y-2">
             <Label>Cidade</Label>
             <Input 
-              value={formData?.city} 
+              value={formatCityName(formData?.city as string)} 
               readOnly={!isEditing}
               onChange={(e) => handleInputChange('city', e.target.value)}
             />
