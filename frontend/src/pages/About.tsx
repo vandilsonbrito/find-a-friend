@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Navbar from '../components/layout/NavBar'
 import Footer from '../components/layout/Footer'
 import {
@@ -11,54 +11,57 @@ import {
 import { Button } from '../components/ui/button'
 import { Heart, Users, Shield, Sparkles } from 'lucide-react'
 
-const About: React.FC = () => {
-  const values = [
-    {
-      icon: Heart,
-      title: 'Amor e Compaixão',
-      description:
-        'Acreditamos que todo animal merece amor, cuidado e um lar seguro onde possa ser feliz.',
-    },
-    {
-      icon: Users,
-      title: 'Comunidade',
-      description:
-        'Trabalhamos junto com ONGs, voluntários e adotantes para criar uma rede de apoio forte.',
-    },
-    {
-      icon: Shield,
-      title: 'Adoção Responsável',
-      description:
-        'Promovemos a adoção consciente, garantindo que pets e famílias sejam compatíveis.',
-    },
-    {
-      icon: Sparkles,
-      title: 'Transparência',
-      description:
-        'Mantemos processos claros e transparentes para conectar pets a lares amorosos.',
-    },
-  ]
+const values = [
+  {
+    icon: Heart,
+    title: 'Amor e Compaixão',
+    description:
+      'Acreditamos que todo animal merece amor, cuidado e um lar seguro onde possa ser feliz.',
+  },
+  {
+    icon: Users,
+    title: 'Comunidade',
+    description:
+      'Trabalhamos junto com ONGs, voluntários e adotantes para criar uma rede de apoio forte.',
+  },
+  {
+    icon: Shield,
+    title: 'Adoção Responsável',
+    description:
+      'Promovemos a adoção consciente, garantindo que pets e famílias sejam compatíveis.',
+  },
+  {
+    icon: Sparkles,
+    title: 'Transparência',
+    description:
+      'Mantemos processos claros e transparentes para conectar pets a lares amorosos.',
+  },
+]
+const team = [
+  {
+    name: 'Ana Silva',
+    role: 'Fundadora & CEO',
+    description:
+      'Veterinária apaixonada por animais, criou a FindAFriend após anos trabalhando em ONGs.',
+  },
+  {
+    name: 'Carlos Santos',
+    role: 'Coordenador de Parcerias',
+    description:
+      'Responsável por conectar e apoiar as organizações parceiras em todo o Brasil.',
+  },
+  {
+    name: 'Vandilson Brito',
+    role: 'Desenvolvedor Fullstack',
+    description:
+      'Garante que a plataforma seja fácil de usar para adotantes e organizações.',
+  },
+]
 
-  const team = [
-    {
-      name: 'Ana Silva',
-      role: 'Fundadora & CEO',
-      description:
-        'Veterinária apaixonada por animais, criou a FindAFriend após anos trabalhando em ONGs.',
-    },
-    {
-      name: 'Carlos Santos',
-      role: 'Coordenador de Parcerias',
-      description:
-        'Responsável por conectar e apoiar as organizações parceiras em todo o Brasil.',
-    },
-    {
-      name: 'Vandilson Brito',
-      role: 'Desenvolvedor Fullstack',
-      description:
-        'Garante que a plataforma seja fácil de usar para adotantes e organizações.',
-    },
-  ]
+const About: React.FC = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  })
 
   return (
     <div className="min-h-screen flex flex-col">
