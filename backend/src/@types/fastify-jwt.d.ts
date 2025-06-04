@@ -3,9 +3,7 @@ import '@fastify/jwt'
 
 declare module 'fastify' {
   interface FastifyRequest {
-    jwtVerify<T = any>(options?: {
-      onlyCookie?: boolean
-    }): Promise<T>
+    jwtVerify<T = any>(options?: { onlyCookie?: boolean }): Promise<T>
     user: {
       sub: string
     }
