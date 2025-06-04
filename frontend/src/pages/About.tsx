@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Navbar from '../components/layout/NavBar'
 import Footer from '../components/layout/Footer'
 import {
@@ -11,54 +11,45 @@ import {
 import { Button } from '../components/ui/button'
 import { Heart, Users, Shield, Sparkles } from 'lucide-react'
 
-const About: React.FC = () => {
-  const values = [
-    {
-      icon: Heart,
-      title: 'Amor e Compaixão',
-      description:
-        'Acreditamos que todo animal merece amor, cuidado e um lar seguro onde possa ser feliz.',
-    },
-    {
-      icon: Users,
-      title: 'Comunidade',
-      description:
-        'Trabalhamos junto com ONGs, voluntários e adotantes para criar uma rede de apoio forte.',
-    },
-    {
-      icon: Shield,
-      title: 'Adoção Responsável',
-      description:
-        'Promovemos a adoção consciente, garantindo que pets e famílias sejam compatíveis.',
-    },
-    {
-      icon: Sparkles,
-      title: 'Transparência',
-      description:
-        'Mantemos processos claros e transparentes para conectar pets a lares amorosos.',
-    },
-  ]
+const values = [
+  {
+    icon: Heart,
+    title: 'Amor e Compaixão',
+    description:
+      'Acreditamos que todo animal merece amor, cuidado e um lar seguro onde possa ser feliz.',
+  },
+  {
+    icon: Users,
+    title: 'Comunidade',
+    description:
+      'Trabalhamos junto com ONGs, voluntários e adotantes para criar uma rede de apoio forte.',
+  },
+  {
+    icon: Shield,
+    title: 'Adoção Responsável',
+    description:
+      'Promovemos a adoção consciente, garantindo que pets e famílias sejam compatíveis.',
+  },
+  {
+    icon: Sparkles,
+    title: 'Transparência',
+    description:
+      'Mantemos processos claros e transparentes para conectar pets a lares amorosos.',
+  },
+]
+const team = [
+  {
+    name: 'Vandilson Brito',
+    role: 'Desenvolvedor Fullstack',
+    description:
+      'Garante que a plataforma seja fácil de usar para adotantes e organizações.',
+  },
+]
 
-  const team = [
-    {
-      name: 'Ana Silva',
-      role: 'Fundadora & CEO',
-      description:
-        'Veterinária apaixonada por animais, criou a FindAFriend após anos trabalhando em ONGs.',
-    },
-    {
-      name: 'Carlos Santos',
-      role: 'Coordenador de Parcerias',
-      description:
-        'Responsável por conectar e apoiar as organizações parceiras em todo o Brasil.',
-    },
-    {
-      name: 'Vandilson Brito',
-      role: 'Desenvolvedor Fullstack',
-      description:
-        'Garante que a plataforma seja fácil de usar para adotantes e organizações.',
-    },
-  ]
+const About: React.FC = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  })
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -173,14 +164,22 @@ const About: React.FC = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="flex justify-center items-center">
               {team.map((member, index) => (
-                <Card key={index} className="text-center">
+                <Card key={index} className="w-[450px] h-[270px] text-center">
                   <CardHeader>
                     <div className="mx-auto w-20 h-20 bg-brand-500/10 rounded-full flex items-center justify-center mb-4">
                       <Users className="h-10 w-10 text-brand-500" />
                     </div>
-                    <CardTitle>{member.name}</CardTitle>
+                    <CardTitle className="hover:underline">
+                      <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="http://linkedin.com/in/vandilson-brito-desenvolvedor-fullstack"
+                      >
+                        {member.name}
+                      </a>
+                    </CardTitle>
                     <CardDescription className="text-brand-500 font-medium">
                       {member.role}
                     </CardDescription>

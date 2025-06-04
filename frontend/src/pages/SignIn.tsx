@@ -58,17 +58,11 @@ const SignIn: React.FC = () => {
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <Label htmlFor="password">Senha</Label>
-                <Link
-                  to="/forgot-password"
-                  className="text-sm text-brand-500 hover:underline"
-                >
-                  Esqueceu a senha?
-                </Link>
               </div>
               <Input
                 id="password"
                 type="password"
-                placeholder="••••••••"
+                placeholder="••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required

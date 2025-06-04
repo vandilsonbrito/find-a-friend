@@ -28,6 +28,7 @@ interface CreatePetUseCaseRequest {
   breed: string
   type: Type
   city: string
+  state: string
   org_id: string
   photos: { buffer: Buffer; filename: string }[]
 }
@@ -65,7 +66,7 @@ export class CreatePetUseCase {
       ...petData,
       org: { connect: { id: petData.org_id } },
     })
-
+    
     for (const photo of photos) {
       const url = await this.storageService.uploadFile(
         photo.buffer,

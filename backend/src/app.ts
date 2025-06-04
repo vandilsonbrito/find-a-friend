@@ -13,6 +13,9 @@ import fastifyCors from '@fastify/cors'
 
 export const app = fastify()
 
+app.get('/', async () => {
+  return 'Server Running'
+})
 app.register(fastifyCors, {
   origin: (origin, cb) => {
     const allowedOrigins = ['http://localhost:5173', 'https://meu-site.com']
@@ -24,7 +27,7 @@ app.register(fastifyCors, {
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
 })
 
 app.register(fastifyRateLimit, {
@@ -59,8 +62,11 @@ app.setErrorHandler((error, _request, reply) => {
   if (error instanceof PetsNotFoundError || error instanceof OrgNotFoundError) {
     return reply.status(404).send({ message: error.message })
   }
-  if (error instanceof ZodError) {
-    return reply.status(400).send({ message: error.format() })
+  if (error.code === 'FST_ERR_CTP_EMPTY_JSON_BODY') {
+    return reply.status(400).send({
+      message:
+        "O corpo da requisição não pode estar vazio quando 'Content-Type' é 'application/json'.",
+    })
   }
   if (env.NODE_ENV !== 'production') {
     console.error(error)

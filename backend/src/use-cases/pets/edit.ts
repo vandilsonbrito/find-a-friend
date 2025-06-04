@@ -24,6 +24,9 @@ interface EdiPetUseCaseRequest {
   breed?: string
   type?: Type
   city?: string
+  state?: string
+  is_adopted?: boolean
+  photos?: string[]
 }
 interface EdiPetUseCaseResponse {
   petUpdated: Pet
@@ -37,7 +40,7 @@ export class EdiPetUseCase {
 
   async execute(data: EdiPetUseCaseRequest): Promise<EdiPetUseCaseResponse> {
     const pet = await this.petsRepository.findById(data.petId)
-
+    
     if (!pet) {
       throw new PetsNotFoundError()
     }
@@ -51,7 +54,12 @@ export class EdiPetUseCase {
       energy_level: data.energy_level || pet.energy_level,
       independence_level: data.independence_level || pet.independence_level,
       environment: data.environment || pet.environment,
+      sex: data.sex || pet.sex,
+      type: data.type || pet.type,
+      breed: data.breed || pet.breed,
       city: data.city || pet.city,
+      state: data.state || pet.state,
+      is_adopted: data.is_adopted || pet.is_adopted,
     })
 
     return { petUpdated }

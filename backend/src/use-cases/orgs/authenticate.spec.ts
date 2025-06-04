@@ -21,6 +21,9 @@ describe('Authenticate Org Use Case', () => {
       whatsapp: '11111111111',
       address: 'Rua Teste',
       city: 'Testelândia',
+      description: 'Org description',
+      state: 'SP',
+      cep: 'São Paulo',
     })
 
     const { org } = await sut.execute({
@@ -48,6 +51,9 @@ describe('Authenticate Org Use Case', () => {
       whatsapp: '11111111111',
       address: 'Rua Teste',
       city: 'Testelândia',
+      description: 'Org description',
+      state: 'SP',
+      cep: 'São Paulo',
     })
 
     await expect(() => {

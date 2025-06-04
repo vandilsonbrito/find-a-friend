@@ -7,7 +7,9 @@ export interface IPetsRepository {
   save(pet: Pet): Promise<Pet>
   findById(petId: string): Promise<Pet | null>
   create(data: Prisma.PetCreateInput): Promise<Pet>
-  findManyByCityAndFilters(
+  findAvailablePets(
     data: GetPetsAvailableForAdoptionUseCaseRequest,
   ): Promise<Pet[]>
+  findManyByOrgId(orgId: string, page: number): Promise<Pet[]>
+  countAvailablePetsByOrg(orgId: string): Promise<number>
 }

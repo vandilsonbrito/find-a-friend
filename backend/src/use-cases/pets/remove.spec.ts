@@ -60,6 +60,7 @@ describe('Remove Pet Use Case', () => {
       type: 'dog',
       org_id: org.id,
       city: 'São Paulo',
+      state: 'SP',
       photos: [
         { buffer: Buffer.from('fake-file-1.png'), filename: 'fake-file-1.png' },
       ],

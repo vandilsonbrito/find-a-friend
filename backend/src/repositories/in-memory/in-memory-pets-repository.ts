@@ -55,6 +55,7 @@ export class InMemoryPetsRepository implements IPetsRepository {
     pet.sex = (data.sex as Sex) ?? pet.sex
     pet.breed = (data.breed as string) ?? pet.breed
     pet.type = (data.type as Type) ?? pet.type
+    pet.is_adopted = (data.is_adopted as boolean) ?? pet.is_adopted
 
     return pet
   }
@@ -84,11 +85,11 @@ export class InMemoryPetsRepository implements IPetsRepository {
     return pet
   }
 
-  async findManyByCityAndFilters(
+  async findAvailablePets(
     data: GetPetsAvailableForAdoptionUseCaseRequest,
   ): Promise<Pet[]> {
     return this.pets.filter((pet) => {
-      if (normalizeCityName(pet.city) !== normalizeCityName(data.city))
+      if (data.city && normalizeCityName(pet.city) !== normalizeCityName(data.city))
         return false
       if (pet.is_adopted) return false
       if (data.age && pet.age !== data.age) return false
@@ -106,5 +107,13 @@ export class InMemoryPetsRepository implements IPetsRepository {
       return true
 
     })
+  }
+
+  async countAvailablePetsByOrg(orgId: string) {
+    return this.pets.filter((pet) => pet.org_id === orgId && !pet.is_adopted).length
+  }
+
+  async findManyByOrgId(orgId: string, page: number): Promise<Pet[]> {
+    return this.pets.filter((pet) => pet.org_id === orgId)
   }
 }

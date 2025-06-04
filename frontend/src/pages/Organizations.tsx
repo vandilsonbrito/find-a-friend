@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Navbar from '../components/layout/NavBar'
 import Footer from '../components/layout/Footer'
 import {
@@ -10,47 +10,13 @@ import {
 } from '../components/ui/card'
 import { Button } from '../components/ui/button'
 import { MapPin, Phone, ExternalLink } from 'lucide-react'
-
-const organizations = [
-  {
-    id: '1',
-    name: 'Amigos dos Animais SP',
-    description:
-      'Dedicada ao resgate e cuidado de animais abandonados em São Paulo.',
-    address: 'Rua das Flores, 123 - Vila Madalena, São Paulo - SP',
-    phone: '+55 (11) 99999-1234',
-    whatsapp: '+5511999991234',
-    city: 'São Paulo',
-    state: 'SP',
-    totalPets: 25,
-  },
-  {
-    id: '2',
-    name: 'Casa dos Bichos Rio',
-    description:
-      'ONG focada na adoção responsável e conscientização sobre cuidados com pets.',
-    address: 'Av. Copacabana, 456 - Copacabana, Rio de Janeiro - RJ',
-    phone: '+55 (21) 98888-5678',
-    whatsapp: '+5521988885678',
-    city: 'Rio de Janeiro',
-    state: 'RJ',
-    totalPets: 18,
-  },
-  {
-    id: '3',
-    name: 'Patas Solidárias BH',
-    description:
-      'Trabalhamos para dar uma nova chance aos animais de rua de Belo Horizonte.',
-    address: 'Rua da Esperança, 789 - Savassi, Belo Horizonte - MG',
-    phone: '+55 (31) 97777-9012',
-    whatsapp: '+5531977779012',
-    city: 'Belo Horizonte',
-    state: 'MG',
-    totalPets: 32,
-  },
-]
+import { useGetAllOrgs } from '../services/hooks/useGetAllOrgs'
+import type { AllOrgsFromAPI } from '../@types'
+import { formatCityName } from '../utils/formatCityName'
+import { maskCEP, maskWhatsApp } from '../utils/formValidation'
 
 const Organizations: React.FC = () => {
+  const { data: orgsData } = useGetAllOrgs()
   const handleWhatsAppContact = (whatsapp: string, orgName: string) => {
     const message = `Olá! Gostaria de saber mais sobre a ${orgName} e como posso ajudar com a adoção de pets.`
     const whatsappUrl = `https://wa.me/${whatsapp}?text=${encodeURIComponent(
@@ -58,6 +24,10 @@ const Organizations: React.FC = () => {
     )}`
     window.open(whatsappUrl, '_blank')
   }
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  })
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -76,7 +46,9 @@ const Organizations: React.FC = () => {
         <section className="py-16">
           <div className="container-custom">
             <div className="text-center mb-12">
-              <h2 className="heading-2 mb-4">Nossas Organizações</h2>
+              <h2 className="heading-2 mb-4">
+                Algumas das Nossas Organizações
+              </h2>
               <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
                 Cada organização tem sua própria missão e história, mas todas
                 compartilham o mesmo objetivo: encontrar lares amorosos para
@@ -85,7 +57,7 @@ const Organizations: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {organizations.map((org) => (
+              {orgsData?.orgsList?.slice(0, 3).map((org: AllOrgsFromAPI) => (
                 <Card
                   key={org.id}
                   className="hover:shadow-lg transition-shadow"
@@ -97,12 +69,17 @@ const Organizations: React.FC = () => {
                   <CardContent className="space-y-4">
                     <div className="flex items-start gap-2 text-sm">
                       <MapPin className="h-4 w-4 text-brand-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-foreground/70">{org.address}</span>
+                      <span className="text-foreground/70">
+                        {org.address} - {formatCityName(org.city)}, {org.state}.
+                        CEP: {maskCEP(org.cep)}
+                      </span>
                     </div>
 
                     <div className="flex items-center gap-2 text-sm">
                       <Phone className="h-4 w-4 text-brand-500" />
-                      <span className="text-foreground/70">{org.phone}</span>
+                      <span className="text-foreground/70">
+                        {maskWhatsApp(org.whatsapp)}
+                      </span>
                     </div>
 
                     <div className="bg-secondary/50 rounded-lg p-3 text-center">
@@ -110,7 +87,7 @@ const Organizations: React.FC = () => {
                         Pets disponíveis
                       </p>
                       <p className="text-2xl font-bold text-brand-500">
-                        {org.totalPets}
+                        {org.pets_count}
                       </p>
                     </div>
 
@@ -123,11 +100,6 @@ const Organizations: React.FC = () => {
                       >
                         <ExternalLink className="h-4 w-4 mr-2" />
                         Entrar em Contato
-                      </Button>
-                      <Button variant="outline" className="w-full" asChild>
-                        <a href={`/pets?city=${encodeURIComponent(org.city)}`}>
-                          Ver Pets da {org.city}
-                        </a>
                       </Button>
                     </div>
                   </CardContent>

@@ -6,7 +6,7 @@ import useAuthContext from '../../hooks/useAuthContext'
 
 const Navbar: React.FC = () => {
   const { isLoggedIn, logoutOrg } = useAuthContext()
-
+  const pathName = window.location.pathname
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
@@ -20,43 +20,54 @@ const Navbar: React.FC = () => {
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
-          <Link
-            to="/pets"
-            className="text-foreground/80 hover:text-brand-500 transition-colors"
-          >
-            Buscar Pets
-          </Link>
-          <Link
-            to="/orgs"
-            className="text-foreground/80 hover:text-brand-500 transition-colors"
-          >
-            Organizações
-          </Link>
-          <Link
-            to="/about"
-            className="text-foreground/80 hover:text-brand-500 transition-colors"
-          >
-            Sobre
-          </Link>
-          {isLoggedIn && (
+          {[
+            { to: '/pets', label: 'Buscar Pets' },
+            { to: '/orgs', label: 'Organizações' },
+            { to: '/about', label: 'Sobre' },
+          ].map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={`relative text-foreground/80 hover:text-brand-500 transition-colors duration-300
+        after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-full after:transition-all after:duration-300
+        ${
+          pathName === item.to
+            ? 'after:bg-brand-500'
+            : 'after:bg-transparent hover:after:bg-brand-500'
+        }`}
+            >
+              {item.label}
+            </Link>
+          ))}
+
+          {isLoggedIn ? (
             <div className="flex items-center gap-3">
               <Link
                 to="/dashboard"
-                className="text-foreground/80 hover:text-brand-500 transition-colors"
+                className={`relative text-foreground/80 hover:text-brand-500 transition-colors duration-300
+          after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-full after:transition-all after:duration-300
+          ${
+            pathName === '/dashboard'
+              ? 'after:bg-brand-500'
+              : 'after:bg-transparent hover:after:bg-brand-500'
+          }`}
               >
                 Dashboard
               </Link>
-              <Button asChild onClick={logoutOrg} className='ml-3 px-7'>
+              <Button asChild onClick={logoutOrg} className="ml-3 px-7">
                 <Link to="/signin">Sair</Link>
               </Button>
             </div>
-          )}
-          {!isLoggedIn && (
+          ) : (
             <div className="flex items-center gap-3">
-              <Button variant="ghost" asChild className='px-5 text-foreground/80 text-[.94rem]'>
+              <Button
+                variant="ghost"
+                asChild
+                className="px-5 text-foreground/80 text-[.94rem]"
+              >
                 <Link to="/signin">Entrar</Link>
               </Button>
-              <Button asChild className='text-[.94rem]'>
+              <Button asChild className="text-[.94rem]">
                 <Link to="/signup">Cadastrar</Link>
               </Button>
             </div>

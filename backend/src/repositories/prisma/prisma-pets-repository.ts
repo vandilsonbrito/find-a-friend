@@ -3,6 +3,9 @@ import { IPetsRepository } from '../pets-repository'
 import { Pet, Prisma } from '@prisma/client'
 import { GetPetsAvailableForAdoptionUseCaseRequest } from '../../@types/get-pets-available-for-adoption-use-case'
 
+type PetWithPhoto = Pet & {
+  photos: string[]
+}
 export class PrismaPetsRepository implements IPetsRepository {
   async create(data: Prisma.PetCreateInput & { org_id: string }): Promise<Pet> {
     const { org_id, ...rest } = data
@@ -51,7 +54,7 @@ export class PrismaPetsRepository implements IPetsRepository {
     })
   }
 
-  async findManyByCityAndFilters(
+  async findAvailablePets(
     data: GetPetsAvailableForAdoptionUseCaseRequest,
   ): Promise<Pet[]> {
     const {
@@ -65,10 +68,11 @@ export class PrismaPetsRepository implements IPetsRepository {
       sex,
       page,
     } = data
+  
     const pets = await prisma.pet.findMany({
       where: {
-        city,
         is_adopted: false,
+        ...(city && { city }),
         ...(age && { age }),
         ...(size && { size }),
         ...(energy_level && { energy_level }),
@@ -80,8 +84,41 @@ export class PrismaPetsRepository implements IPetsRepository {
       take: 20,
       skip: (page - 1) * 20,
     })
+  
+    const petPhotos = await prisma.petPhoto.findMany({
+      where: {
+        pet_id: {
+          in: pets.map((pet) => pet.id),
+        },
+      },
+    })
+    const petPhotosMap = petPhotos.reduce((acc, petPhoto) => {
+      if (!acc[petPhoto.pet_id]) {
+        acc[petPhoto.pet_id] = []
+      }
+      acc[petPhoto.pet_id].push(petPhoto.url)
+      return acc
+    }, {} as Record<string, string[]>)
+  
+    const petsWithPhotos = pets.map((pet) => {
+      return {
+        ...pet,
+        photos: petPhotosMap[pet.id] || [], 
+      }
+    })
+  
+    return petsWithPhotos
+  }
 
-    return pets
+  async countAvailablePetsByOrg(orgId: string) {
+    const count = await prisma.pet.count({
+      where: {
+        org_id: orgId,
+        is_adopted: false,
+      },
+    })
+  
+    return count
   }
 
   async findById(petId: string): Promise<Pet | null> {
@@ -92,5 +129,40 @@ export class PrismaPetsRepository implements IPetsRepository {
     })
 
     return pet
+  }
+
+  async findManyByOrgId(orgId: string, page: number): Promise<PetWithPhoto[]> {
+    const pets = await prisma.pet.findMany({
+      where: {
+        org_id: orgId,
+      },
+      take: 20,
+      skip: (page - 1) * 20,
+    })
+
+    const petPhotos = await prisma.petPhoto.findMany({
+      where: {
+        pet_id: {
+          in: pets.map((pet) => pet.id),
+        },
+      },
+    })
+
+    const petPhotosMap = petPhotos.reduce((acc, petPhoto) => {
+      if (!acc[petPhoto.pet_id]) {
+        acc[petPhoto.pet_id] = []
+      }
+      acc[petPhoto.pet_id].push(petPhoto.url)
+      return acc
+    }, {} as Record<string, string[]>)
+  
+    const petsWithPhotos = pets.map((pet) => {
+      return {
+        ...pet,
+        photos: petPhotosMap[pet.id] || [], 
+      }
+    })
+  
+    return petsWithPhotos
   }
 }

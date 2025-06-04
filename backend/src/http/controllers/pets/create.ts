@@ -16,6 +16,7 @@ export async function createPet(request: FastifyRequest, reply: FastifyReply) {
     type: z.enum(['dog', 'cat']),
     breed: z.string(),
     city: z.string(),
+    state: z.string(),
     org_id: z.string().uuid(),
   })
 
@@ -49,6 +50,7 @@ export async function createPet(request: FastifyRequest, reply: FastifyReply) {
       breed,
       type,
       city,
+      state,
       org_id,
     } = registerPetBodySchema.parse(body)
 
@@ -66,6 +68,7 @@ export async function createPet(request: FastifyRequest, reply: FastifyReply) {
       type,
       breed,
       city,
+      state,
       org_id,
       photos: uploadedPhotos,
     })

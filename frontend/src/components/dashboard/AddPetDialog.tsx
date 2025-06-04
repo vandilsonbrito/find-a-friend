@@ -1,7 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from '../ui/button'
-import { Input } from '../../components/ui/input'
-import { Label } from '../../components/ui/label'
 import {
   Dialog,
   DialogContent,
@@ -9,34 +7,27 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '../../components/ui/dialog'
-import { Textarea } from '../../components/ui/textarea'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../../components/ui/select'
+} from '../ui/dialog'
 import { Plus } from 'lucide-react'
+import { validatePetForm, type PetFormData } from '../../utils/petValidations'
+import PetForm from './PetForm'
+import useAuthContext from '../../hooks/useAuthContext'
+import { useGetOrgPets } from '../../services/hooks/useGetOrgPets'
 
-export interface NewPet {
-  name: string
-  type: string
-  breed: string
-  age: string
-  size: string
-  gender: string
-  description: string
-  photos: string[]
+export type PetType = PetFormData & {
+  is_adopted: boolean
 }
 
 interface AddPetDialogProps {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
-  newPet: NewPet
-  setNewPet: (pet: NewPet) => void
-  onAddPet: () => void
+  newPet: PetType
+  setNewPet: React.Dispatch<React.SetStateAction<PetType>>
+  onAddPet: () => Promise<boolean>
+  onEdit: (petId: string, pet: PetType) => Promise<boolean>
+  selectedPetIdToEdit: string
+  isaddingPetLoading: boolean
+  setSelectedPetIdToEdit: (isaddingPetLoading: string) => void
 }
 
 const AddPetDialog: React.FC<AddPetDialogProps> = ({
@@ -45,114 +36,125 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
   newPet,
   setNewPet,
   onAddPet,
+  onEdit,
+  selectedPetIdToEdit,
+  isaddingPetLoading,
+  setSelectedPetIdToEdit
 }) => {
+  const { user } = useAuthContext()
+  const { data: petsData } = useGetOrgPets(user?.id as string)
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const modalTitle = selectedPetIdToEdit ? 'Editar Pet' : 'Adicionar Pet'
+  const buttonText = selectedPetIdToEdit ? 'Salvar Edição' : 'Adicionar Pet'
+  const petToEdit = petsData?.find((pet) => pet.id === selectedPetIdToEdit)
+
+  const handleOpenChange = (open: boolean) => {
+    onOpenChange(open)
+    if (!open) {
+      setSelectedPetIdToEdit('')
+      setNewPet({
+        name: '',
+        description: '',
+        age: 'Filhote',
+        size: 'Pequeno',
+        sex: 'Macho',
+        energy_level: 'Baixo',
+        independence_level: 'Baixo',
+        environment: 'Pequeno',
+        type: 'Cachorro',
+        breed: '',
+        city: '',
+        state: '',
+        photos: [],
+        is_adopted: false,
+      })
+      setErrors({})
+    }
+  }
+
+  const handleErrorChange = (field: string, error?: string) => {
+    setErrors((prev) => {
+      const newErrors = { ...prev }
+      if (error) {
+        newErrors[field] = error
+      } else {
+        delete newErrors[field]
+      }
+      return newErrors
+    })
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    const validation = validatePetForm(newPet)
+    if (!validation.success) {
+      setErrors(validation.errors)
+
+      const firstErrorField = Object.keys(validation.errors)[0]
+      const element = document.getElementById(firstErrorField)
+      if (element) {
+        element.focus()
+      }
+      return
+    }
+
+    setErrors({})
+        
+    if(selectedPetIdToEdit) {
+      const response = onEdit(selectedPetIdToEdit, newPet)
+      if(await response) {
+        handleOpenChange(false)
+        return
+      }
+    }
+    const response = await onAddPet()
+    if(response) {
+      handleOpenChange(false)
+    }
+  }
+
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button>
           <Plus className="h-4 w-4 mr-2" />
-          Adicionar Pet
+          {modalTitle}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>Adicionar Novo Pet</DialogTitle>
+
+      <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        {isaddingPetLoading && (
+          <div className="absolute inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50 rounded-lg">
+            <div className="bg-white p-6 rounded-lg shadow-lg flex items-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-500"></div>
+              <span className="ml-2 text-brand-500">Carregando...</span>
+            </div>
+          </div>
+        )}
+
+        <DialogHeader className="flex-shrink-0">
+          <DialogTitle>{modalTitle}</DialogTitle>
           <DialogDescription>
             Preencha as informações do pet para disponibilizá-lo para adoção.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Nome</Label>
-            <Input
-              id="name"
-              value={newPet.name}
-              onChange={(e) => setNewPet({ ...newPet, name: e.target.value })}
-              placeholder="Nome do pet"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="type">Tipo</Label>
-            <Select
-              value={newPet.type}
-              onValueChange={(value) => setNewPet({ ...newPet, type: value })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione o tipo" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Cachorro">Cachorro</SelectItem>
-                <SelectItem value="Gato">Gato</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="breed">Raça</Label>
-            <Input
-              id="breed"
-              value={newPet.breed}
-              onChange={(e) => setNewPet({ ...newPet, breed: e.target.value })}
-              placeholder="Raça do pet"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="age">Idade</Label>
-            <Input
-              id="age"
-              value={newPet.age}
-              onChange={(e) => setNewPet({ ...newPet, age: e.target.value })}
-              placeholder="Ex: 2 anos"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="size">Porte</Label>
-            <Select
-              value={newPet.size}
-              onValueChange={(value) => setNewPet({ ...newPet, size: value })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione o porte" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Pequeno">Pequeno</SelectItem>
-                <SelectItem value="Médio">Médio</SelectItem>
-                <SelectItem value="Grande">Grande</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="gender">Sexo</Label>
-            <Select
-              value={newPet.gender}
-              onValueChange={(value) => setNewPet({ ...newPet, gender: value })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione o sexo" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Macho">Macho</SelectItem>
-                <SelectItem value="Fêmea">Fêmea</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="description">Descrição</Label>
-          <Textarea
-            id="description"
-            value={newPet.description}
-            onChange={(e) =>
-              setNewPet({ ...newPet, description: e.target.value })
-            }
-            placeholder="Conte um pouco sobre a personalidade do pet..."
-            rows={3}
-          />
-        </div>
-        <div className="flex justify-end gap-3">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+
+        <PetForm
+          pet={newPet}
+          setPet={setNewPet}
+          errors={errors}
+          onErrorChange={handleErrorChange}
+          onSubmit={handleSubmit}
+          petToEdit={petToEdit}
+        />
+
+        <div className="flex justify-end gap-3 pt-4 border-t flex-shrink-0">
+          <Button variant="outline" onClick={() => handleOpenChange(false)}>
             Cancelar
           </Button>
-          <Button onClick={onAddPet}>Adicionar Pet</Button>
+          <Button onClick={handleSubmit} disabled={isaddingPetLoading}>{buttonText}</Button>
         </div>
       </DialogContent>
     </Dialog>
