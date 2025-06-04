@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import Navbar from '../components/layout/NavBar'
 import Footer from '../components/layout/Footer'
