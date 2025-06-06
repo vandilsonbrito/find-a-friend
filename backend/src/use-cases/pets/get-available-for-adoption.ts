@@ -6,6 +6,9 @@ import { normalizeCityName } from '../../utils/normalizeCityName'
 
 interface GetPetsAvailableForAdoptionUseCaseResponse {
   pets: Pet[]
+  total_pets: number
+  current_page: number
+  total_pages: number
 }
 
 export class GetPetsAvailableForAdoptionUseCase {
@@ -17,7 +20,7 @@ export class GetPetsAvailableForAdoptionUseCase {
   async execute(
     data: GetPetsAvailableForAdoptionUseCaseRequest,
   ): Promise<GetPetsAvailableForAdoptionUseCaseResponse> {
-    const pets = await this.petsRepository.findAvailablePets({
+    const petsResponse = await this.petsRepository.findAvailablePets({
       city: data?.city && normalizeCityName(data.city),
       age: data.age,
       size: data.size,
@@ -28,10 +31,15 @@ export class GetPetsAvailableForAdoptionUseCase {
       sex: data.sex,
       page: data.page,
     })
-    if (!pets) {
+    if (!petsResponse.pets) {
       throw new PetsNotFoundError()
     }
 
-    return { pets }
+    return {
+      pets: petsResponse.pets,
+      total_pets: petsResponse.total_pets,
+      current_page: petsResponse.current_page,
+      total_pages: petsResponse.total_pages,
+    }
   }
 }
