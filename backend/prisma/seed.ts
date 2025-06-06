@@ -520,7 +520,7 @@ async function main() {
       {
         id: randomUUID(),
         org_id: orgs[1].id,
-        name: 'Lili',
+        name: 'Lila',
         description: 'Gata tigrada pequena e ágil, muito curiosa e afetuosa.',
         age: Age.puppy,
         size: 'small',
@@ -530,8 +530,8 @@ async function main() {
         breed: 'Tabby',
         sex: 'female',
         type: 'cat',
-        city: normalizeCityName('Rio de Janeiro'),
-        state: 'RJ',
+        city: normalizeCityName('Campo Grande'),
+        state: 'MS',
         photos: ['/cats/tabby3.png'],
       },
       {
@@ -621,8 +621,8 @@ async function main() {
       },
       {
         id: randomUUID(),
-        org_id: orgs[4].id,
-        name: 'Stella',
+        org_id: orgs[1].id,
+        name: 'Lili',
         description: 'Lapphund Finlandês peludo e resistente, ótimo para clima frio.',
         age: Age.adult,
         size: 'medium',
@@ -632,8 +632,8 @@ async function main() {
         breed: 'Lapphund Finlandês',
         sex: 'female',
         type: 'dog',
-        city: normalizeCityName('Porto Alegre'),
-        state: 'RS',
+        city: normalizeCityName('Florianópolis'),
+        state: 'SC',
         photos: ['/dogs/lapphund-finlandes.jpg'],
       },
       {
