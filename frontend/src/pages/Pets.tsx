@@ -300,8 +300,8 @@ const Pets: React.FC = () => {
 
           {isLoading && currentPage === 1 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {Array.from({ length: 8 }).map(() => (
-                <SkeletonLoadingPetsCard />
+              {Array.from({ length: 8 }).map((_, index) => (
+                <SkeletonLoadingPetsCard key={index} />
               ))}
             </div>
           ) : (
