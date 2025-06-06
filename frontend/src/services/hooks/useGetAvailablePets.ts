@@ -3,8 +3,11 @@ import type { PetFromAPI } from '../../@types'
 import axiosInstance from '../../axios'
 
 type PetsDataFromAPI = {
-  pets: {
+  pets_data: {
     pets: PetFromAPI[]
+    total_pets: number
+    current_page: number
+    total_pages: number
   }
 }
 
@@ -24,7 +27,12 @@ function buildQueryString(filters: PetFilters): string {
   const params = new URLSearchParams()
 
   Object.entries(filters).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== '') {
+    if (
+      value !== undefined &&
+      value !== null &&
+      value !== '' &&
+      value !== 'any'
+    ) {
       params.append(key, String(value))
     }
   })
@@ -36,14 +44,16 @@ function buildQueryString(filters: PetFilters): string {
 export function useGetAvailablePets(filters: PetFilters = {}) {
   async function getAvailablePets() {
     const queryString = buildQueryString(filters)
-    const response = await axiosInstance.get<PetsDataFromAPI>(`/pets${queryString}`)
-
-    const data: PetFromAPI[] = response.data.pets.pets
+    const response = await axiosInstance.get<PetsDataFromAPI>(
+      `/pets${queryString}`,
+    )
+    const data = response.data.pets_data
     return data || []
   }
 
   return useQuery({
     queryKey: ['pets', filters],
     queryFn: getAvailablePets,
+    refetchOnMount: true,
   })
 }
