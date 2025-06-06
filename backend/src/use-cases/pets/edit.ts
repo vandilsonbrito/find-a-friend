@@ -40,7 +40,7 @@ export class EdiPetUseCase {
 
   async execute(data: EdiPetUseCaseRequest): Promise<EdiPetUseCaseResponse> {
     const pet = await this.petsRepository.findById(data.petId)
-    
+
     if (!pet) {
       throw new PetsNotFoundError()
     }
@@ -59,7 +59,7 @@ export class EdiPetUseCase {
       breed: data.breed || pet.breed,
       city: data.city || pet.city,
       state: data.state || pet.state,
-      is_adopted: data.is_adopted || pet.is_adopted,
+      is_adopted: data.is_adopted,
     })
 
     return { petUpdated }

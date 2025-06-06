@@ -18,20 +18,23 @@ import axiosInstance from '../../axios'
 import { SuccessToast } from '../SuccessToast'
 import { ErrorToast } from '../ErrorToast'
 import { formatCityName } from '../../utils/formatCityName'
-
+import { getChangedFields } from '../../utils/objectComparison'
 
 const OrganizationProfile: React.FC = () => {
-
   const { user: orgData, setUser } = useAuthContext()
-  
+
   const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState(orgData)
+  const [originalData, setOriginalData] = useState<OrgFromAPI | null>(null)
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }) as OrgFromAPI | null)
+    setFormData(
+      (prev) =>
+        ({
+          ...prev,
+          [field]: value,
+        } as OrgFromAPI | null),
+    )
   }
 
   const handleCEPChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,6 +48,9 @@ const OrganizationProfile: React.FC = () => {
   }
 
   const handleEdit = () => {
+    if (orgData) {
+      setOriginalData({ ...orgData })
+    }
     setIsEditing(true)
   }
 
@@ -54,25 +60,50 @@ const OrganizationProfile: React.FC = () => {
   }
 
   const handleSave = () => {
-    const formattedData = {
-      ...formData,
-      whatsapp: unmaskValue(formData?.whatsapp as string),
-      cep: unmaskValue(formData?.cep as string),
+    if (!originalData || !formData) {
+      ErrorToast('Erro: dados não encontrados.')
+      return
     }
+
+    const formattedCurrentData = {
+      ...formData,
+      whatsapp: unmaskValue(formData.whatsapp as string),
+      cep: unmaskValue(formData.cep as string),
+    }
+
+    const formattedOriginalData = {
+      ...originalData,
+      whatsapp: unmaskValue(originalData.whatsapp as string),
+      cep: unmaskValue(originalData.cep as string),
+    }
+
+    const changedFields = getChangedFields(
+      formattedOriginalData,
+      formattedCurrentData,
+      ['id', 'created_at', 'updated_at'],
+    )
+
+    if (Object.keys(changedFields).length === 0) {
+      setIsEditing(false)
+      setOriginalData(null)
+      return
+    }
+
     axiosInstance
-      .put(`http://localhost:3333/orgs/${orgData?.id}/profile`, formattedData)
-      .then(async response => {
-        if(response.status === 200) {
+      .patch(`http://localhost:3333/orgs/${orgData?.id}/profile`, changedFields)
+      .then(async (response) => {
+        if (response.status === 200) {
           SuccessToast('Dados salvos com sucesso!')
-          const updatedOrg = response.data 
+          const updatedOrg = response.data
           setUser(updatedOrg.org.org as OrgFromAPI)
           setIsEditing(false)
+          setOriginalData(null)
         } else {
           ErrorToast('Erro ao salvar dados.')
           console.error('Erro status não 200:', response)
         }
       })
-      .catch(error => {
+      .catch((error) => {
         ErrorToast('Erro ao salvar dados.')
         console.error('Erro ao salvar dados:', error)
       })
@@ -88,47 +119,44 @@ const OrganizationProfile: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label>Nome da Organização</Label>
-            <Input 
-              value={formData?.name} 
+            <Input
+              value={formData?.name}
               readOnly={!isEditing}
               onChange={(e) => handleInputChange('name', e.target.value)}
             />
           </div>
           <div className="space-y-2">
             <Label>E-mail</Label>
-            <Input 
-              value={formData?.email} 
-              readOnly 
-            />
+            <Input value={formData?.email} readOnly />
           </div>
           <div className="space-y-2">
             <Label>WhatsApp</Label>
-            <Input 
-              value={maskWhatsApp(formData?.whatsapp as string)} 
+            <Input
+              value={maskWhatsApp(formData?.whatsapp as string)}
               readOnly={!isEditing}
               onChange={handleWhatsAppChange}
             />
           </div>
           <div className="space-y-2">
             <Label>Cidade</Label>
-            <Input 
-              value={formatCityName(formData?.city as string)} 
+            <Input
+              value={formatCityName(formData?.city as string)}
               readOnly={!isEditing}
               onChange={(e) => handleInputChange('city', e.target.value)}
             />
           </div>
           <div className="space-y-2">
             <Label>Estado</Label>
-            <Input 
-              value={formData?.state} 
+            <Input
+              value={formData?.state}
               readOnly={!isEditing}
               onChange={(e) => handleInputChange('state', e.target.value)}
             />
           </div>
           <div className="space-y-2">
             <Label>CEP</Label>
-            <Input 
-              value={maskCEP(formData?.cep as string)} 
+            <Input
+              value={maskCEP(formData?.cep as string)}
               readOnly={!isEditing}
               onChange={handleCEPChange}
             />
@@ -136,8 +164,8 @@ const OrganizationProfile: React.FC = () => {
         </div>
         <div className="space-y-2">
           <Label>Endereço</Label>
-          <Input 
-            value={formData?.address} 
+          <Input
+            value={formData?.address}
             readOnly={!isEditing}
             onChange={(e) => handleInputChange('address', e.target.value)}
           />
@@ -151,7 +179,7 @@ const OrganizationProfile: React.FC = () => {
             rows={3}
           />
         </div>
-        
+
         <div className="flex gap-2">
           {!isEditing ? (
             <Button variant="outline" onClick={handleEdit}>

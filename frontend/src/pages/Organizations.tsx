@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import Navbar from '../components/layout/NavBar'
 import Footer from '../components/layout/Footer'
 import {
-  Card,
   CardContent,
   CardDescription,
   CardHeader,
@@ -14,6 +13,7 @@ import { useGetAllOrgs } from '../services/hooks/useGetAllOrgs'
 import type { AllOrgsFromAPI } from '../@types'
 import { formatCityName } from '../utils/formatCityName'
 import { maskCEP, maskWhatsApp } from '../utils/formValidation'
+import { motion } from 'framer-motion'
 
 const Organizations: React.FC = () => {
   const { data: orgsData } = useGetAllOrgs()
@@ -32,7 +32,12 @@ const Organizations: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-1">
+      <motion.main
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+        initial={{ y: 30, scale: 1 }}
+        animate={{ y: 0, scale: 1 }}
+        className="flex-1"
+      >
         <section className="bg-gradient-to-r from-brand-500 to-orange-400 text-white py-16">
           <div className="container-custom text-center">
             <h1 className="heading-1 mb-6">Organizações Parceiras</h1>
@@ -58,9 +63,12 @@ const Organizations: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {orgsData?.orgsList?.slice(0, 3).map((org: AllOrgsFromAPI) => (
-                <Card
+                <motion.div
+                  transition={{ duration: 0.8, ease: 'easeOut' }}
+                  initial={{ y: 30, scale: 1, opacity: 0.7 }}
+                  animate={{ y: 0, scale: 1, opacity: 1 }}
                   key={org.id}
-                  className="hover:shadow-lg transition-shadow"
+                  className="hover:shadow-xl transition-shadow rounded-md border border-border"
                 >
                   <CardHeader>
                     <CardTitle className="text-xl">{org.name}</CardTitle>
@@ -103,7 +111,7 @@ const Organizations: React.FC = () => {
                       </Button>
                     </div>
                   </CardContent>
-                </Card>
+                </motion.div>
               ))}
             </div>
 
@@ -121,7 +129,7 @@ const Organizations: React.FC = () => {
             </div>
           </div>
         </section>
-      </main>
+      </motion.main>
       <Footer />
     </div>
   )

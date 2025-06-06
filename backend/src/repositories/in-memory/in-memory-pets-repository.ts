@@ -14,6 +14,10 @@ import { GetPetsAvailableForAdoptionUseCaseRequest } from '../../@types/get-pets
 import { normalizeCityName } from '../../utils/normalizeCityName'
 import { PetsNotFoundError } from '../../use-cases/errors/pet-not-found-error'
 
+interface PetWithPhotos extends Pet {
+  photos: string[]
+}
+
 export class InMemoryPetsRepository implements IPetsRepository {
   public pets: Pet[] = []
 
@@ -60,14 +64,19 @@ export class InMemoryPetsRepository implements IPetsRepository {
     return pet
   }
 
-  async findById(petId: string) {
+  async findById(petId: string): Promise<PetWithPhotos | null> {
     const pet = this.pets.find((pet) => pet.id === petId)
 
     if (!pet) {
       return null
     }
 
-    return pet
+    const petWithPhotos: PetWithPhotos = {
+      ...pet,
+      photos: [],
+    }
+
+    return petWithPhotos
   }
 
   async create(data: Prisma.PetCreateInput) {
@@ -87,9 +96,17 @@ export class InMemoryPetsRepository implements IPetsRepository {
 
   async findAvailablePets(
     data: GetPetsAvailableForAdoptionUseCaseRequest,
-  ): Promise<Pet[]> {
-    return this.pets.filter((pet) => {
-      if (data.city && normalizeCityName(pet.city) !== normalizeCityName(data.city))
+  ): Promise<{
+    pets: Pet[]
+    total_pets: number
+    current_page: number
+    total_pages: number
+  }> {
+    const filteredPets = this.pets.filter((pet) => {
+      if (
+        data.city &&
+        normalizeCityName(pet.city) !== normalizeCityName(data.city)
+      )
         return false
       if (pet.is_adopted) return false
       if (data.age && pet.age !== data.age) return false
@@ -102,15 +119,26 @@ export class InMemoryPetsRepository implements IPetsRepository {
       )
         return false
       if (data.environment && pet.environment !== data.environment) return false
-      if(data.type && pet.type !== data.type) return false
-      if(data.sex && pet.sex !== data.sex) return false
+      if (data.type && pet.type !== data.type) return false
+      if (data.sex && pet.sex !== data.sex) return false
       return true
-
     })
+
+    const totalPets = filteredPets.length
+    const currentPage = 1
+    const totalPages = Math.ceil(totalPets / 20)
+
+    return {
+      pets: filteredPets,
+      total_pets: totalPets,
+      current_page: currentPage,
+      total_pages: totalPages,
+    }
   }
 
   async countAvailablePetsByOrg(orgId: string) {
-    return this.pets.filter((pet) => pet.org_id === orgId && !pet.is_adopted).length
+    return this.pets.filter((pet) => pet.org_id === orgId && !pet.is_adopted)
+      .length
   }
 
   async findManyByOrgId(orgId: string, page: number): Promise<Pet[]> {
