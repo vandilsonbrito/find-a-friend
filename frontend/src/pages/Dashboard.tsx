@@ -105,7 +105,6 @@ const Dashboard = () => {
   ): Promise<boolean> => {
     try {
       if (Object.keys(changes).length === 0) {
-        console.log('Nenhuma alteração para enviar')
         return true
       }
 

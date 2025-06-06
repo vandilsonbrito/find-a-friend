@@ -105,7 +105,6 @@ const Pets: React.FC = () => {
 
   const hasMorePages = petsData && currentPage < petsData.total_pages
   const showProgressBar = petsData && petsData.total_pages > 1
-  console.log('allPets', allPets)
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />

@@ -5,7 +5,11 @@ import Footer from '../components/layout/Footer'
 import axiosInstance from '../axios'
 import { SuccessToast } from '../components/SuccessToast'
 import { ErrorToast } from '../components/ErrorToast'
-import { unmaskValue, validateStep1, validateStep2 } from '../utils/formValidation'
+import {
+  unmaskValue,
+  validateStep1,
+  validateStep2,
+} from '../utils/formValidation'
 import FormStep1 from '../components/signup/SignUpStep1'
 import FormStep2 from '../components/signup/SignUpStep2'
 
@@ -71,7 +75,6 @@ const SignUp: React.FC = () => {
         state: formData.state,
         cep: unmaskValue(formData.postalCode),
       }
-      console.log('Formatted form data:', formattedFormData)
       const response = await axiosInstance.post('/orgs', formattedFormData)
       if (response.status === 201) {
         SuccessToast('Organização cadastrada com sucesso!')
@@ -95,7 +98,7 @@ const SignUp: React.FC = () => {
       ErrorToast(
         error.response?.status === 409
           ? 'E-mail já está em uso.'
-          : 'Erro ao cadastrar organização.'
+          : 'Erro ao cadastrar organização.',
       )
       console.error('Erro no cadastro', error)
     } finally {
@@ -164,12 +167,12 @@ const SignUp: React.FC = () => {
 
             {step === 2 && (
               <FormStep2
-              formData={formData}
-              handleChange={handleChange}
-              prevStep={prevStep}
-              handleSubmit={handleSubmit}
-              isLoading={isLoading}
-            />
+                formData={formData}
+                handleChange={handleChange}
+                prevStep={prevStep}
+                handleSubmit={handleSubmit}
+                isLoading={isLoading}
+              />
             )}
           </form>
 
