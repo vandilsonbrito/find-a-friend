@@ -32,7 +32,7 @@ export async function getAvailablePetsForAdoption(
 
   const getAvailablePetsForAdoptionUseCase = makeGetAvailablePetsUseCase()
 
-  const pets = await getAvailablePetsForAdoptionUseCase.execute({
+  const pets_data = await getAvailablePetsForAdoptionUseCase.execute({
     city,
     age,
     size,
@@ -45,6 +45,6 @@ export async function getAvailablePetsForAdoption(
   })
 
   return reply.status(200).send({
-    pets,
+    pets_data,
   })
 }
