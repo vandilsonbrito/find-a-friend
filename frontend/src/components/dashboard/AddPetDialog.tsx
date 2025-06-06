@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 import {
   Dialog,
@@ -13,6 +13,16 @@ import { validatePetForm, type PetFormData } from '../../utils/petValidations'
 import PetForm from './PetForm'
 import useAuthContext from '../../hooks/useAuthContext'
 import { useGetOrgPets } from '../../services/hooks/useGetOrgPets'
+import { translateToPT } from '../../utils/translateTypes'
+import type {
+  AgePT,
+  EnergyLevelPT,
+  EnvironmentPT,
+  SexPT,
+  SizePT,
+  TypePT,
+} from '../../@types'
+import { getChangedFields } from '../../utils/objectComparison'
 
 export type PetType = PetFormData & {
   is_adopted: boolean
@@ -24,7 +34,7 @@ interface AddPetDialogProps {
   newPet: PetType
   setNewPet: React.Dispatch<React.SetStateAction<PetType>>
   onAddPet: () => Promise<boolean>
-  onEdit: (petId: string, pet: PetType) => Promise<boolean>
+  onEdit: (petId: string, changes: Partial<PetType>) => Promise<boolean>
   selectedPetIdToEdit: string
   isaddingPetLoading: boolean
   setSelectedPetIdToEdit: (isaddingPetLoading: string) => void
@@ -39,15 +49,49 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
   onEdit,
   selectedPetIdToEdit,
   isaddingPetLoading,
-  setSelectedPetIdToEdit
+  setSelectedPetIdToEdit,
 }) => {
   const { user } = useAuthContext()
   const { data: petsData } = useGetOrgPets(user?.id as string)
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [originalPetData, setOriginalPetData] = useState<PetType | null>(null)
 
   const modalTitle = selectedPetIdToEdit ? 'Editar Pet' : 'Adicionar Pet'
   const buttonText = selectedPetIdToEdit ? 'Salvar Edição' : 'Adicionar Pet'
   const petToEdit = petsData?.find((pet) => pet.id === selectedPetIdToEdit)
+
+  useEffect(() => {
+    if (selectedPetIdToEdit && petToEdit) {
+      const originalData: PetType = {
+        name: petToEdit.name,
+        description: petToEdit.description,
+        age: translateToPT('age', petToEdit.age) as AgePT,
+        size: translateToPT('size', petToEdit.size) as SizePT,
+        sex: translateToPT('sex', petToEdit.sex) as SexPT,
+        energy_level: translateToPT(
+          'energy_level',
+          petToEdit.energy_level,
+        ) as EnergyLevelPT,
+        independence_level: translateToPT(
+          'independence_level',
+          petToEdit.independence_level,
+        ) as EnergyLevelPT,
+        environment: translateToPT(
+          'environment',
+          petToEdit.environment,
+        ) as EnvironmentPT,
+        type: translateToPT('type', petToEdit.type) as TypePT,
+        breed: petToEdit.breed,
+        city: petToEdit.city,
+        state: petToEdit.state,
+        photos: [...petToEdit.photos],
+        is_adopted: petToEdit.is_adopted,
+      }
+      setOriginalPetData(originalData)
+    } else {
+      setOriginalPetData(null)
+    }
+  }, [selectedPetIdToEdit, petToEdit])
 
   const handleOpenChange = (open: boolean) => {
     onOpenChange(open)
@@ -101,16 +145,23 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
     }
 
     setErrors({})
-        
-    if(selectedPetIdToEdit) {
-      const response = onEdit(selectedPetIdToEdit, newPet)
-      if(await response) {
+
+    if (selectedPetIdToEdit && originalPetData) {
+      const changedFields = getChangedFields(originalPetData, newPet)
+
+      if (Object.keys(changedFields).length === 0) {
+        handleOpenChange(false)
+        return
+      }
+
+      const response = await onEdit(selectedPetIdToEdit, changedFields)
+      if (response) {
         handleOpenChange(false)
         return
       }
     }
     const response = await onAddPet()
-    if(response) {
+    if (response) {
       handleOpenChange(false)
     }
   }
@@ -154,7 +205,9 @@ const AddPetDialog: React.FC<AddPetDialogProps> = ({
           <Button variant="outline" onClick={() => handleOpenChange(false)}>
             Cancelar
           </Button>
-          <Button onClick={handleSubmit} disabled={isaddingPetLoading}>{buttonText}</Button>
+          <Button onClick={handleSubmit} disabled={isaddingPetLoading}>
+            {buttonText}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
