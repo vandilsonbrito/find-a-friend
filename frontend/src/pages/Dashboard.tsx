@@ -6,7 +6,9 @@ import Navbar from '../components/layout/NavBar'
 import Footer from '../components/layout/Footer'
 import StatsCards from '../components/dashboard/StatsCards'
 import PetCard from '../components/dashboard/PetCard'
-import AddPetDialog, { type PetType } from '../components/dashboard/AddPetDialog'
+import AddPetDialog, {
+  type PetType,
+} from '../components/dashboard/AddPetDialog'
 import OrganizationProfile from '../components/dashboard/OrganizationProfile'
 import EmptyPetsState from '../components/dashboard/EmptyPetsState'
 import useAuthContext from '../hooks/useAuthContext'
@@ -16,7 +18,16 @@ import { useGetOrgPets } from '../services/hooks/useGetOrgPets'
 import PetSkeletonCardShimmer from '../components/dashboard/SkeletonLoadingPetCard'
 import StatsSkeleton from '../components/dashboard/SkeletonLoadingStatsCard'
 import { petService } from '../services/petService'
-import type { AgePT, EnergyLevelPT, EnvironmentPT, IndependenceLevelPT, SexPT, SizePT, TypePT } from '../@types'
+import type {
+  AgePT,
+  EnergyLevelPT,
+  EnvironmentPT,
+  IndependenceLevelPT,
+  SexPT,
+  SizePT,
+  TypePT,
+} from '../@types'
+import { motion } from 'framer-motion'
 
 export interface NewPet {
   name: string
@@ -88,9 +99,17 @@ const Dashboard = () => {
     }
   }
 
-  const handleEditPet = async (petId: string, pet: PetType): Promise<boolean> => {
+  const handleEditPet = async (
+    petId: string,
+    changes: Partial<PetType>,
+  ): Promise<boolean> => {
     try {
-      const response = await petService.editPet(petId, pet)
+      if (Object.keys(changes).length === 0) {
+        console.log('Nenhuma alteração para enviar')
+        return true
+      }
+
+      const response = await petService.editPet(petId, changes)
       if (response.status === 200) {
         SuccessToast('Pet editado com sucesso!')
         refetch()
@@ -158,7 +177,12 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar />
-      <main className="flex-1 py-8">
+      <motion.main
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+        initial={{ y: 30, scale: 1, opacity: 0.7 }}
+        animate={{ y: 0, scale: 1, opacity: 1 }}
+        className="flex-1 py-8"
+      >
         <div className="container-custom">
           <div className="mb-8">
             <h1 className="heading-1 mb-2">Dashboard da Organização</h1>
@@ -199,14 +223,19 @@ const Dashboard = () => {
 
               {isFetching && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {Array.from({ length: 8 }).map((_, index) => (
+                  {Array.from({ length: 4 }).map((_, index) => (
                     <PetSkeletonCardShimmer key={index} />
                   ))}
                 </div>
               )}
 
               {petsData && petsData.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <motion.div
+                  transition={{ duration: 0.8, ease: 'easeOut' }}
+                  initial={{ y: 30, scale: 1, opacity: 0.7 }}
+                  animate={{ y: 0, scale: 1, opacity: 1 }}
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                >
                   {petsData.map((pet) => (
                     <PetCard
                       key={pet.id}
@@ -217,18 +246,25 @@ const Dashboard = () => {
                       setSelectedPetIdToEdit={setSelectedPetIdToEdit}
                     />
                   ))}
-                </div>
+                </motion.div>
               ) : (
                 <EmptyPetsState onAddPet={() => setIsAddingPet(true)} />
               )}
             </TabsContent>
 
             <TabsContent value="profile">
-              <OrganizationProfile />
+              <motion.div
+                transition={{ duration: 0.8, ease: 'easeOut' }}
+                initial={{ y: 30, scale: 1, opacity: 0.7 }}
+                animate={{ y: 0, scale: 1, opacity: 1 }}
+                className=""
+              >
+                <OrganizationProfile />
+              </motion.div>
             </TabsContent>
           </Tabs>
         </div>
-      </main>
+      </motion.main>
       <Footer />
     </div>
   )

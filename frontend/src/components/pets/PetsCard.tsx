@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '../ui/button'
 import type { PetFromAPI } from '../../@types'
 import { formatCityName } from '../../utils/formatCityName'
+import { motion } from 'framer-motion'
 
 const PetCard: React.FC<PetFromAPI> = ({
   id,
@@ -24,10 +25,27 @@ const PetCard: React.FC<PetFromAPI> = ({
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border overflow-hidden transition-transform hover:scale-[1.02] hover:shadow-md">
+    <motion.div
+      initial={{ opacity: 0.5,}}
+      whileInView={{ opacity: 1, }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{
+        duration: 0.5,
+        ease: 'easeInOut',
+        delay: 0.1,
+      }}
+      whileHover={{
+        y: -8,
+        transition: { duration: 0.3 },
+      }}
+      className="bg-white rounded-2xl shadow-sm border overflow-hidden transition-transform hover:scale-[1.02] hover:shadow-md"
+    >
       <div className="relative h-48 overflow-hidden">
         <img
-          src={photos[0] || 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'} 
+          src={
+            photos[0] ||
+            'https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'
+          }
           alt={`${name} - um ${type}`}
           className="w-full h-full object-cover"
         />
@@ -46,10 +64,10 @@ const PetCard: React.FC<PetFromAPI> = ({
         </p>
 
         <Button asChild className="w-full">
-          <Link to={`/pets/${id}`}>Ver mais</Link>
+          <Link to={`/pets/${id}`}>Ver detalhes</Link>
         </Button>
       </div>
-    </div>
+    </motion.div>
   )
 }
 

@@ -10,6 +10,7 @@ import {
 } from '../components/ui/card'
 import { Button } from '../components/ui/button'
 import { Heart, Users, Shield, Sparkles } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 const values = [
   {
@@ -54,7 +55,12 @@ const About: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-1">
+      <motion.main
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+        initial={{ y: 30, scale: 1 }}
+        animate={{ y: 0, scale: 1 }}
+        className="flex-1"
+      >
         <section className="bg-gradient-to-r from-brand-500 to-orange-400 text-white py-16">
           <div className="container-custom text-center">
             <h1 className="heading-1 mb-6">Sobre a FindAFriend</h1>
@@ -91,7 +97,12 @@ const About: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <div className="bg-secondary/30 rounded-2xl p-8">
+              <motion.div
+                transition={{ duration: 1.5, ease: 'easeOut' }}
+                initial={{ y: 30, scale: 1, opacity: 0.7 }}
+                animate={{ y: 0, scale: 1, opacity: 1 }}
+                className="bg-secondary/30 rounded-2xl p-8"
+              >
                 <div className="grid grid-cols-2 gap-6 text-center">
                   <div>
                     <p className="text-3xl font-bold text-brand-500 mb-2">
@@ -116,13 +127,27 @@ const About: React.FC = () => {
                     <p className="text-foreground/70">Famílias Felizes</p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
 
         <section className="py-16 bg-secondary/20">
-          <div className="container-custom">
+          <motion.div
+            initial={{ opacity: 0.8, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{
+              duration: 0.5,
+              ease: 'easeInOut',
+              delay: 0.1,
+            }}
+            whileHover={{
+              y: -8,
+              transition: { duration: 0.3 },
+            }}
+            className="container-custom"
+          >
             <div className="text-center mb-12">
               <h2 className="heading-2 mb-4">Nossos Valores</h2>
               <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
@@ -131,7 +156,21 @@ const About: React.FC = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <motion.div
+              initial={{ opacity: 0.8, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{
+                duration: 0.5,
+                ease: 'easeInOut',
+                delay: 0.1,
+              }}
+              whileHover={{
+                y: -8,
+                transition: { duration: 0.3 },
+              }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+            >
               {values.map((value, index) => (
                 <Card
                   key={index}
@@ -150,12 +189,26 @@ const About: React.FC = () => {
                   </CardContent>
                 </Card>
               ))}
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </section>
 
         <section className="py-16">
-          <div className="container-custom">
+          <motion.div
+            initial={{ opacity: 0.8, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{
+              duration: 1.5,
+              ease: 'easeInOut',
+              delay: 0.1,
+            }}
+            whileHover={{
+              y: -8,
+              transition: { duration: 0.3 },
+            }}
+            className="container-custom"
+          >
             <div className="text-center mb-12">
               <h2 className="heading-2 mb-4">Nossa Equipe</h2>
               <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
@@ -192,7 +245,7 @@ const About: React.FC = () => {
                 </Card>
               ))}
             </div>
-          </div>
+          </motion.div>
         </section>
 
         <section className="py-16 bg-brand-500 text-white">
@@ -217,7 +270,7 @@ const About: React.FC = () => {
             </div>
           </div>
         </section>
-      </main>
+      </motion.main>
       <Footer />
     </div>
   )
