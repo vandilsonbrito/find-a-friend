@@ -148,7 +148,7 @@ describe('Create Pet Use Case', () => {
     })
 
     vi.spyOn(storageProvider, 'uploadFile').mockImplementationOnce(() => {
-      throw new Error('Storage Error')
+      throw new Error('Error on create pet.')
     })
 
     await expect(() =>
@@ -168,6 +168,6 @@ describe('Create Pet Use Case', () => {
         state: 'SP',
         photos: [{ buffer: Buffer.from('fail-file'), filename: 'fail.png' }],
       }),
-    ).rejects.toThrow('Storage Error')
+    ).rejects.toThrow('Error on create pet.')
   })
 })
