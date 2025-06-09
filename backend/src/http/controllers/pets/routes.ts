@@ -6,12 +6,13 @@ import { editPet } from './edit'
 import { removePet } from './remove'
 import { getOrgPets } from './org-pets'
 import { getPet } from './get-pet'
+import { checkPetOwner } from '@/http/middlewares/check-pet-owner'
 export async function petRoutes(app: FastifyInstance) {
   app.get('/pets', getAvailablePetsForAdoption)
   app.get('/pets/:petId', getPet)
 
-  app.get('/orgs/:orgId/pets', { onRequest: [verifyJWT] }, getOrgPets)
+  app.get('/orgs/:orgId/pets/:page?', { onRequest: [verifyJWT] }, getOrgPets)
   app.post('/pets', { onRequest: [verifyJWT] }, createPet)
-  app.patch('/pets/:petId', { onRequest: [verifyJWT] }, editPet)
-  app.delete('/pets/:petId', { onRequest: [verifyJWT] }, removePet)
+  app.patch('/pets/:petId', { onRequest: [verifyJWT, checkPetOwner] }, editPet)
+  app.delete('/pets/:petId', { onRequest: [verifyJWT, checkPetOwner] }, removePet)
 }
