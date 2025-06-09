@@ -38,6 +38,8 @@ jobs:
     name: 🧪 Run Unit Tests
     runs-on: ubuntu-latest
     needs: lint
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/db_test?schema=public
 
     defaults:
       run:
@@ -64,6 +66,8 @@ jobs:
     name: 🚀 Run E2E Tests
     runs-on: ubuntu-latest
     needs: tests
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/db_test?schema=public
 
     services:
       postgres:
@@ -83,9 +87,6 @@ jobs:
     defaults:
       run:
         working-directory: ./backend
-
-    env:
-      DATABASE_URL: 'postgresql://test:test@localhost:5432/testdb'
 
     steps:
       - name: ⬇️ Checkout Repository
