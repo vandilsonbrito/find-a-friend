@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint
     env:
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5433/db_test?schema=public
+      DATABASE_URL: postgresql://test:test@localhost:5432/testdb?schema=public
 
     defaults:
       run:
@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: tests
     env:
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5433/db_test?schema=public
+      DATABASE_URL: postgresql://test:test@localhost:5433/testdb?schema=public
 
     services:
       postgres:
@@ -77,7 +77,7 @@ jobs:
           POSTGRES_PASSWORD: test
           POSTGRES_DB: testdb
         ports:
-          - 5432:5432
+          - 5433:5432
         options: >-
           --health-cmd="pg_isready"
           --health-interval=10s
@@ -101,6 +101,16 @@ jobs:
 
       - name: 📦 Install Dependencies
         run: npm ci
+
+      - name: ⏳ Wait for Database
+        run: |
+          for i in {1..10}; do
+            nc -z localhost 5432 && echo "Banco está pronto" && exit 0
+            echo "Aguardando banco..."
+            sleep 2
+          done
+          echo "Banco não subiu a tempo" && exit 1
+
 
       - name: 🛠 Run Prisma Migrate
         run: npx prisma migrate deploy
