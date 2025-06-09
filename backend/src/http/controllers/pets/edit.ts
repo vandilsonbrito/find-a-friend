@@ -21,11 +21,16 @@ export async function editPet(request: FastifyRequest, reply: FastifyReply) {
     city: z.string().optional(),
     state: z.string().optional(),
     is_adopted: z.boolean().optional(),
-    photos: z.array(z.string()).optional(),
   })
 
   const { petId } = editParamsSchema.parse(request.params)
   const data = editBodySchema.parse(request.body)
+
+  if (Object.keys(data).length === 0) {
+    return reply.status(400).send({
+      message: 'At least one field must be sent.',
+    })
+  }
 
   const editPetUseCase = makeEditPetUseCase()
 
