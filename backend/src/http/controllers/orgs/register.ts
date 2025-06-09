@@ -16,13 +16,22 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     cep: z.string(),
   })
 
-  const { name, description, email, password, whatsapp, address, city, state, cep,} =
-    registerBodySchema.parse(request.body)
+  const {
+    name,
+    description,
+    email,
+    password,
+    whatsapp,
+    address,
+    city,
+    state,
+    cep,
+  } = registerBodySchema.parse(request.body)
 
   const registerUseCase = makeRegisterOrgUseCase()
 
   try {
-    await registerUseCase.execute({
+    const org = await registerUseCase.execute({
       name,
       description,
       email,
@@ -33,11 +42,13 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       state,
       cep,
     })
+
+    return reply.status(201).send({
+      org_data: org,
+    })
   } catch (error) {
     if (error instanceof OrgAlreadyExistsError) {
       return reply.status(409).send({ message: error.message })
+    }
   }
-  }
-
-  return reply.status(201).send()
 }
