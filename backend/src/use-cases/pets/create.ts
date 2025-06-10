@@ -34,54 +34,55 @@ interface CreatePetUseCaseRequest {
 }
 
 export class CreatePetUseCase {
-  private orgsRepository: IOrgsRepository
-
-  private petsRepository: IPetsRepository
-  private petPhotosRepository: IPetPhotosRepository
-  private storageService: IStorageProviderRepository
-
   constructor(
-    orgsRepository: IOrgsRepository,
-    petsRepository: IPetsRepository,
-    petPhotosRepository: IPetPhotosRepository,
-    storageService: IStorageProviderRepository,
-  ) {
-    this.orgsRepository = orgsRepository
-    this.petsRepository = petsRepository
-    this.petPhotosRepository = petPhotosRepository
-    this.storageService = storageService
-  }
+    private orgsRepository: IOrgsRepository,
+    private petsRepository: IPetsRepository,
+    private petPhotosRepository: IPetPhotosRepository,
+    private storageService: IStorageProviderRepository,
+  ) {}
 
   async execute(data: CreatePetUseCaseRequest) {
-    const org = await this.orgsRepository.findById(data.org_id)
+    try {
+      const org = await this.orgsRepository.findById(data.org_id)
 
-    if (!org) {
-      throw new OrgNotFoundError()
-    }
+      if (!org) {
+        throw new OrgNotFoundError()
+      }
 
-    const { city, photos, ...petData } = data
+      const { city, photos, ...petData } = data
 
-    const pet = await this.petsRepository.create({
-      city: normalizeCityName(city),
-      ...petData,
-      org: { connect: { id: petData.org_id } },
-    })
-    
-    for (const photo of photos) {
-      const url = await this.storageService.uploadFile(
-        photo.buffer,
-        photo.filename,
-      )
-      await this.petPhotosRepository.create({
-        pet_id: pet.id,
-        url,
+      const pet = await this.petsRepository.create({
+        city: normalizeCityName(city),
+        ...petData,
+        org: { connect: { id: petData.org_id } },
       })
-    }
 
-    if (!pet) {
+      await Promise.all(
+        photos.map(async (photo) => {
+          const url = await this.storageService.uploadFile(
+            photo.buffer,
+            photo.filename,
+          )
+          await this.petPhotosRepository.create({
+            pet_id: pet.id,
+            url,
+          })
+        }),
+      )
+
+      const petWithPhotos = await this.petsRepository.findById(pet.id)
+
+      if (!petWithPhotos) {
+        throw new CreatePetError()
+      }
+
+      return { pet: petWithPhotos }
+    } catch (error) {
+      console.error('[CreatePetUseCase] Unexpected error:', error)
+      if (error instanceof OrgNotFoundError) {
+        throw error
+      }
       throw new CreatePetError()
     }
-
-    return { pet }
   }
 }

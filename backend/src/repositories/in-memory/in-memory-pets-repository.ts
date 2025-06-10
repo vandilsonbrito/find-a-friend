@@ -141,7 +141,26 @@ export class InMemoryPetsRepository implements IPetsRepository {
       .length
   }
 
-  async findManyByOrgId(orgId: string, page: number): Promise<Pet[]> {
-    return this.pets.filter((pet) => pet.org_id === orgId)
+  async findManyByOrgId(
+    orgId: string,
+    page: number,
+  ): Promise<{
+    pets: Pet[]
+    total_pets: number
+    current_page: number
+    total_pages: number
+  }> {
+    const filteredPets = this.pets.filter((pet) => pet.org_id === orgId)
+
+    const totalPets = filteredPets.length
+    const currentPage = page
+    const totalPages = Math.ceil(totalPets / 20)
+
+    return {
+      pets: filteredPets,
+      total_pets: totalPets,
+      current_page: currentPage,
+      total_pages: totalPages,
+    }
   }
 }

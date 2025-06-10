@@ -156,20 +156,40 @@ export class PrismaPetsRepository implements IPetsRepository {
       },
     })
 
+    if (!pet) {
+      return null
+    }
+
     return {
       ...pet,
-      photos: petPhotos.map((photo) => photo.url) || [],
+      photos: petPhotos.map((photo) => photo.url),
     } as PetWithPhoto
   }
 
-  async findManyByOrgId(orgId: string, page: number): Promise<PetWithPhoto[]> {
-    const pets = await prisma.pet.findMany({
-      where: {
-        org_id: orgId,
-      },
-      take: 20,
-      skip: (page - 1) * 20,
-    })
+  async findManyByOrgId(
+    orgId: string,
+    page: number,
+  ): Promise<{
+    pets: PetWithPhoto[]
+    total_pets: number
+    current_page: number
+    total_pages: number
+  }> {
+    const where = {
+      org_id: orgId,
+    }
+
+    const [pets, total] = await Promise.all([
+      prisma.pet.findMany({
+        where,
+        take: 20,
+        skip: (page - 1) * 20,
+      }),
+
+      prisma.pet.count({
+        where,
+      }),
+    ])
 
     const petPhotos = await prisma.petPhoto.findMany({
       where: {
@@ -190,13 +210,16 @@ export class PrismaPetsRepository implements IPetsRepository {
       {} as Record<string, string[]>,
     )
 
-    const petsWithPhotos = pets.map((pet) => {
-      return {
-        ...pet,
-        photos: petPhotosMap[pet.id] || [],
-      }
-    })
+    const petsWithPhotos = pets.map((pet) => ({
+      ...pet,
+      photos: petPhotosMap[pet.id] || [],
+    }))
 
-    return petsWithPhotos
+    return {
+      pets: petsWithPhotos,
+      total_pets: total,
+      current_page: page,
+      total_pages: Math.ceil(total / 20),
+    }
   }
 }

@@ -76,9 +76,9 @@ describe('Count Available Pets By Org Use Case', () => {
     })
 
     if (isAdopted) {
-      const {is_adopted} = pet
-      const petAdopted = { ...pet, is_adopted: !is_adopted }
-      await petsRepository.update(petAdopted)
+      const { is_adopted, photos, ...rest } = pet;
+      const petAdopted = { ...rest, is_adopted: !is_adopted };
+      await petsRepository.update(petAdopted);
     }
 
     return pet

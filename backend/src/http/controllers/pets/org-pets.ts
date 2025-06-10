@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 export async function getOrgPets(request: FastifyRequest, reply: FastifyReply) {
   const getOrgPetsParamsSchema = z.object({
-    orgId: z.string(),
+    orgId: z.string().uuid(),
     page: z.coerce.number().default(1),
   })
 

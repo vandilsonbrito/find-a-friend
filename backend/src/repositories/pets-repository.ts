@@ -14,6 +14,14 @@ export interface IPetsRepository {
     current_page: number
     total_pages: number
   }>
-  findManyByOrgId(orgId: string, page: number): Promise<Pet[]>
+  findManyByOrgId(
+    orgId: string,
+    page: number,
+  ): Promise<{
+    pets: Pet[]
+    total_pets: number
+    current_page: number
+    total_pages: number
+  }>
   countAvailablePetsByOrg(orgId: string): Promise<number>
 }

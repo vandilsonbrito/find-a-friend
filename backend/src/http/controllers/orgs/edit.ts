@@ -20,6 +20,19 @@ export async function editOrg(request: FastifyRequest, reply: FastifyReply) {
 
   const { orgId } = editOrgParamsSchema.parse(request.params)
   const data = editOrgBodySchema.parse(request.body)
+
+  if (Object.keys(data).length === 0) {
+    return reply.status(400).send({
+      message: 'At least one field must be sent.'
+    })
+  }
+
+  if ((request.user as { sub: string }).sub !== orgId) {
+    return reply.status(403).send({
+      message: 'You are not allowed to edit this org profile.',
+    })
+  }
+
   const editOrgUseCase = makeEditOrgUseCase()
 
   const org = await editOrgUseCase.execute({

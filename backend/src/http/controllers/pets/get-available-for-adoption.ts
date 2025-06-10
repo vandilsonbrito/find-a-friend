@@ -1,6 +1,6 @@
 import { makeGetAvailablePetsUseCase } from '../../../use-cases/factories/make-get-available-pets-use-case'
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { z, ZodError } from 'zod'
+import { z } from 'zod'
 
 export async function getAvailablePetsForAdoption(
   request: FastifyRequest,
