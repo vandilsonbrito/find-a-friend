@@ -38,8 +38,6 @@ jobs:
     name: 🧪 Run Unit Tests
     runs-on: ubuntu-latest
     needs: lint
-    env:
-      DATABASE_URL: postgresql://test:test@localhost:5433/testdb?schema=public
 
     defaults:
       run:
@@ -67,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: unit-tests
     env:
-      DATABASE_URL: postgresql://test:test@localhost:5433/testdb?schema=public
+      DATABASE_URL: postgresql://test:test@postgres:5432/testdb?schema=public
 
     services:
       postgres:
@@ -76,7 +74,7 @@ jobs:
           POSTGRES_USER: test
           POSTGRES_PASSWORD: test
           POSTGRES_DB: testdb
-          
+
         ports:
           - 5433:5432
         options: >-
@@ -106,16 +104,16 @@ jobs:
       - name: ⏳ Wait for Database
         run: |
           for i in {1..10}; do
-            nc -z localhost 5433 && echo "Banco está pronto" && exit 0
+            nc -z postgres 5432 && echo "Banco está pronto" && exit 0
             echo "Aguardando banco..."
             sleep 2
           done
           echo "Banco não subiu a tempo" && exit 1
-        
+      
       - name: 🔍 Verify db connection
         run: |
           apt-get update && apt-get install -y postgresql-client
-          PGPASSWORD=test psql -h localhost -p 5433 -U test -d testdb -c '\dt'
+          PGPASSWORD=test psql -h postgres -p 5432 -U test -d testdb -c '\dt'
 
       - name: 🛠 Run Prisma Migrate
         run: npx prisma migrate deploy
@@ -127,5 +125,5 @@ jobs:
 
       - name: 🚀 Run E2E Tests
         run: npm run test:e2e
-        env: 
+        env:
           JWT_SECRET: secret
