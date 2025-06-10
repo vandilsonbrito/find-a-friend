@@ -11,12 +11,6 @@ export default defineConfig({
         test: {
           name: 'unit',
           dir: 'src/use-cases',
-          // Unit tests don't need database connection typically
-          poolOptions: {
-            threads: {
-              singleThread: false,
-            },
-          },
         },
       },
       {
@@ -26,9 +20,10 @@ export default defineConfig({
           dir: 'src/http/controllers',
           environment: './prisma/vitest-environment-prisma/prisma-test-environment.ts',
           // E2E tests should run sequentially to avoid database conflicts
+          pool: 'forks',
           poolOptions: {
-            threads: {
-              singleThread: true,
+            forks: {
+              singleFork: true,
             },
           },
           // Add timeout for database setup

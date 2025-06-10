@@ -40,8 +40,6 @@ jobs:
     name: 🧪 Run Unit Tests
     runs-on: ubuntu-latest
     needs: lint
-    env:
-      DATABASE_URL: postgresql://test:test@localhost:5432/testdb?schema=public
 
     defaults:
       run:
@@ -68,12 +66,10 @@ jobs:
     name: 🚀 Run E2E Tests
     runs-on: ubuntu-latest
     needs: unit-tests
-    env:
-      DATABASE_URL: postgresql://test:test@localhost:5432/testdb?schema=public
 
     services:
       postgres:
-        image: bitnami/postgresql:15
+        image: postgres:15
         env:
           POSTGRES_USER: test
           POSTGRES_PASSWORD: test
@@ -81,10 +77,10 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U test -d testdb"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     defaults:
       run:
@@ -129,7 +125,9 @@ jobs:
         run: npx prisma generate
 
       - name: 🛠 Run Prisma Migrate
-        run: npx prisma migrate deploy
+        run: |
+          export DATABASE_URL="postgresql://test:test@localhost:5432/testdb?schema=public"
+          npx prisma migrate deploy
 
       - name: 🔗 Setup vitest-environment-prisma links
         run: |
@@ -141,4 +139,5 @@ jobs:
       - name: 🚀 Run E2E Tests
         run: npm run test:e2e
         env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/testdb?schema=public
           JWT_SECRET: secret

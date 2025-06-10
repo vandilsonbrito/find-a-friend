@@ -15,30 +15,6 @@ function generateDatabaseURL(schema: string) {
   return url.toString()
 }
 
-async function waitForDatabase(maxAttempts = 30, delayMs = 1000) {
-  for (let i = 1; i <= maxAttempts; i++) {
-    try {
-      const prisma = new PrismaClient()
-      await prisma.$queryRaw`SELECT 1`
-      await prisma.$disconnect()
-      console.log(`Banco de dados conectado na tentativa ${i}`)
-      return true
-    } catch (error) {
-      console.log(`Tentativa ${i}/${maxAttempts} - Aguardando banco...`)
-      if (i === maxAttempts) {
-        console.error(
-          'Falha ao conectar ao banco após',
-          maxAttempts,
-          'tentativas',
-        )
-        throw error
-      }
-      await new Promise((resolve) => setTimeout(resolve, delayMs))
-    }
-  }
-  return false
-}
-
 export default <Environment>{
   name: 'prisma',
   transformMode: 'ssr',
@@ -55,16 +31,28 @@ export default <Environment>{
     )
 
     try {
-      // Wait for database to be ready
-      await waitForDatabase()
-
       // Generate Prisma client
       execSync('npx prisma generate', { stdio: 'pipe' })
       console.log('Prisma Client gerado com sucesso')
 
-      // Deploy migrations
-      execSync('npx prisma migrate deploy', { stdio: 'pipe' })
+      // Deploy migrations with the specific schema
+      execSync('npx prisma migrate deploy', {
+        stdio: 'pipe',
+        env: { ...process.env, DATABASE_URL: databaseURL },
+      })
       console.log('Migrações aplicadas com sucesso')
+
+      // Test the connection quickly
+      const prisma = new PrismaClient({
+        datasources: {
+          db: {
+            url: databaseURL,
+          },
+        },
+      })
+
+      await prisma.$connect()
+      await prisma.$disconnect()
 
       console.log(`Schema "${schema}" criado com sucesso`)
     } catch (error) {
@@ -75,7 +63,13 @@ export default <Environment>{
     return {
       async teardown() {
         try {
-          const prisma = new PrismaClient()
+          const prisma = new PrismaClient({
+            datasources: {
+              db: {
+                url: process.env.DATABASE_URL,
+              },
+            },
+          })
           await prisma.$executeRawUnsafe(
             `DROP SCHEMA IF EXISTS "${schema}" CASCADE`,
           )
