@@ -25,6 +25,10 @@ jobs:
           POSTGRESQL_PASSWORD: docker
           POSTGRESQL_DATABASE: findafriend
 
+    defaults:
+      run:
+        working-directory: ./backend
+
     steps:
       - uses: actions/checkout@v4
 
@@ -32,8 +36,14 @@ jobs:
         with:
           node-version: 21
           cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
 
       - run: npm ci
+
+      - name: 🛠 Run Prisma Migrate
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: 'postgresql://docker:docker@localhost:5432/findafriend?schema=public'
 
       - run: npm run test:e2e
         env:
