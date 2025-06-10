@@ -123,8 +123,19 @@ jobs:
           }
           echo "Conexão com banco verificada com sucesso"
 
+      - name: 🔍 Debug Database Status
+        run: |
+          echo "=== Status dos serviços ==="
+          ps aux | grep postgres || echo "Processo postgres não encontrado"
+          echo "=== Testando conectividade ==="
+          nc -zv localhost 5432 || echo "Porta 5432 não está aberta"
+          echo "=== Verificando logs do Docker ==="
+          docker ps -a
+
       - name: 🛠 Run Prisma Generate
-        run: npx prisma generate
+        run: |
+          npx prisma generate
+          echo "Prisma Client gerado globalmente"
 
       - name: 🛠 Run Prisma Migrate
         run: |

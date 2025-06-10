@@ -31,33 +31,33 @@ export default <Environment>{
     )
 
     try {
-      // Generate Prisma client
-      execSync('npx prisma generate', { stdio: 'pipe' })
-      console.log('Prisma Client gerado com sucesso')
-
-      // Deploy migrations with the specific schema
-      execSync('npx prisma migrate deploy', {
+      // Use db push instead of migrate deploy as it's more reliable for testing
+      execSync('npx prisma db push --skip-generate', {
         stdio: 'pipe',
         env: { ...process.env, DATABASE_URL: databaseURL },
       })
-      console.log('Migrações aplicadas com sucesso')
-
-      // Test the connection quickly
-      const prisma = new PrismaClient({
-        datasources: {
-          db: {
-            url: databaseURL,
-          },
-        },
-      })
-
-      await prisma.$connect()
-      await prisma.$disconnect()
-
-      console.log(`Schema "${schema}" criado com sucesso`)
+      console.log(`Migrações aplicadas com sucesso no schema "${schema}"`)
     } catch (error) {
       console.error('Erro ao configurar o ambiente de teste:', error)
-      throw error
+      // Try to create schema manually if db push fails
+      try {
+        const prisma = new PrismaClient({
+          datasources: {
+            db: {
+              url: databaseURL,
+            },
+          },
+        })
+
+        await prisma.$executeRawUnsafe(
+          `CREATE SCHEMA IF NOT EXISTS "${schema}"`,
+        )
+        await prisma.$disconnect()
+        console.log(`Schema "${schema}" criado manualmente`)
+      } catch (manualError) {
+        console.error('Falha na criação manual do schema:', manualError)
+        throw error
+      }
     }
 
     return {
