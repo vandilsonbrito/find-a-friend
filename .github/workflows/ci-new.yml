@@ -21,10 +21,10 @@ jobs:
 
     steps:
       - name: ⬇️ Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 🏗 Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 21
           cache: 'npm'
@@ -40,8 +40,6 @@ jobs:
     name: 🧪 Run Unit Tests
     runs-on: ubuntu-latest
     needs: lint
-    env:
-      DATABASE_URL: postgresql://test:test@postgres:5432/testdb?schema=public
 
     defaults:
       run:
@@ -49,10 +47,10 @@ jobs:
 
     steps:
       - name: ⬇️ Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 🏗 Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 21
           cache: 'npm'
@@ -69,20 +67,19 @@ jobs:
     runs-on: ubuntu-latest
     needs: unit-tests
     env:
-      DATABASE_URL: postgresql://test:test@postgres:5432/testdb?schema=public
+      DATABASE_URL: postgresql://test:test@localhost:5432/testdb?schema=public
 
     services:
       postgres:
-        image: bitnami/postgresql
+        image: bitnami/postgresql:15
         env:
           POSTGRES_USER: test
           POSTGRES_PASSWORD: test
           POSTGRES_DB: testdb
-
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready"
+          --health-cmd="pg_isready -U test -d testdb"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
@@ -93,10 +90,10 @@ jobs:
 
     steps:
       - name: ⬇️ Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 🏗 Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 21
           cache: 'npm'
@@ -107,24 +104,31 @@ jobs:
 
       - name: ⏳ Wait for Database
         run: |
-          for i in {1..10}; do
-            nc -z postgres 5432 && echo "Banco está pronto" && exit 0
-            echo "Aguardando banco..."
+          for i in {1..30}; do
+            if pg_isready -h localhost -p 5432 -U test -d testdb; then
+              echo "Banco está pronto"
+              exit 0
+            fi
+            echo "Aguardando banco... ($i/30)"
             sleep 2
           done
           echo "Banco não subiu a tempo" && exit 1
-      
-      - name: 🔍 Verify db connection
+
+      - name: 🔍 Verify Database Connection
         run: |
-          apt-get update && apt-get install -y postgresql-client
-          PGPASSWORD=test psql -h postgres -p 5432 -U test -d testdb -c '\dt'
+          PGPASSWORD=test psql -h localhost -p 5432 -U test -d testdb -c 'SELECT version();'
+
+      - name: 🛠 Run Prisma Generate
+        run: npx prisma generate
 
       - name: 🛠 Run Prisma Migrate
         run: npx prisma migrate deploy
 
       - name: 🔗 Setup vitest-environment-prisma links
         run: |
-          npm link ./prisma/vitest-environment-prisma
+          cd prisma/vitest-environment-prisma
+          npm link
+          cd ../..
           npm link vitest-environment-prisma
 
       - name: 🚀 Run E2E Tests
