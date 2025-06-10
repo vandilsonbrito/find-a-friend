@@ -15,6 +15,30 @@ function generateDatabaseURL(schema: string) {
   return url.toString()
 }
 
+async function waitForDatabase(maxAttempts = 30, delayMs = 1000) {
+  for (let i = 1; i <= maxAttempts; i++) {
+    try {
+      const prisma = new PrismaClient()
+      await prisma.$queryRaw`SELECT 1`
+      await prisma.$disconnect()
+      console.log(`Banco de dados conectado na tentativa ${i}`)
+      return true
+    } catch (error) {
+      console.log(`Tentativa ${i}/${maxAttempts} - Aguardando banco...`)
+      if (i === maxAttempts) {
+        console.error(
+          'Falha ao conectar ao banco após',
+          maxAttempts,
+          'tentativas',
+        )
+        throw error
+      }
+      await new Promise((resolve) => setTimeout(resolve, delayMs))
+    }
+  }
+  return false
+}
+
 export default <Environment>{
   name: 'prisma',
   transformMode: 'ssr',
@@ -31,11 +55,16 @@ export default <Environment>{
     )
 
     try {
+      // Wait for database to be ready
+      await waitForDatabase()
+
       // Generate Prisma client
-      execSync('npx prisma generate', { stdio: 'inherit' })
+      execSync('npx prisma generate', { stdio: 'pipe' })
+      console.log('Prisma Client gerado com sucesso')
 
       // Deploy migrations
-      execSync('npx prisma migrate deploy', { stdio: 'inherit' })
+      execSync('npx prisma migrate deploy', { stdio: 'pipe' })
+      console.log('Migrações aplicadas com sucesso')
 
       console.log(`Schema "${schema}" criado com sucesso`)
     } catch (error) {
