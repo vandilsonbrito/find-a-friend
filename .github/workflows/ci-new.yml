@@ -63,3 +63,42 @@ jobs:
 
       - name: 🧪 Run Unit Tests
         run: npm run test
+
+  run-e2e-tests:
+      name: 🚀 Run E2E Tests
+      runs-on: ubuntu-latest
+
+      services:
+        postgres:
+          image: bitnami/postgresql
+          ports:
+            - 5433:5432
+          env:
+            POSTGRESQL_USERNAME: docker
+            POSTGRESQL_PASSWORD: docker
+            POSTGRESQL_DATABASE: findafriend
+
+      defaults:
+        run:
+          working-directory: ./backend
+
+      steps:
+        - uses: actions/checkout@v4
+
+        - uses: actions/setup-node@v4
+          with:
+            node-version: 21
+            cache: 'npm'
+            cache-dependency-path: backend/package-lock.json
+
+        - run: npm ci
+
+        - name: 🛠 Run Prisma Migrate
+          run: npx prisma migrate deploy
+          env:
+            DATABASE_URL: 'postgresql://docker:docker@localhost:5433/findafriend?schema=public'
+
+        - run: npm run test:e2e
+          env:
+            JWT_SECRET: testing
+            DATABASE_URL: 'postgresql://docker:docker@localhost:5433/findafriend?schema=public'
