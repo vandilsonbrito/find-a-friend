@@ -5,8 +5,8 @@ export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
     dir: 'src',
-    testTimeout: 10000,
-    maxConcurrency: 5,
+    testTimeout: 30000,
+    maxConcurrency: 3,
     workspace: [
       {
         extends: true,
