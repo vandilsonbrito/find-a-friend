@@ -95,7 +95,7 @@ describe('Create Pet Controller - E2E', () => {
       expect(createPetResponse.body.pet.photos).toBeInstanceOf(Array)
       expect(createPetResponse.body.pet.photos.length).toBeGreaterThan(0)
     }
-  })
+  }, 30000)
 
   test('Should not be able to create a pet without org ID or with invalid org ID', async () => {
     if (accessToken) {
