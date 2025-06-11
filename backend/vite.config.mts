@@ -3,7 +3,7 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
   plugins: [tsconfigPaths()],
-  /* test: {
+  test: {
     dir: 'src',
     workspace: [
       {
@@ -22,5 +22,5 @@ export default defineConfig({
         },
       },
     ],
-  }, */
+  },
 })
