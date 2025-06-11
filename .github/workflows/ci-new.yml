@@ -70,7 +70,7 @@ jobs:
           env:
             DATABASE_URL: 'postgresql://docker:docker@localhost:5433/findafriend?schema=public'
 
-        - run: npm run test:e2e
+        - run: npm run test:e2e -- --reporter=verbose
           env:
             JWT_SECRET: testing
             DATABASE_URL: 'postgresql://docker:docker@localhost:5433/findafriend?schema=public'
