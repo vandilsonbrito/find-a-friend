@@ -52,7 +52,7 @@ describe('Get Org Pets Controller - E2E', () => {
         'photos',
         path.resolve(__dirname, '../../../utils/test-image.jpg'),
       )
-
+    console.log('createPetResponse',createPetResponse.body)
     expect(createPetResponse.statusCode).toBe(201)
 
     petId = createPetResponse.body.pet.id

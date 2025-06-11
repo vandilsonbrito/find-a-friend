@@ -50,6 +50,7 @@ describe('Edit Pet Controller - E2E', () => {
         'photos',
         path.resolve(__dirname, '../../../utils/test-image.jpg'),
       )
+    console.log('Body',createPetResponse1.body)
     petId1 = createPetResponse1.body.pet.id
 
     const response = await request(app.server)

@@ -90,6 +90,7 @@ describe('Create Pet Controller - E2E', () => {
           path.resolve(__dirname, '../../../utils/test-image.jpg'),
         )
 
+      console.log('Body',createPetResponse.body)
       expect(createPetResponse.statusCode).toBe(201)
       expect(createPetResponse.body.pet).toBeDefined()
       expect(createPetResponse.body.pet.photos).toBeInstanceOf(Array)
