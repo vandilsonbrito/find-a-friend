@@ -10,7 +10,6 @@ let petId2: string
 const CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME
 const API_KEY = process.env.CLOUDINARY_API_KEY
 const API_SECRET = process.env.CLOUDINARY_API_SECRET
-console.log('Cloudinary',`cloudinary://${API_KEY}:${API_SECRET}@${CLOUD_NAME}`)
 
 describe('Edit Pet Controller - E2E', () => {
   beforeAll(async () => {
@@ -27,13 +26,14 @@ describe('Edit Pet Controller - E2E', () => {
       state: 'SP',
       cep: '12345678',
     })
-
+    
     const authResponse = await request(app.server).post('/sessions').send({
       email: 'orgtest@example.com',
       password: '123456',
     })
-
+    
     accessToken = authResponse.body.accessToken
+    console.log('Cloudinary',`cloudinary://${API_KEY}:${API_SECRET}@${CLOUD_NAME}`)
 
     const createPetResponse1 = await request(app.server)
       .post('/pets')
