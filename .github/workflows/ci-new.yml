@@ -13,7 +13,9 @@ on:
 env:
     JWT_SECRET: testing
     DATABASE_URL: 'postgresql://docker:docker@localhost:5433/findafriend?schema=public'
-    CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
+    CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+    CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+    CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
 
 jobs:
   lint:
