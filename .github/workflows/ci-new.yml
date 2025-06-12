@@ -37,41 +37,41 @@ jobs:
         run: npm run lint
 
   run-tests:
-      name: 🧪 Run Unit Tests and 🚀 E2E Tests
-      runs-on: ubuntu-latest
+    name: 🧪 Run Unit Tests and 🚀 E2E Tests
+    runs-on: ubuntu-latest
+    env:
+      JWT_SECRET: testing
+      DATABASE_URL: 'postgresql://docker:docker@localhost:5433/findafriend?schema=public'
+      CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
 
-      services:
-        postgres:
-          image: bitnami/postgresql
-          ports:
-            - 5433:5432
-          env:
-            POSTGRESQL_USERNAME: docker
-            POSTGRESQL_PASSWORD: docker
-            POSTGRESQL_DATABASE: findafriend
+    services:
+      postgres:
+        image: bitnami/postgresql
+        ports:
+          - 5433:5432
+        env:
+          POSTGRESQL_USERNAME: docker
+          POSTGRESQL_PASSWORD: docker
+          POSTGRESQL_DATABASE: findafriend
 
-      defaults:
-        run:
-          working-directory: ./backend
+    defaults:
+      run:
+        working-directory: ./backend
 
-      steps:
-        - uses: actions/checkout@v4
+    steps:
+      - uses: actions/checkout@v4
 
-        - uses: actions/setup-node@v4
-          with:
-            node-version: 21
-            cache: 'npm'
-            cache-dependency-path: backend/package-lock.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 21
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
 
-        - run: npm ci
+      - run: npm ci
 
-        - name: 🛠 Run Prisma Migrate
-          run: npx prisma migrate deploy
-          env:
-            DATABASE_URL: 'postgresql://docker:docker@localhost:5433/findafriend?schema=public'
+      - name: 🛠 Run Prisma Migrate
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: 'postgresql://docker:docker@localhost:5433/findafriend?schema=public'
 
-        - run: npm run test:e2e -- --reporter=verbose
-          env:
-            JWT_SECRET: testing
-            DATABASE_URL: 'postgresql://docker:docker@localhost:5433/findafriend?schema=public'
-            CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
+      - run: npm run test:e2e -- --reporter=verbose
