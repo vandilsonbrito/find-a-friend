@@ -1,21 +1,20 @@
 name: CI - Lint, Unit and E2E Tests
 
 on:
-  push:
-    paths:
-      - 'backend/**'
-      - '.github/workflows/**'
   pull_request:
+    branches:
+      - development
+      - main
     paths:
       - 'backend/**'
       - '.github/workflows/**'
 
 env:
-    JWT_SECRET: testing
-    DATABASE_URL: 'postgresql://docker:docker@localhost:5433/findafriend?schema=public'
-    CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
-    CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-    CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+  JWT_SECRET: testing
+  DATABASE_URL: 'postgresql://docker:docker@localhost:5433/findafriend?schema=public'
+  CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+  CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+  CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
 
 jobs:
   lint:
