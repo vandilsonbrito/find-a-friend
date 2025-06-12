@@ -7,6 +7,10 @@ let accessToken: string
 let petId1: string
 let petId2: string
 
+const CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME
+const API_KEY = process.env.CLOUDINARY_API_KEY
+const API_SECRET = process.env.CLOUDINARY_API_SECRET
+
 describe('Edit Pet Controller - E2E', () => {
   beforeAll(async () => {
     await app.ready()
@@ -51,6 +55,7 @@ describe('Edit Pet Controller - E2E', () => {
         path.resolve(__dirname, '../../../utils/test-image.jpg'),
       )
     console.log('Body',createPetResponse1.body)
+    console.log('Cloudinary',`cloudinary://${API_KEY}:${API_SECRET}@${CLOUD_NAME}`)
     petId1 = createPetResponse1.body.pet.id
 
     const response = await request(app.server)
