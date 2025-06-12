@@ -33,9 +33,7 @@ describe('Edit Pet Controller - E2E', () => {
     })
     
     accessToken = authResponse.body.accessToken
-    if(CLOUD_NAME && API_KEY && API_SECRET){
-      console.log('Cloudinary',`cloudinary://${API_KEY}:${API_SECRET}@${CLOUD_NAME}`)
-    }
+    console.log('Cloudinary',`cloudinary://${API_KEY}:${API_SECRET}@${CLOUD_NAME}`)
 
     const createPetResponse1 = await request(app.server)
       .post('/pets')
