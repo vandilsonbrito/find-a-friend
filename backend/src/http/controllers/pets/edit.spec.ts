@@ -14,7 +14,8 @@ const API_SECRET = process.env.CLOUDINARY_API_SECRET
 describe('Edit Pet Controller - E2E', () => {
   beforeAll(async () => {
     await app.ready()
-
+    
+    console.log('Cloudinary',`cloudinary://${API_KEY}:${API_SECRET}@${CLOUD_NAME}`)
     const orgResponse1 = await request(app.server).post('/orgs').send({
       name: 'Org Test',
       email: 'orgtest@example.com',
@@ -55,7 +56,6 @@ describe('Edit Pet Controller - E2E', () => {
         path.resolve(__dirname, '../../../utils/test-image.jpg'),
       )
     console.log('Body',createPetResponse1.body)
-    console.log('Cloudinary',`cloudinary://${API_KEY}:${API_SECRET}@${CLOUD_NAME}`)
     petId1 = createPetResponse1.body.pet.id
 
     const response = await request(app.server)
