@@ -10,12 +10,12 @@ let petId2: string
 const CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME
 const API_KEY = process.env.CLOUDINARY_API_KEY
 const API_SECRET = process.env.CLOUDINARY_API_SECRET
+console.log('Cloudinary',`cloudinary://${API_KEY}:${API_SECRET}@${CLOUD_NAME}`)
 
 describe('Edit Pet Controller - E2E', () => {
   beforeAll(async () => {
     await app.ready()
     
-    console.log('Cloudinary',`cloudinary://${API_KEY}:${API_SECRET}@${CLOUD_NAME}`)
     const orgResponse1 = await request(app.server).post('/orgs').send({
       name: 'Org Test',
       email: 'orgtest@example.com',
