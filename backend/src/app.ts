@@ -57,40 +57,44 @@ app.register(fastifyMultipart, {
   },
 })
 
-app.register(fastifySwagger, {
-  openapi: {
-    info: {
-      title: 'Find A Friend API',
-      description: 'API documentation for Find A Friend.',
-      version: '1.0.0',
-    },
-    servers: [{ url: 'http://localhost:3333' }],
-  },
-})
 
-app.register(fastifySwaggerUi, {
-  routePrefix: '/docs',
-  uiConfig: {
-    docExpansion: 'list',
-    deepLinking: false,
-    tryItOutEnabled: false,
-    supportedSubmitMethods: [],
-  },
-  uiHooks: {
-    onRequest: function (request, reply, next) {
-      next()
+
+if (process.env.NODE_ENV !== 'test') {
+  app.register(fastifySwagger, {
+    openapi: {
+      info: {
+        title: 'Find A Friend API',
+        description: 'API documentation for Find A Friend.',
+        version: '1.0.0',
+      },
+      servers: [{ url: 'http://localhost:3333' }],
     },
-    preHandler: function (request, reply, next) {
-      next()
+  })
+  
+  app.register(fastifySwaggerUi, {
+    routePrefix: '/docs',
+    uiConfig: {
+      docExpansion: 'list',
+      deepLinking: false,
+      tryItOutEnabled: false,
+      supportedSubmitMethods: [],
     },
-  },
-  staticCSP: true,
-  transformStaticCSP: (header) => header,
-  transformSpecification: (swaggerObject, request, reply) => {
-    return swaggerObject
-  },
-  transformSpecificationClone: true,
-})
+    uiHooks: {
+      onRequest: function (request, reply, next) {
+        next()
+      },
+      preHandler: function (request, reply, next) {
+        next()
+      },
+    },
+    staticCSP: true,
+    transformStaticCSP: (header) => header,
+    transformSpecification: (swaggerObject, request, reply) => {
+      return swaggerObject
+    },
+    transformSpecificationClone: true,
+  })
+}
 
 app.register(orgsRoutes)
 app.register(petRoutes)
