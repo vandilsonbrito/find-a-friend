@@ -109,6 +109,10 @@ const OrganizationProfile: React.FC = () => {
       })
   }
 
+  if (!orgData) {
+    return <p>Erro ao carregar dados</p>
+  }
+
   return (
     <Card>
       <CardHeader>
