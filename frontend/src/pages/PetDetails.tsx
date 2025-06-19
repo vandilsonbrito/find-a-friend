@@ -24,9 +24,8 @@ const PetDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>()
 
   const { data: petData, isLoading } = useGetPet(id as string)
-  const { data: orgdata } = useGetOrg(petData?.pets_data?.pet?.org_id as string)
-
-  const selectedPetData = petData?.pets_data?.pet
+  const { data: orgdata } = useGetOrg(petData?.pet?.org_id as string)
+  const selectedPetData = petData?.pet
   const selectedPetOrgData = orgdata?.org
 
   const handleWhatsAppClick = () => {

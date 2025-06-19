@@ -3,12 +3,10 @@ import type { PetFromAPI } from '../../@types'
 import axiosInstance from '../../axios'
 
 type PetsDataFromAPI = {
-  pets_data: {
-    pets: PetFromAPI[]
-    total_pets: number
-    current_page: number
-    total_pages: number
-  }
+  pets: PetFromAPI[]
+  total_pets: number
+  current_page: number
+  total_pages: number
 }
 
 type PetFilters = {
@@ -47,7 +45,7 @@ export function useGetAvailablePets(filters: PetFilters = {}) {
     const response = await axiosInstance.get<PetsDataFromAPI>(
       `/pets${queryString}`,
     )
-    const data = response.data.pets_data
+    const data = response.data
     return data || []
   }
 

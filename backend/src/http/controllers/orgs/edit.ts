@@ -35,7 +35,7 @@ export async function editOrg(request: FastifyRequest, reply: FastifyReply) {
 
   const editOrgUseCase = makeEditOrgUseCase()
 
-  const org = await editOrgUseCase.execute({
+  const { org } = await editOrgUseCase.execute({
     id: orgId as UUID,
     ...data,
   })

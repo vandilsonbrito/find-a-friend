@@ -3,15 +3,15 @@ import type { PetFromAPI } from '../../@types'
 import axiosInstance from '../../axios'
 
 type PetsDataFromAPI = {
-  pets: {
-    pets: PetFromAPI[]
-  }
+  pets: PetFromAPI[]
 }
 
 export function useGetOrgPets(orgId: string) {
   async function getOrgPets() {
-    const response = await axiosInstance.get<PetsDataFromAPI>(`/orgs/${orgId}/pets`)
-    const data: PetFromAPI[] = response.data.pets.pets
+    const response = await axiosInstance.get<PetsDataFromAPI>(
+      `/orgs/${orgId}/pets`,
+    )
+    const data: PetFromAPI[] = response.data.pets
     return data || []
   }
 

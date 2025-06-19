@@ -45,7 +45,7 @@ describe('Edit Pet Controller - E2E', () => {
       .field('breed', 'Breed 3')
       .field('city', 'São Paulo')
       .field('state', 'SP')
-      .field('org_id', orgResponse1.body.org_data.org.id)
+      .field('org_id', orgResponse1.body.org.id)
       .attach(
         'photos',
         path.resolve(__dirname, '../../../utils/test-image.jpg'),
@@ -90,7 +90,7 @@ describe('Edit Pet Controller - E2E', () => {
       .field('city', 'São Paulo')
       .field('state', 'SP')
       .field('is_adopted', true)
-      .field('org_id', orgResponse2.body.org_data.org.id)
+      .field('org_id', orgResponse2.body.org.id)
       .attach(
         'photos',
         path.resolve(__dirname, '../../../utils/test-image.jpg'),
@@ -112,12 +112,12 @@ describe('Edit Pet Controller - E2E', () => {
           description: 'Descrição editada',
           is_adopted: true,
         })
-
+        
       expect(response.statusCode).toBe(200)
       expect(response.body.pet).toBeDefined()
-      expect(response.body.pet.petUpdated.name).toBe('Pet Editado')
-      expect(response.body.pet.petUpdated.description).toBe('Descrição editada')
-      expect(response.body.pet.petUpdated.is_adopted).toBe(true)
+      expect(response.body.pet.name).toBe('Pet Editado')
+      expect(response.body.pet.description).toBe('Descrição editada')
+      expect(response.body.pet.is_adopted).toBe(true)
     }
   })
 

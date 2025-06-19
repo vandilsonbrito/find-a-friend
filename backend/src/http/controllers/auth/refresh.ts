@@ -11,9 +11,7 @@ export async function refresh(request: FastifyRequest, reply: FastifyReply) {
     let decoded: { sub: string }
     try {
       decoded = request.server.jwt.verify<{ sub: string }>(refreshToken)
-      console.log('Token decoded successfully:', { sub: decoded.sub })
     } catch (err) {
-      console.log('JWT verification error:', err)
       return reply.status(401).send({ message: 'Invalid refresh token.' })
     }
 

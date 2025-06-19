@@ -29,7 +29,7 @@ describe('Get Org Controller - E2E', () => {
       password: '123456',
     })
 
-    const orgId = createOrgResponse.body.org_data.org.id
+    const orgId = createOrgResponse.body.org.id
 
     if (orgId) {
       const response = await request(app.server).get(`/orgs/${orgId}`).send()

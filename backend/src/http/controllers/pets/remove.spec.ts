@@ -44,11 +44,12 @@ describe('Edit Pet Controller - E2E', () => {
       .field('breed', 'Breed 3')
       .field('city', 'São Paulo')
       .field('state', 'SP')
-      .field('org_id', orgResponse.body.org_data.org.id)
+      .field('org_id', orgResponse.body.org.id)
       .attach(
         'photos',
         path.resolve(__dirname, '../../../utils/test-image.jpg'),
       )
+      
     expect(createPetResponse.statusCode).toBe(201)
 
     petId = createPetResponse.body.pet.id

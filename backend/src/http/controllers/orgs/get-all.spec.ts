@@ -49,10 +49,10 @@ describe('Get All Orgs Controller - E2E', () => {
     expect(response.body.orgsList).toHaveLength(2)
     expect(response.body.orgsList).toEqual([
       expect.objectContaining({
-        id: org1.body.org_data.org.id,
+        id: org1.body.org.id,
       }),
       expect.objectContaining({
-        id: org2.body.org_data.org.id,
+        id: org2.body.org.id,
       }),
     ])
   })

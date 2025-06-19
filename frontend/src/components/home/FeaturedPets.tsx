@@ -21,8 +21,8 @@ const FeaturedPets: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {petsData &&
             petsData.pets
-              .slice(0, 4)
-              .map((pet) => <PetCard key={pet.id} {...pet} />)}
+              ?.slice(0, 4)
+              ?.map((pet) => <PetCard key={pet.id} {...pet} />)}
         </div>
 
         <div className="mt-12 text-center max-w-sm mx-auto">

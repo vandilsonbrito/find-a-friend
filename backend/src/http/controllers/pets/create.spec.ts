@@ -27,7 +27,7 @@ describe('Create Pet Controller - E2E', () => {
     })
 
     accessToken = authResponse.body.accessToken
-    orgId = orgResponse.body.org_data.org.id
+    orgId = orgResponse.body.org.id
 
     if (!accessToken) {
       throw new Error('Access token not found')

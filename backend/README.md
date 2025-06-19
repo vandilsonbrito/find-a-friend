@@ -45,6 +45,4 @@
 
 - [X] - O usuário deve ser identificado por um JWT (JSON Web Token);
 
-- [ ] - Implementar Rate Limiting para proteger contra abusos na API;
-
-- [ ] - Utilizar Soft Delete nos pets (não apagar do banco, apenas colocar como inativo);
+- [X] - Implementar Rate Limiting para proteger contra abusos na API;

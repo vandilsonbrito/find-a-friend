@@ -46,7 +46,7 @@ export class RegisterOrgUseCase {
 
     const password_hash = await hash(password, 6)
 
-    const org = await this.orgsRepository.create({
+    const orgResponse = await this.orgsRepository.create({
       name,
       email,
       password_hash,
@@ -59,7 +59,7 @@ export class RegisterOrgUseCase {
     })
 
     return {
-      org,
+      org: orgResponse,
     }
   }
 }
