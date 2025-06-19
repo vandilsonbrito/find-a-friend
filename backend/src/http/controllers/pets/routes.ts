@@ -7,12 +7,47 @@ import { removePet } from './remove'
 import { getOrgPets } from './org-pets'
 import { getPet } from './get-pet'
 import { checkPetOwner } from '@/http/middlewares/check-pet-owner'
-export async function petRoutes(app: FastifyInstance) {
-  app.get('/pets', getAvailablePetsForAdoption)
-  app.get('/pets/:petId', getPet)
+import {
+  createPetSchema,
+  deletePetSchema,
+  editPetSchema,
+  getAvailablePetsForAdoptionSchema,
+  getOrgPetsSchema,
+  getPetSchema,
+} from '@/docs/swagger/pet-controllers'
 
-  app.get('/orgs/:orgId/pets/:page?', { onRequest: [verifyJWT] }, getOrgPets)
-  app.post('/pets', { onRequest: [verifyJWT] }, createPet)
-  app.patch('/pets/:petId', { onRequest: [verifyJWT, checkPetOwner] }, editPet)
-  app.delete('/pets/:petId', { onRequest: [verifyJWT, checkPetOwner] }, removePet)
+export async function petRoutes(app: FastifyInstance) {
+  app.get(
+    '/pets',
+    {
+      schema: getAvailablePetsForAdoptionSchema.schema,
+    },
+    getAvailablePetsForAdoption,
+  )
+  app.get('/pets/:petId', { schema: getPetSchema.schema }, getPet)
+
+  /* Authenticated */
+  app.get(
+    '/orgs/:orgId/pets/:page?',
+    { schema: getOrgPetsSchema.schema, onRequest: [verifyJWT] },
+    getOrgPets,
+  )
+  app.post(
+    '/pets',
+    {
+      schema: createPetSchema.schema,
+      onRequest: [verifyJWT],
+    },
+    createPet,
+  )
+  app.patch(
+    '/pets/:petId',
+    { schema: editPetSchema.schema, onRequest: [verifyJWT, checkPetOwner] },
+    editPet,
+  )
+  app.delete(
+    '/pets/:petId',
+    { schema: deletePetSchema.schema, onRequest: [verifyJWT, checkPetOwner] },
+    removePet,
+  )
 }
