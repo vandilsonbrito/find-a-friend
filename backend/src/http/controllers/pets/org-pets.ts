@@ -7,17 +7,20 @@ export async function getOrgPets(request: FastifyRequest, reply: FastifyReply) {
     orgId: z.string().uuid(),
     page: z.coerce.number().default(1),
   })
-
   const { orgId, page } = getOrgPetsParamsSchema.parse(request.params)
 
   const getOrgPetsUseCase = makeGetOrgPetsUseCase()
 
-  const pets = await getOrgPetsUseCase.execute({
-    orgId,
-    page,
-  })
+  const { pets, total_pets, current_page, total_pages } =
+    await getOrgPetsUseCase.execute({
+      orgId,
+      page,
+    })
 
   return reply.status(200).send({
     pets,
+    total_pets,
+    current_page,
+    total_pages,
   })
 }

@@ -40,7 +40,7 @@ describe('Get Pet Controller - E2E', () => {
       .field('breed', 'Breed Test')
       .field('city', 'São Paulo')
       .field('state', 'SP')
-      .field('org_id', orgResponse.body.org_data.org.id)
+      .field('org_id', orgResponse.body.org.id)
 
     petId = createPetResponse.body.pet.id
   })
@@ -53,9 +53,9 @@ describe('Get Pet Controller - E2E', () => {
     if (petId) {
       const response = await request(app.server).get(`/pets/${petId}`).send()
       expect(response.statusCode).toBe(200)
-      expect(response.body.pets_data.pet).toBeDefined()
-      expect(response.body.pets_data.pet.id).toBe(petId)
-      expect(response.body.pets_data.pet.name).toBe('Pet para Get')
+      expect(response.body.pet).toBeDefined()
+      expect(response.body.pet.id).toBe(petId)
+      expect(response.body.pet.name).toBe('Pet para Get')
     }
   })
 

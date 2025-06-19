@@ -11,17 +11,16 @@ export async function getPet(request: FastifyRequest, reply: FastifyReply) {
 
   const getPetUseCase = makeGetPetUseCase()
 
-  const pets_data = await getPetUseCase.execute({
+  const { pet } = await getPetUseCase.execute({
     petId,
   })
 
-  if (!pets_data || !pets_data.pet) {
+  if (!pet) {
     return reply.status(404).send({
       message: 'Pet not found',
     })
   }
-
   return reply.status(200).send({
-    pets_data,
+    pet,
   })
 }

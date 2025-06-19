@@ -19,7 +19,7 @@ describe('Edit Org Controller - E2E', () => {
       cep: '12345678',
     })
 
-    orgId = orgResponse.body.org_data.org.id
+    orgId = orgResponse.body.org.id
   })
 
   afterAll(async () => {
@@ -95,7 +95,7 @@ describe('Edit Org Controller - E2E', () => {
 
     expect(orgB.statusCode).toBe(201)
 
-    const orgBId = orgB.body.org_data.org.id
+    const orgBId = orgB.body.org.id
 
     if (orgBId && tokenA) {
       const response = await request(app.server)

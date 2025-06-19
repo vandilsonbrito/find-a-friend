@@ -45,7 +45,7 @@ describe('Get Available Pets For Adoption Controller - E2E', () => {
       .field('breed', 'Breed 3')
       .field('city', 'São Paulo')
       .field('state', 'SP')
-      .field('org_id', orgResponse1.body.org_data.org.id)
+      .field('org_id', orgResponse1.body.org.id)
       .attach(
         'photos',
         path.resolve(__dirname, '../../../utils/test-image.jpg'),
@@ -90,7 +90,7 @@ describe('Get Available Pets For Adoption Controller - E2E', () => {
       .field('city', 'São Paulo')
       .field('state', 'SP')
       .field('is_adopted', true)
-      .field('org_id', orgResponse2.body.org_data.org.id)
+      .field('org_id', orgResponse2.body.org.id)
       .attach(
         'photos',
         path.resolve(__dirname, '../../../utils/test-image.jpg'),
@@ -106,10 +106,10 @@ describe('Get Available Pets For Adoption Controller - E2E', () => {
     const response = await request(app.server).get('/pets').send()
 
     expect(response.statusCode).toBe(200)
-    expect(response.body.pets_data).toBeDefined()
-    expect(Array.isArray(response.body.pets_data.pets)).toBe(true)
-    expect(response.body.pets_data.total_pets).toBe(1)
-    expect(response.body.pets_data.current_page).toBe(1)
+    expect(response.body).toBeDefined()
+    expect(Array.isArray(response.body.pets)).toBe(true)
+    expect(response.body.total_pets).toBe(1)
+    expect(response.body.current_page).toBe(1)
   })
 
   test('Should get available pets with filters and pagination', async () => {
@@ -128,9 +128,9 @@ describe('Get Available Pets For Adoption Controller - E2E', () => {
     const response = await request(app.server).get('/pets').query(query).send()
 
     expect(response.statusCode).toBe(200)
-    expect(response.body.pets_data).toBeDefined()
-    expect(Array.isArray(response.body.pets_data.pets)).toBe(true)
-    expect(response.body.pets_data.current_page).toBe(2)
+    expect(response.body).toBeDefined()
+    expect(Array.isArray(response.body.pets)).toBe(true)
+    expect(response.body.current_page).toBe(2)
   })
 
   test('Should return 400 for invalid query params', async () => {

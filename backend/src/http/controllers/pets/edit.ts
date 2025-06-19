@@ -34,12 +34,12 @@ export async function editPet(request: FastifyRequest, reply: FastifyReply) {
 
   const editPetUseCase = makeEditPetUseCase()
 
-  const pet = await editPetUseCase.execute({
+  const { petUpdated } = await editPetUseCase.execute({
     petId,
     ...data,
   })
 
   return reply.status(200).send({
-    pet,
+    pet: petUpdated,
   })
 }

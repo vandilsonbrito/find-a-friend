@@ -23,7 +23,7 @@ describe('Get Org Pets Controller - E2E', () => {
       cep: '12345678',
     })
 
-    orgId = orgResponse.body.org_data.org.id
+    orgId = orgResponse.body.org.id
 
     const authResponse = await request(app.server).post('/sessions').send({
       email: 'orgtest@example.com',
@@ -70,8 +70,8 @@ describe('Get Org Pets Controller - E2E', () => {
 
       expect(response.statusCode).toBe(200)
       expect(response.body.pets).toBeDefined()
-      expect(Array.isArray(response.body.pets.pets)).toBe(true)
-      expect(response.body.pets.current_page).toBe(1)
+      expect(Array.isArray(response.body.pets)).toBe(true)
+      expect(response.body.current_page).toBe(1)
     }
   })
 
@@ -83,8 +83,8 @@ describe('Get Org Pets Controller - E2E', () => {
 
       expect(response.statusCode).toBe(200)
       expect(response.body.pets).toBeDefined()
-      expect(Array.isArray(response.body.pets.pets)).toBe(true)
-      expect(response.body.pets.current_page).toBe(2)
+      expect(Array.isArray(response.body.pets)).toBe(true)
+      expect(response.body.current_page).toBe(2)
     }
   })
 
@@ -111,7 +111,7 @@ describe('Get Org Pets Controller - E2E', () => {
       cep: '87654321',
     })
 
-    const newOrgId = newOrgResponse.body.org_data.org.id
+    const newOrgId = newOrgResponse.body.org.id
 
     const authResponse = await request(app.server).post('/sessions').send({
       email: 'emptyorg@example.com',
@@ -125,8 +125,8 @@ describe('Get Org Pets Controller - E2E', () => {
       .set('Authorization', `Bearer ${token}`)
 
     expect(response.statusCode).toBe(200)
-    expect(Array.isArray(response.body.pets.pets)).toBe(true)
-    expect(response.body.pets.pets.length).toBe(0)
+    expect(Array.isArray(response.body.pets)).toBe(true)
+    expect(response.body.pets.length).toBe(0)
   })
 
   test('Should return 401 if not authenticated', async () => {
