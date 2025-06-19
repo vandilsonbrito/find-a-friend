@@ -95,7 +95,7 @@ const OrganizationProfile: React.FC = () => {
         if (response.status === 200) {
           SuccessToast('Dados salvos com sucesso!')
           const updatedOrg = response.data
-          setUser(updatedOrg.org.org as OrgFromAPI)
+          setUser(updatedOrg.org as OrgFromAPI)
           setIsEditing(false)
           setOriginalData(null)
         } else {
