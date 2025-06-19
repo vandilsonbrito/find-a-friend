@@ -1,25 +1,10 @@
+import { registerPetBodySchema } from '@/docs/schemas/pets'
 import { makeRegisterPetUseCase } from '../../../use-cases/factories/make-register-pet-use-case'
 import { streamToBuffer } from '../../../utils/streamToBuffer'
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { z, ZodError } from 'zod'
+import { ZodError } from 'zod'
 
 export async function createPet(request: FastifyRequest, reply: FastifyReply) {
-  const registerPetBodySchema = z.object({
-    name: z.string(),
-    description: z.string(),
-    age: z.enum(['puppy', 'adult', 'senior']),
-    size: z.enum(['small', 'medium', 'large']),
-    energy_level: z.enum(['low', 'medium', 'high']),
-    independence_level: z.enum(['low', 'medium', 'high']),
-    environment: z.enum(['small', 'medium', 'large']),
-    sex: z.enum(['male', 'female']),
-    type: z.enum(['dog', 'cat']),
-    breed: z.string(),
-    city: z.string(),
-    state: z.string(),
-    org_id: z.string().uuid(),
-  })
-
   const body: Record<string, string> = {}
   const uploadedPhotos: { buffer: Buffer; filename: string }[] = []
 
