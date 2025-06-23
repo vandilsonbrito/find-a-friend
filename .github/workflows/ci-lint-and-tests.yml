@@ -1,0 +1,79 @@
+name: CI - Lint, Unit and E2E Tests
+
+on:
+  pull_request:
+    branches:
+      - development
+      - main
+    paths:
+      - 'backend/**'
+      - '.github/workflows/**'
+
+env:
+  JWT_SECRET: testing
+  DATABASE_URL: 'postgresql://docker:docker@localhost:5433/findafriend?schema=public'
+  CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+  CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+  CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+
+jobs:
+  lint:
+    name: 🧹 Lint Code
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - name: ⬇️ Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🏗 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: 📦 Install Dependencies
+        run: npm ci
+
+      - name: 🔍 Run ESLint
+        run: npm run lint
+
+  run-tests:
+    name: 🧪 Run Unit Tests and 🚀 E2E Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: bitnami/postgresql
+        ports:
+          - 5433:5432
+        env:
+          POSTGRESQL_USERNAME: docker
+          POSTGRESQL_PASSWORD: docker
+          POSTGRESQL_DATABASE: findafriend
+
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 21
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - run: npm ci
+
+      - name: 🛠 Run Prisma Migrate
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: 'postgresql://docker:docker@localhost:5433/findafriend?schema=public'
+
+      - run: npm run test:e2e -- --reporter=verbose
