@@ -24,7 +24,7 @@ app.register(fastifyCors, {
     const allowedOrigins = [
       'http://localhost:5173',
       'http://localhost:3333',
-      'https://meu-site.com',
+      process.env.CLIENT_URL,
     ]
     if (!origin || allowedOrigins.includes(origin)) {
       cb(null, true)
