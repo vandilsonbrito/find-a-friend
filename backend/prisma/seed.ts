@@ -7,6 +7,12 @@ const prisma = new PrismaClient()
 async function main() {
   console.log('🌱 Starting seed...')
 
+  console.log('🧹 Clearing database...')
+  await prisma.petPhoto.deleteMany()
+  await prisma.pet.deleteMany()
+  await prisma.org.deleteMany()
+  console.log('✅ Database cleared')
+
   const orgs = [
     {
       id: randomUUID(),
@@ -70,17 +76,7 @@ async function main() {
     },
   ]
 
-  for (const org of orgs) {
-    const existingOrg = await prisma.org.findUnique({
-      where: { email: org.email },
-    })
-
-    if (!existingOrg) {
-      await prisma.org.create({ data: { ...org, id: randomUUID() } })
-    } else {
-      console.log(`⚠️ Org already exists: ${org.email}`)
-    }
-  }
+  await prisma.org.createMany({ data: orgs })
   console.log('✅ Orgs created')
 
   type PetType = Prisma.PetUncheckedCreateInput & { photos: string[] }
@@ -899,27 +895,21 @@ async function main() {
     },
   ]
 
-  for (const pet of pets) {
-    const existingPet = await prisma.pet.findUnique({
-      where: { id: pet.id },
-    })
+  await prisma.pet.createMany({
+    data: pets.map(({ photos, ...rest }) => rest),
+  })
 
-    if (!existingPet) {
-      await prisma.pet.create({
-        data: {
-          ...pet,
-          photos: {
-            create: pet.photos.map((url) => ({
-              id: randomUUID(),
-              url,
-            })),
-          },
-        },
-      })
-    } else {
-      console.log(`⚠️ Pet already exists: ${pet.name} - (${pet.id})`)
-    }
-  }
+  const photos = pets.flatMap((pet) =>
+    pet.photos.map((url) => ({
+      id: randomUUID(),
+      pet_id: pet.id as UUID,
+      url,
+    })),
+  )
+
+  await prisma.petPhoto.createMany({
+    data: photos,
+  })
 
   console.log('✅ Pets created')
 
