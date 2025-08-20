@@ -27,7 +27,7 @@ O problema do abandono de animais e a dificuldade que ONGs e abrigos enfrentam p
 **Find A Friend** surge como a solução para este problema, oferecendo uma ferramenta intuitiva e eficiente que centraliza o processo de adoção, desde o cadastro dos pets e suas características até a facilitação do contato direto entre a ONG e o interessado, garantindo um processo ágil e seguro.
 
 <img width="715" height="405" alt="Screenshot 2025-08-19 at 23 29 42" src="https://github.com/user-attachments/assets/3324078f-a7c0-4dc4-9802-bac5fad6681d" />
-<img width="222" height="450" alt="Screenshot 2025-08-19 at 23 28 49" src="https://github.com/user-attachments/assets/6fbc6399-3392-47f0-88d3-e416e39f3b12" />
+<img width="200" height="405" alt="Screenshot 2025-08-19 at 23 28 49" src="https://github.com/user-attachments/assets/6fbc6399-3392-47f0-88d3-e416e39f3b12" />
 
 ---
 
