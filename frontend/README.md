@@ -117,7 +117,7 @@ cd find-a-friend
 4. **Configuração e Instalação do Backend**:
 - Navegue até a pasta do backend:
 ```bash
-cd Backend
+cd backend
 ```
 - Crie um arquivo `.env` com base no `.env.example` e preencha com suas credenciais (por exemplo, PostgreSQL e Cloudinary).
 - Suba o banco de dados com Docker Compose:
@@ -140,7 +140,7 @@ npx prisma db seed
 6. **Configuração e Instalação do Frontend**:
 - Navegue até a pasta do frontend:
 ```bash
-cd Frontend
+cd frontend
 ```
 - Instale as dependências:
 ```bash
@@ -152,7 +152,7 @@ npm install
 ## Executando a Aplicação
 
 - **Para executar o Backend**:
-1. Navegue até o diretório do backend (`cd Backend`).
+1. Navegue até o diretório do backend (`cd backend`).
 2. Inicie o servidor:
 ```bash
 npm run start:dev
@@ -160,7 +160,7 @@ npm run start:dev
 4. O servidor estará acessível em: `http://localhost:3333`
 
 - **Para executar o Frontend**:
-1. Navegue até o diretório do frontend (`cd Frontend`).
+1. Navegue até o diretório do frontend (`cd frontend`).
 2. Inicie a aplicação React:
 ```bash
 npm run dev
