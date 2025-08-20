@@ -104,45 +104,52 @@ Certifique-se de que você tenha instalado:
 ### **Passos**
 
 1. **Clone o repositório**:
-   ```bash
+   ```
    git clone [https://github.com/vandilsonbrito/find-a-friend.git](https://github.com/vandilsonbrito/find-a-friend.git)
    ```
 
 2. **Navegue para o repositório:**
-   ```bash
+   
+   ```
    cd find-a-friend
    ```
 
-3. **Configuração e Instalação do Backend**:
+4. **Configuração e Instalação do Backend**:
    - Navegue até a pasta do backend:
-    ```bash
+
+    ```
     cd Backend
     ```
    - Crie um arquivo `.env` com base no `.env.example` e preencha com suas credenciais (por exemplo, PostgreSQL e Cloudinary).
    - Suba o banco de dados com Docker Compose:
-    ```bash
+   
+    ```
     docker-compose up -d
     ```
    - Instale as dependências:
-    ```bash
+   
+    ```
     npm install
     ```
    - Execute as migrações do banco de dados:
-    ```bash
+   
+    ```
     npm run prisma:migrate
     ```
    - Execute o seed do banco de dados:
-    ```bash
+   
+    ```
     npx prisma db seed
     ```
 
-4. **Configuração e Instalação do Frontend**:
+6. **Configuração e Instalação do Frontend**:
    - Navegue até a pasta do frontend:
-    ```bash
+   
+    ```
     cd Frontend
     ```
    - Instale as dependências:
-    ```bash
+    ```
     npm install
     ```
 
@@ -153,29 +160,33 @@ Certifique-se de que você tenha instalado:
 - **Para executar o Backend**:
 1. Navegue até o diretório do backend (`cd Backend`).
 2. Inicie o servidor:
-  ```bash
+   
+  ```
   npm run start:dev
   ```
-3. O servidor estará acessível em: `http://localhost:3333`
+4. O servidor estará acessível em: `http://localhost:3333`
 
 - **Para executar o Frontend**:
 1. Navegue até o diretório do frontend (`cd Frontend`).
 2. Inicie a aplicação React:
-  ```bash
+   
+  ```
   npm run dev
   ```
-3. O frontend estará acessível em: `http://localhost:5173`
+4. O frontend estará acessível em: `http://localhost:5173`
 
 ---
 
 ## Como Contribuir
 1. **Fork esse repositório.**
 2. **Crie uma branch para a sua mudança:**
-   ```bash
+   
+   ```
    git checkout -b sua-branch
    ```
-3. **Faça suas alterações e envie um pull request:**
-   ```bash
+4. **Faça suas alterações e envie um pull request:**
+
+   ```
      git add .
      git commit -m "Descrição da mudança"
      git push origin sua-branch
