@@ -39,6 +39,7 @@ const PetCard: React.FC<PetFromAPI> = ({
         transition: { duration: 0.3 },
       }}
       className="bg-white rounded-2xl shadow-sm border overflow-hidden transition-transform hover:scale-[1.02] hover:shadow-md"
+      data-testid="pet-card"
     >
       <div className="relative h-48 overflow-hidden">
         <img

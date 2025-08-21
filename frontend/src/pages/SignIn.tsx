@@ -47,6 +47,7 @@ const SignIn: React.FC = () => {
               <Label htmlFor="email">E-mail</Label>
               <Input
                 id="email"
+                data-testid="email-input"
                 type="email"
                 placeholder="seu@email.com"
                 value={email}
@@ -61,6 +62,7 @@ const SignIn: React.FC = () => {
               </div>
               <Input
                 id="password"
+                data-testid="password-input"
                 type="password"
                 placeholder="••••••"
                 value={password}

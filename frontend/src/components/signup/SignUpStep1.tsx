@@ -34,6 +34,7 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
         <Label htmlFor="name">Nome da Organização</Label>
         <Input
           id="name"
+          data-testid="name-input"
           name="name"
           placeholder="ONG Amigos dos Animais"
           value={formData.name}
@@ -46,6 +47,7 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
         <Label htmlFor="email">E-mail</Label>
         <Input
           id="email"
+          data-testid="email-input"
           name="email"
           type="email"
           placeholder="contato@suaong.org"
@@ -59,6 +61,7 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
         <Label htmlFor="password">Senha</Label>
         <Input
           id="password"
+          data-testid="password-input"
           name="password"
           type="password"
           placeholder="••••••••"
@@ -72,6 +75,7 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
         <Label htmlFor="confirmPassword">Confirme a senha</Label>
         <Input
           id="confirmPassword"
+          data-testid="confirm-password-input"
           name="confirmPassword"
           type="password"
           placeholder="••••••••"
