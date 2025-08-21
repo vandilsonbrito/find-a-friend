@@ -151,6 +151,7 @@ const PetForm: React.FC<PetFormProps> = ({
             <Label htmlFor="name">Nome</Label>
             <Input
               id="name"
+              data-testid="name-input"
               value={pet.name}
               onChange={(e) => handleInputChange('name', e.target.value)}
               placeholder="Nome do pet"

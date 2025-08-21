@@ -59,6 +59,7 @@ const SignUpStep2: React.FC<SignUpStep2Props> = ({
           <Label htmlFor="address">Endereço</Label>
           <Input
             id="address"
+            data-testid="address-input"
             name="address"
             placeholder="Rua, número, complemento"
             value={formData.address}
@@ -72,6 +73,7 @@ const SignUpStep2: React.FC<SignUpStep2Props> = ({
           <Label htmlFor="city">Cidade</Label>
           <Input
             id="city"
+            data-testid="city-input"
             name="city"
             placeholder="Sua cidade"
             value={formData.city}
@@ -87,6 +89,7 @@ const SignUpStep2: React.FC<SignUpStep2Props> = ({
           <Label htmlFor="state">Estado</Label>
           <Input
             id="state"
+            data-testid="state-input"
             name="state"
             placeholder="SP"
             value={formData.state}
@@ -102,6 +105,7 @@ const SignUpStep2: React.FC<SignUpStep2Props> = ({
           <Label htmlFor="postalCode">CEP</Label>
           <Input
             id="postalCode"
+            data-testid="postal-code-input"
             name="postalCode"
             placeholder="00000-000"
             value={formData.postalCode}
@@ -116,6 +120,7 @@ const SignUpStep2: React.FC<SignUpStep2Props> = ({
         <Label htmlFor="whatsapp">WhatsApp</Label>
         <Input
           id="whatsapp"
+          data-testid="whatsapp-input"
           name="whatsapp"
           placeholder="(00) 00000-0000"
           value={formData.whatsapp}
@@ -129,6 +134,7 @@ const SignUpStep2: React.FC<SignUpStep2Props> = ({
         <Label htmlFor="about">Sobre a organização</Label>
         <Textarea
           id="about"
+          data-testid="about-input"
           name="about"
           placeholder="Conte um pouco sobre o trabalho da sua organização..."
           value={formData.about}

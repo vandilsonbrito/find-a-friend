@@ -3,9 +3,10 @@ import { Button } from '../ui/button'
 import PetCard from '../pets/PetsCard'
 import { Link } from 'react-router-dom'
 import { useGetAvailablePets } from '../../services/hooks/useGetAvailablePets'
+import PetsCardSkeletonLoading from '../pets/PetsCardSkeletonLoading'
 
 const FeaturedPets: React.FC = () => {
-  const { data: petsData } = useGetAvailablePets()
+  const { data: petsData, isLoading, error } = useGetAvailablePets()
 
   return (
     <section className="py-16">
@@ -18,8 +19,21 @@ const FeaturedPets: React.FC = () => {
           </p>
         </div>
 
+        {error && <p data-testid="error-message" className="text-center">Erro ao carregar os pets</p>}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {!petsData && isLoading && (
+            <>
+              <PetsCardSkeletonLoading />
+              <PetsCardSkeletonLoading />
+              <PetsCardSkeletonLoading />
+              <PetsCardSkeletonLoading />
+            </>
+          )}
+          {petsData && petsData.pets.length === 0 && (
+            <p data-testid="no-pets-message" className="text-center">Nenhum pet encontrado</p>
+          )}
           {petsData &&
+            petsData.pets.length > 0 &&
             petsData.pets
               ?.slice(0, 4)
               ?.map((pet) => <PetCard key={pet.id} {...pet} />)}

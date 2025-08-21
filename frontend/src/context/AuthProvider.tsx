@@ -138,14 +138,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(null)
       setAccessToken(null)
 
-      if (error.response?.status === 400) {
+      if (error.response?.status === 400 || error.response?.status === 401) {
         ErrorToast('Email ou senha inválidos.')
-      } else if (error.response?.status === 401) {
-        ErrorToast('Credenciais inválidas.')
       } else if (error.response?.status >= 500) {
         ErrorToast('Erro interno do servidor. Tente novamente.')
       } else {
-        ErrorToast('Erro ao fazer login. Tente novamente.')
+        const status = error?.response?.status
+        const message = error?.response?.data?.message || 'Erro desconhecido.'
+        ErrorToast(
+          `Erro ao fazer login. Tente novamente. (${status}) ${message}`,
+        )
       }
 
       throw error

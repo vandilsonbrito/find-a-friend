@@ -76,7 +76,8 @@ const SignUp: React.FC = () => {
         cep: unmaskValue(formData.postalCode),
       }
       const response = await axiosInstance.post('/orgs', formattedFormData)
-      if (response.status === 201) {
+
+      if (response.status === 200 || response.status === 201) {
         SuccessToast('Organização cadastrada com sucesso!')
         setFormData({
           name: '',
