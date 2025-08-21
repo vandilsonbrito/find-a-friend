@@ -14,9 +14,10 @@ import type { AllOrgsFromAPI } from '../@types'
 import { formatCityName } from '../utils/formatCityName'
 import { maskCEP, maskWhatsApp } from '../utils/formValidation'
 import { motion } from 'framer-motion'
+import { LoadingCardEffect } from '../components/organizations/loadingCardEffect'
 
 const Organizations: React.FC = () => {
-  const { data: orgsData } = useGetAllOrgs()
+  const { data: orgsData, isLoading, isError } = useGetAllOrgs()
   const handleWhatsAppContact = (whatsapp: string, orgName: string) => {
     const message = `Olá! Gostaria de saber mais sobre a ${orgName} e como posso ajudar com a adoção de pets.`
     const whatsappUrl = `https://wa.me/${whatsapp}?text=${encodeURIComponent(
@@ -69,6 +70,7 @@ const Organizations: React.FC = () => {
                   animate={{ y: 0, scale: 1, opacity: 1 }}
                   key={org.id}
                   className="hover:shadow-xl transition-shadow rounded-md border border-border"
+                  data-testid="org-card"
                 >
                   <CardHeader>
                     <CardTitle className="text-xl">{org.name}</CardTitle>
@@ -113,7 +115,21 @@ const Organizations: React.FC = () => {
                   </CardContent>
                 </motion.div>
               ))}
+              {isLoading && (
+                <>
+                  <LoadingCardEffect />
+                  <LoadingCardEffect />
+                  <LoadingCardEffect />
+                </>
+              )}
             </div>
+            {isError && (
+              <div className="w-full flex items-center justify-center">
+                <p data-testid="error-message" className="text-xl">
+                  Erro ao carregar Organizações.
+                </p>
+              </div>
+            )}
 
             <div className="mt-16 text-center">
               <div className="bg-secondary/30 rounded-2xl p-8 max-w-4xl mx-auto">
