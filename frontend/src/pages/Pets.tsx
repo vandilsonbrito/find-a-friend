@@ -34,7 +34,11 @@ const Pets: React.FC = () => {
     independence_level: '' as IndependenceLevel,
   })
 
-  const { data: petsData, isLoading } = useGetAvailablePets({
+  const {
+    data: petsData,
+    isLoading,
+    isError,
+  } = useGetAvailablePets({
     ...filters,
     page: currentPage,
   })
@@ -308,12 +312,28 @@ const Pets: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {allPets.length > 0 ? (
                 allPets.map((pet) => <PetCard key={pet.id} {...pet} />)
-              ) : (
+              ) : isAnyFilterActive ? (
                 <p className="text-center text-foreground/70 col-span-full">
                   Nenhum pet encontrado com os filtros selecionados.
                 </p>
+              ) : (
+                <p
+                  data-testid="no-pets-message"
+                  className="text-center text-foreground/70 col-span-full"
+                >
+                  Nenhum pet encontrado.
+                </p>
               )}
             </div>
+          )}
+
+          {isError && (
+            <p
+              data-testid="error-message"
+              className="text-center text-foreground/70 col-span-full"
+            >
+              Erro ao carregar os pets.
+            </p>
           )}
 
           <AnimatePresence>
