@@ -49,7 +49,7 @@ export async function authenticate(
   } catch (err) {
     if (err instanceof Error) {
       if (err instanceof InvalidCredentialsError) {
-        return reply.status(400).send({ message: err.message })
+        return reply.status(401).send({ message: err.message })
       }
       return reply.status(500).send()
     }

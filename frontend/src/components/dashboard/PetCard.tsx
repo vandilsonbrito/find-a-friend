@@ -93,6 +93,7 @@ const PetCard: React.FC<PetCardProps> = ({ pet, onDelete, setIsAddingPet, setSel
               setIsAddingPet(true)
               setSelectedPetIdToEdit(formattedPet.id)
             }}
+            data-testid={`edit-pet-${formattedPet.id}`}
             >
             <Edit2 className="h-4 w-4 mr-1" />
             Editar
@@ -102,6 +103,7 @@ const PetCard: React.FC<PetCardProps> = ({ pet, onDelete, setIsAddingPet, setSel
             size="sm"
             className="flex-1"
             onClick={() => onDelete(formattedPet.id)}
+            data-testid={`delete-pet-${formattedPet.id}`}
           >
             <Trash2 className="h-4 w-4 mr-1" />
             Excluir

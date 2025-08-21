@@ -57,8 +57,10 @@ axiosInstance.interceptors.response.use(
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
-      !originalRequest.url?.includes('/token/refresh')
+      !originalRequest.url?.includes('/token/refresh') &&
+      !originalRequest.url?.includes('/sessions') 
     ) {
+      
       if (isRefreshing) {
         // if isRefreshing is true, we will wait until the token is refreshed
         return new Promise((resolve, reject) => {
