@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from '../ui/button'
+import { Button } from '@/components/ui/button'
 import PetCard from '../pets/PetsCard'
 import { Link } from 'react-router-dom'
 import { useGetAvailablePets } from '../../services/hooks/useGetAvailablePets'

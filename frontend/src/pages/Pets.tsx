@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import Navbar from '../components/layout/NavBar'
-import Footer from '../components/layout/Footer'
-import PetCard from '../components/pets/PetsCard'
-import { Input } from '../components/ui/input'
-import { Label } from '../components/ui/label'
-import { Button } from '../components/ui/button'
+import Navbar from '@/components/layout/NavBar'
+import Footer from '@/components/layout/Footer'
+import PetCard from '@/components/pets/PetsCard'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+
 import { Search, Filter, X, Loader2 } from 'lucide-react'
 import {
   Select,
@@ -12,11 +13,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../components/ui/select'
+} from '@/components/ui/select'
 import { useGetAvailablePets } from '../services/hooks/useGetAvailablePets'
 import type { Age, EnergyLevel, IndependenceLevel, Size, Type } from '../@types'
-import { PaginationProgress } from '../components/pets/ProgressBar'
-import SkeletonLoadingPetsCard from '../components/pets/PetsCardSkeletonLoading'
+import { PaginationProgress } from '@/components/pets/ProgressBar'
+import SkeletonLoadingPetsCard from '@/components/pets/PetsCardSkeletonLoading'
 import { AnimatePresence, motion } from 'framer-motion'
 
 const Pets: React.FC = () => {

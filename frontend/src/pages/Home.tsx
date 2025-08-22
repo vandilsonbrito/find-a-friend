@@ -1,9 +1,9 @@
 import React from 'react'
-import Navbar from '../components/layout/NavBar'
-import Footer from '../components/layout/Footer'
-import Hero from '../components/home/Hero'
-import HowItWorks from '../components/home/HowItWorks'
-import FeaturedPets from '../components/home/FeaturedPets'
+import Navbar from '@/components/layout/NavBar'
+import Footer from '@/components/layout/Footer'
+import Hero from '@/components/home/Hero'
+import HowItWorks from '@/components/home/HowItWorks'
+import FeaturedPets from '@/components/home/FeaturedPets'
 import { motion } from 'framer-motion'
 
 const Home: React.FC = () => {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Button } from '../ui/button'
+import { Button } from '@/components/ui/button'
 import type { PetFromAPI } from '../../@types'
 import { formatCityName } from '../../utils/formatCityName'
 import { motion } from 'framer-motion'
