@@ -20,13 +20,11 @@ const SignIn: React.FC = () => {
 
     try {
       await loginOrg({ email, password }, setIsLoading)
-    } catch (error) {
-      console.log(error)
-      setIsLoading(false)
-      return
+      navigate('/dashboard')
+    } catch {
+      // The error toast is already shown by AuthProvider.login; stay on the page.
     } finally {
       setIsLoading(false)
-      navigate('/dashboard');
     }
   }
 

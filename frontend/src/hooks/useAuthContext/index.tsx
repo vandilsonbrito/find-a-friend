@@ -78,7 +78,6 @@ const useAuthContext = () => {
     try {
       setIsLoading(true)
       await login(input)
-      navigate('/')
     } finally {
       setIsLoading(false)
     }

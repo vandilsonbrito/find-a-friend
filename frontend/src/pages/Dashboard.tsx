@@ -18,6 +18,7 @@ import { useGetOrgPets } from '../services/hooks/useGetOrgPets'
 import PetSkeletonCardShimmer from '@/components/dashboard/SkeletonLoadingPetCard'
 import StatsSkeleton from '@/components/dashboard/SkeletonLoadingStatsCard'
 import { petService } from '../services/petService'
+import { getApiErrorMessage } from '../utils/apiError'
 import type {
   AgePT,
   EnergyLevelPT,
@@ -91,7 +92,11 @@ const Dashboard = () => {
         return false
       }
     } catch (error) {
-      ErrorToast('Erro ao adicionar pet.')
+      ErrorToast(
+        getApiErrorMessage(error, 'Erro ao adicionar pet.', {
+          400: 'Dados do pet inválidos. Verifique os campos.',
+        }),
+      )
       console.error(error)
       return false
     } finally {
@@ -119,7 +124,11 @@ const Dashboard = () => {
         return false
       }
     } catch (error) {
-      ErrorToast('Erro ao editar pet.')
+      ErrorToast(
+        getApiErrorMessage(error, 'Erro ao editar pet.', {
+          400: 'Dados do pet inválidos. Verifique os campos.',
+        }),
+      )
       console.error(error)
       return false
     }
@@ -131,7 +140,7 @@ const Dashboard = () => {
       SuccessToast('Pet excluído com sucesso!')
       refetch()
     } catch (error) {
-      ErrorToast('Erro ao excluir pet.')
+      ErrorToast(getApiErrorMessage(error, 'Erro ao excluir pet.'))
       console.error(error)
     }
   }

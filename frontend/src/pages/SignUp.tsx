@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '@/components/layout/NavBar'
 import Footer from '@/components/layout/Footer'
-import { isAxiosError } from 'axios'
 import axiosInstance from '../axios'
+import { getApiErrorMessage } from '../utils/apiError'
 import { SuccessToast } from '@/components/SuccessToast'
 import { ErrorToast } from '@/components/ErrorToast'
 import {
@@ -98,9 +98,10 @@ const SignUp: React.FC = () => {
       }
     } catch (error) {
       ErrorToast(
-        isAxiosError(error) && error.response?.status === 409
-          ? 'E-mail já está em uso.'
-          : 'Erro ao cadastrar organização.',
+        getApiErrorMessage(error, 'Erro ao cadastrar organização.', {
+          400: 'Dados inválidos. Verifique os campos.',
+          409: 'E-mail já está em uso.',
+        }),
       )
       console.error('Erro no cadastro', error)
     } finally {
