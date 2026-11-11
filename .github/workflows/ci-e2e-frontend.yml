@@ -39,4 +39,8 @@ jobs:
           wait-on: 'http://localhost:5173'
           working-directory: ./frontend
         env:
-          CYPRESS_apiUrl: ${{ secrets.API_URL }}
+          # Fake API host: every request must be stubbed with cy.intercept,
+          # so tests never reach the real backend. The app (VITE_API_URL)
+          # and the specs (CYPRESS_apiUrl) must point to the same host.
+          VITE_API_URL: http://api.test
+          CYPRESS_apiUrl: http://api.test
