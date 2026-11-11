@@ -40,7 +40,9 @@ export async function editOrg(request: FastifyRequest, reply: FastifyReply) {
     ...data,
   })
 
+  const { password_hash: _, ...orgWithoutPassword } = org
+
   return reply.status(200).send({
-    org,
+    org: orgWithoutPassword,
   })
 }
