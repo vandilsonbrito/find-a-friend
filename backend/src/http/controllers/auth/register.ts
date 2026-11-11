@@ -1,6 +1,6 @@
 import { makeRegisterOrgUseCase } from '../../../use-cases/factories/make-register-org-use-case'
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { OrgAlreadyExistsError } from 'src/use-cases/errors/org-already-exists-error'
+import { OrgAlreadyExistsError } from '@/use-cases/errors/org-already-exists-error'
 import { z } from 'zod'
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {

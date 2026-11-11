@@ -2,7 +2,7 @@ import { hash } from 'bcryptjs'
 import { Org } from '@prisma/client'
 import { IOrgsRepository } from '../../repositories/orgs-repository'
 import { OrgAlreadyExistsError } from '../errors/org-already-exists-error'
-import { normalizeCityName } from 'src/utils/normalizeCityName'
+import { normalizeCityName } from '@/utils/normalizeCityName'
 
 interface RegisterOrgUseCaseRequest {
   name: string

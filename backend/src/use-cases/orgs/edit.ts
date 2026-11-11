@@ -1,6 +1,6 @@
 import { Org } from '@prisma/client'
 import { IOrgsRepository } from '../../repositories/orgs-repository'
-import { normalizeCityName } from 'src/utils/normalizeCityName'
+import { normalizeCityName } from '@/utils/normalizeCityName'
 import { UUID } from 'node:crypto'
 
 interface EditOrgUseCaseRequest {
