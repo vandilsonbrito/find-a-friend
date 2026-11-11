@@ -5,7 +5,7 @@ export async function getMeService() {
   try {
     const orgData = await axiosInstance.get<OrgFromAPI>('/me')
     return orgData
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error fetching org:', error)
     throw error
   }

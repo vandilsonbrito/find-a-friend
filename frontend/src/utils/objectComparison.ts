@@ -1,4 +1,4 @@
-export function getChangedFields<T extends Record<string, any>>(
+export function getChangedFields<T extends Record<string, unknown>>(
   original: T,
   modified: T,
   excludeFields: string[] = [],

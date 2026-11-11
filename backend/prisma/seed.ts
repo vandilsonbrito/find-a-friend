@@ -1,5 +1,5 @@
 import { Age, Prisma, PrismaClient } from '@prisma/client'
-import { normalizeCityName } from 'src/utils/normalizeCityName'
+import { normalizeCityName } from '../src/utils/normalizeCityName'
 import { randomUUID, UUID } from 'crypto'
 
 const prisma = new PrismaClient()

@@ -105,9 +105,9 @@ const PetForm: React.FC<PetFormProps> = ({
     onErrorChange('photos', 'Pelo menos uma foto é obrigatória')
   }
 
-  const handleInputChange = (
-    field: keyof PetFormData | 'is_adopted',
-    value: any,
+  const handleInputChange = <K extends keyof PetType>(
+    field: K,
+    value: PetType[K] | undefined,
   ) => {
     setPet((prev) => ({ ...prev, [field]: value }))
 

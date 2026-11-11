@@ -75,7 +75,7 @@ export const fileSchema = z.object({
 export type PetFormData = z.infer<typeof petSchema> 
 export type FileData = z.infer<typeof fileSchema>
 
-export const validatePetForm = (data: any) => {
+export const validatePetForm = (data: unknown) => {
   try {
     petSchema.parse(data)
     return { success: true, errors: {} }

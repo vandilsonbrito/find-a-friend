@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState, type ReactNode } from 'react'
+import { isAxiosError } from 'axios'
 import type { OrgFromAPI } from '../@types'
 import axiosInstance, {
   setCurrentAccessToken,
@@ -26,6 +27,20 @@ interface RegisterType {
 
 type DataFromAPI = {
   org: OrgFromAPI
+}
+
+type ApiErrorBody = {
+  message?: string
+}
+
+const getApiError = (error: unknown) => {
+  if (isAxiosError<ApiErrorBody>(error)) {
+    return {
+      status: error.response?.status,
+      message: error.response?.data?.message,
+    }
+  }
+  return { status: undefined, message: undefined }
 }
 
 export interface AuthContextProps {
@@ -134,19 +149,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         SuccessToast('Login realizado com sucesso!')
       }
-    } catch (error: any) {
+    } catch (error) {
       setUser(null)
       setAccessToken(null)
 
-      if (error.response?.status === 400 || error.response?.status === 401) {
+      const { status, message } = getApiError(error)
+
+      if (status === 400 || status === 401) {
         ErrorToast('Email ou senha inválidos.')
-      } else if (error.response?.status >= 500) {
+      } else if ((status ?? 0) >= 500) {
         ErrorToast('Erro interno do servidor. Tente novamente.')
       } else {
-        const status = error?.response?.status
-        const message = error?.response?.data?.message || 'Erro desconhecido.'
         ErrorToast(
-          `Erro ao fazer login. Tente novamente. (${status}) ${message}`,
+          `Erro ao fazer login. Tente novamente. (${status}) ${message || 'Erro desconhecido.'}`,
         )
       }
 
@@ -162,11 +177,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(null)
       setAccessToken(null)
       SuccessToast('Logout realizado com sucesso!')
-    } catch (error: any) {
+    } catch (error) {
       setUser(null)
       setAccessToken(null)
 
-      if (error.response?.status >= 500) {
+      if ((getApiError(error).status ?? 0) >= 500) {
         ErrorToast('Erro no servidor durante logout.')
       } else {
         ErrorToast('Erro ao fazer logout.')
@@ -184,12 +199,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (res.status === 201) {
         SuccessToast('Organização criada com sucesso!')
       }
-    } catch (error: any) {
-      if (error.response?.status === 400) {
+    } catch (error) {
+      const { status } = getApiError(error)
+
+      if (status === 400) {
         ErrorToast('Dados inválidos. Verifique os campos.')
-      } else if (error.response?.status === 409) {
+      } else if (status === 409) {
         ErrorToast('Email já está em uso.')
-      } else if (error.response?.status >= 500) {
+      } else if ((status ?? 0) >= 500) {
         ErrorToast('Erro interno do servidor. Tente novamente.')
       } else {
         ErrorToast('Erro ao registrar organização.')

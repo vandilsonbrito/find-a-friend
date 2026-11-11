@@ -15,7 +15,14 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useGetAvailablePets } from '../services/hooks/useGetAvailablePets'
-import type { Age, EnergyLevel, IndependenceLevel, Size, Type } from '../@types'
+import type {
+  Age,
+  EnergyLevel,
+  IndependenceLevel,
+  PetFromAPI,
+  Size,
+  Type,
+} from '../@types'
 import { PaginationProgress } from '@/components/pets/ProgressBar'
 import SkeletonLoadingPetsCard from '@/components/pets/PetsCardSkeletonLoading'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -24,7 +31,7 @@ const Pets: React.FC = () => {
   const [city, setCity] = useState('')
   const [filterOpen, setFilterOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
-  const [allPets, setAllPets] = useState<any[]>([])
+  const [allPets, setAllPets] = useState<PetFromAPI[]>([])
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [filters, setFilters] = useState({
     city: '',
