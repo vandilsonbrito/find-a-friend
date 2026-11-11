@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '@/components/layout/NavBar'
 import Footer from '@/components/layout/Footer'
+import { isAxiosError } from 'axios'
 import axiosInstance from '../axios'
 import { SuccessToast } from '@/components/SuccessToast'
 import { ErrorToast } from '@/components/ErrorToast'
@@ -95,9 +96,9 @@ const SignUp: React.FC = () => {
           window.location.href = '/signin'
         }, 1000)
       }
-    } catch (error: any) {
+    } catch (error) {
       ErrorToast(
-        error.response?.status === 409
+        isAxiosError(error) && error.response?.status === 409
           ? 'E-mail já está em uso.'
           : 'Erro ao cadastrar organização.',
       )
