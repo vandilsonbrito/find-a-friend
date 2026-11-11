@@ -7,3 +7,8 @@ services:
       - POSTGRESQL_USERNAME=findafriend
       - POSTGRESQL_PASSWORD=findafriend
       - POSTGRESQL_DATABASE=findafriend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U findafriend -d findafriend"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
