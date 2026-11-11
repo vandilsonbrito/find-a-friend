@@ -33,16 +33,14 @@ jobs:
         run: npm ci
 
       - name: 🚀 Run Cypress E2E Tests
-        uses: cypress-io/github-action@v6
+        # v7.4.4+ is required: v6 bundles got@11, whose wait-on gives up on the
+        # first poll on current runners (ERR_SOCKET_CLOSED_BEFORE_CONNECTION).
+        uses: cypress-io/github-action@v7
         with:
-          # Bind and wait on 127.0.0.1 explicitly: "localhost" may resolve to
-          # IPv4 or IPv6 depending on the Node version, so wait-on and Vite
-          # could end up on different addresses.
-          start: npm run dev -- --host 127.0.0.1 --strictPort
-          wait-on: 'http://127.0.0.1:5173'
+          start: npm run dev
+          wait-on: 'http://localhost:5173'
           working-directory: ./frontend
         env:
-          CYPRESS_baseUrl: http://127.0.0.1:5173
           # Fake API host: every request must be stubbed with cy.intercept,
           # so tests never reach the real backend. The app (VITE_API_URL)
           # and the specs (CYPRESS_apiUrl) must point to the same host.
