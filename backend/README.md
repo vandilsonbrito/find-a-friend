@@ -46,3 +46,36 @@
 - [X] - O usuário deve ser identificado por um JWT (JSON Web Token);
 
 - [X] - Implementar Rate Limiting para proteger contra abusos na API;
+
+#### Como rodar localmente
+
+Pré-requisitos: Node.js 22+ e Docker (aberto).
+
+**Primeira vez** (na raiz do repositório):
+
+```bash
+cp backend/.env.example backend/.env     # ajuste JWT_SECRET e, para upload de fotos, as chaves do Cloudinary
+cp frontend/.env.example frontend/.env   # VITE_API_URL=http://localhost:3333
+npm run setup                            # instala dependências, sobe o banco e cria as tabelas
+npm run db:seed                          # opcional: APAGA o banco e cria ONGs e pets de exemplo
+```
+
+**No dia a dia:**
+
+```bash
+npm run dev    # sobe banco + API (http://localhost:3333) + frontend (http://localhost:5173) em um só terminal
+```
+
+| Comando              | O que faz                                                      |
+| -------------------- | -------------------------------------------------------------- |
+| `npm run setup`      | Instala dependências da raiz, backend e frontend; sobe o banco e aplica as migrations |
+| `npm run dev`        | Sobe o banco (se ainda não estiver de pé), a API e o frontend juntos |
+| `npm run db:up`      | Sobe o PostgreSQL no Docker e espera ele ficar pronto          |
+| `npm run db:down`    | Para o container do banco (os dados são perdidos)              |
+| `npm run db:migrate` | Aplica as migrations do Prisma                                 |
+| `npm run db:seed`    | Apaga o banco e recria os dados de exemplo                     |
+| `npm run db:studio`  | Abre o Prisma Studio, uma interface visual para ver/editar o banco |
+
+ONGs do seed: login com qualquer e-mail de `prisma/seed.ts` (ex.: `contato@amigos.org`) e senha `senha123`.
+
+> O CORS da API só aceita `http://localhost:5173`, `http://localhost:3333` e o valor de `CLIENT_URL`. Se o Vite subir em outra porta, ajuste `CLIENT_URL` no `.env` do backend.

@@ -1,10 +1,14 @@
 import { Age, Prisma, PrismaClient } from '@prisma/client'
 import { normalizeCityName } from '../src/utils/normalizeCityName'
 import { randomUUID, UUID } from 'crypto'
+import { hash } from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
 async function main() {
+  const SEED_PASSWORD = 'senha123'
+  const passwordHash = await hash(SEED_PASSWORD, 6)
+
   console.log('🌱 Starting seed...')
 
   console.log('🧹 Clearing database...')
@@ -19,7 +23,7 @@ async function main() {
       name: 'Amigos dos Animais',
       description: 'ONG dedicada ao resgate e adoção de animais.',
       email: 'contato@amigos.org',
-      password_hash: 'senha123',
+      password_hash: passwordHash,
       whatsapp: '11999999999',
       address: 'Rua das Flores, 123',
       city: normalizeCityName('São Paulo'),
@@ -31,7 +35,7 @@ async function main() {
       name: 'Patas Felizes',
       description: 'Acolhimento e adoção de cães e gatos.',
       email: 'contato@patasfelizes.org',
-      password_hash: 'senha123',
+      password_hash: passwordHash,
       whatsapp: '23999999999',
       address: 'Avenida Central, 456',
       city: normalizeCityName('Rio de Janeiro'),
@@ -43,7 +47,7 @@ async function main() {
       name: 'Mundo Animal',
       description: 'Cuidando dos animais que precisam de um lar.',
       email: 'contato@mundoanimal.org',
-      password_hash: 'senha123',
+      password_hash: passwordHash,
       whatsapp: '41999999999',
       address: 'Rua dos Bichos, 789',
       city: normalizeCityName('Curitiba'),
@@ -55,7 +59,7 @@ async function main() {
       name: 'SOS Pet',
       description: 'Resgate de animais em situação de risco.',
       email: 'contato@sospet.org',
-      password_hash: 'senha123',
+      password_hash: passwordHash,
       whatsapp: '31999990004',
       address: 'Rua Solidária, 321',
       city: normalizeCityName('Belo Horizonte'),
@@ -67,7 +71,7 @@ async function main() {
       name: 'Anjos de Patas',
       description: 'ONG dedicada ao bem-estar dos animais.',
       email: 'contato@anjosdepatas.org',
-      password_hash: 'senha123',
+      password_hash: passwordHash,
       whatsapp: '51999990005',
       address: 'Avenida Amor Animal, 654',
       city: normalizeCityName('Porto Alegre'),
