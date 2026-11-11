@@ -4,8 +4,8 @@ import axiosInstance, {
   setCurrentAccessToken,
   setRefreshTokenCallback,
 } from '../axios'
-import { ErrorToast } from '../components/ErrorToast'
-import { SuccessToast } from '../components/SuccessToast'
+import { ErrorToast } from '@/components/ErrorToast'
+import { SuccessToast } from '@/components/SuccessToast'
 
 interface LoginType {
   email: string

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import Navbar from '../components/layout/NavBar'
-import Footer from '../components/layout/Footer'
-import { Button } from '../components/ui/button'
+import Navbar from '@/components/layout/NavBar'
+import Footer from '@/components/layout/Footer'
+import { Button } from '@/components/ui/button'
+
 import { Link, useParams } from 'react-router-dom'
 import {
   ArrowLeft,
@@ -12,12 +13,12 @@ import {
   Clock,
   MapPin,
 } from 'lucide-react'
-import { Badge } from '../components/ui/badge'
+import { Badge } from '@/components/ui/badge'
 import { translateToPT } from '../utils/translateTypes'
 import { formatCityName } from '../utils/formatCityName'
 import { useGetPet } from '../services/hooks/useGetPet'
 import { useGetOrg } from '../services/hooks/useGetOrg'
-import PetDetailSkeleton from '../components/PetDetails/PetDetailsSkeleton'
+import PetDetailSkeleton from '@/components/PetDetails/PetDetailsSkeleton'
 import { motion } from 'framer-motion'
 
 const PetDetails: React.FC = () => {

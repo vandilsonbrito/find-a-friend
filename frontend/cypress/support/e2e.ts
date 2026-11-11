@@ -15,3 +15,13 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+
+// On mount, AuthProvider calls PATCH /token/refresh to restore the session.
+// Stub it as "not logged in" so tests never depend on a real backend.
+// Specs can override this with their own intercept.
+beforeEach(() => {
+  cy.intercept('PATCH', '**/token/refresh', {
+    statusCode: 401,
+    body: { message: 'Refresh token missing.' },
+  })
+})
