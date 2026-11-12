@@ -41,7 +41,10 @@ app.register(fastifyRateLimit, {
   max: 100,
   timeWindow: '1 minute',
   errorResponseBuilder: () => {
-    return { message: 'Too many requests. Please try again later.' }
+    return {
+      statusCode: 429,
+      message: 'Too many requests. Please try again later.',
+    }
   },
 })
 
@@ -132,6 +135,12 @@ app.setErrorHandler((error, _request, reply) => {
       message:
         "O corpo da requisição não pode estar vazio quando 'Content-Type' é 'application/json'.",
     })
+  }
+
+  // Erros do Fastify e dos plugins já trazem o próprio status (ex.: multipart → 406).
+  // Se for um erro do cliente (4xx), respeita esse status em vez de cair no 500.
+  if (error.statusCode && error.statusCode >= 400 && error.statusCode < 500) {
+    return reply.status(error.statusCode).send({ message: error.message })
   }
 
   if (env.NODE_ENV !== 'production') {
