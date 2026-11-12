@@ -167,7 +167,8 @@ describe('Create Pet Controller - E2E', () => {
           photos: [],
           org_id: orgId,
         })
-      expect(createPetResponse2.statusCode).toEqual(400)
+      // 406 vem do @fastify/multipart: a rota só aceita multipart/form-data
+      expect(createPetResponse2.statusCode).toEqual(406)
     }
   })
   test('Should not be able to create a pet with invalid data/missing data', async () => {

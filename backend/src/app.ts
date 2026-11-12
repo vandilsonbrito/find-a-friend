@@ -134,6 +134,12 @@ app.setErrorHandler((error, _request, reply) => {
     })
   }
 
+  // Erros do Fastify e dos plugins já trazem o próprio status (ex.: multipart → 406).
+  // Se for um erro do cliente (4xx), respeita esse status em vez de cair no 500.
+  if (error.statusCode && error.statusCode >= 400 && error.statusCode < 500) {
+    return reply.status(error.statusCode).send({ message: error.message })
+  }
+
   if (env.NODE_ENV !== 'production') {
     console.error(error)
   }
