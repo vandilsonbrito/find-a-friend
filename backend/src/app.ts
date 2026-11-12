@@ -41,7 +41,10 @@ app.register(fastifyRateLimit, {
   max: 100,
   timeWindow: '1 minute',
   errorResponseBuilder: () => {
-    return { message: 'Too many requests. Please try again later.' }
+    return {
+      statusCode: 429,
+      message: 'Too many requests. Please try again later.',
+    }
   },
 })
 
