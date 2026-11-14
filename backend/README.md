@@ -76,6 +76,8 @@ npm run dev    # sobe banco + API (http://localhost:3333) + frontend (http://loc
 | `npm run db:seed`    | Apaga o banco e recria os dados de exemplo                     |
 | `npm run db:studio`  | Abre o Prisma Studio, uma interface visual para ver/editar o banco |
 
+> **Trava do seed:** como o `db:seed` apaga o banco, ele só roda se o `DATABASE_URL` apontar para um banco local (`localhost`/`127.0.0.1`). Para rodar contra um banco remoto (ex.: repopular o demo em produção), passe a variável de propósito: `ALLOW_REMOTE_SEED=true npm run db:seed`.
+
 > O CORS da API só aceita `http://localhost:5173`, `http://localhost:3333` e o valor de `CLIENT_URL`. Se o Vite subir em outra porta, ajuste `CLIENT_URL` no `.env` do backend.
 
 #### Logins de teste

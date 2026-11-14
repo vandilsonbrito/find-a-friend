@@ -3,9 +3,40 @@ import { normalizeCityName } from '../src/utils/normalizeCityName'
 import { randomUUID, UUID } from 'crypto'
 import { hash } from 'bcryptjs'
 
+const LOCAL_DB_HOSTS = ['localhost', '127.0.0.1', '::1', '[::1]']
+
+// O seed APAGA o banco. Para não apagar a produção por engano (ex.: um .env
+// local apontando para o banco da nuvem), ele só roda contra um banco local,
+// a não ser que ALLOW_REMOTE_SEED=true seja passado de propósito.
+function assertSeedTargetIsAllowed() {
+  const databaseUrl = process.env.DATABASE_URL
+  if (!databaseUrl) {
+    throw new Error('DATABASE_URL não está definida.')
+  }
+
+  const { hostname } = new URL(databaseUrl)
+  const isLocal = LOCAL_DB_HOSTS.includes(hostname)
+  const isRemoteAllowed = process.env.ALLOW_REMOTE_SEED === 'true'
+
+  if (!isLocal && !isRemoteAllowed) {
+    throw new Error(
+      `Seed bloqueado: o DATABASE_URL aponta para "${hostname}", que não é um banco local, ` +
+        'e o seed APAGA todos os dados. Se for isso mesmo, rode de novo com ALLOW_REMOTE_SEED=true.',
+    )
+  }
+
+  if (!isLocal) {
+    console.warn(
+      `⚠️  ALLOW_REMOTE_SEED=true: apagando e recriando o banco em "${hostname}".`,
+    )
+  }
+}
+
 const prisma = new PrismaClient()
 
 async function main() {
+  assertSeedTargetIsAllowed()
+
   const SEED_PASSWORD = 'senha123'
   const passwordHash = await hash(SEED_PASSWORD, 6)
 
