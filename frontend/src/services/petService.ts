@@ -1,5 +1,5 @@
 import axiosInstance from '../axios'
-import type { PetType } from '../components/dashboard/AddPetDialog'
+import type { PetType } from '@/components/dashboard/AddPetDialog'
 import { translateToEN } from '../utils/translateTypes'
 import type {
   Age,

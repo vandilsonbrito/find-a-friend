@@ -1,20 +1,21 @@
 import React, { useEffect } from 'react'
-import Navbar from '../components/layout/NavBar'
-import Footer from '../components/layout/Footer'
+import Navbar from '@/components/layout/NavBar'
+import Footer from '@/components/layout/Footer'
 import {
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../components/ui/card'
-import { Button } from '../components/ui/button'
+} from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+
 import { MapPin, Phone, ExternalLink } from 'lucide-react'
 import { useGetAllOrgs } from '../services/hooks/useGetAllOrgs'
 import type { AllOrgsFromAPI } from '../@types'
 import { formatCityName } from '../utils/formatCityName'
 import { maskCEP, maskWhatsApp } from '../utils/formValidation'
 import { motion } from 'framer-motion'
-import { LoadingCardEffect } from '../components/organizations/loadingCardEffect'
+import { LoadingCardEffect } from '@/components/organizations/loadingCardEffect'
 
 const Organizations: React.FC = () => {
   const { data: orgsData, isLoading, isError } = useGetAllOrgs()

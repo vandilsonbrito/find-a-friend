@@ -1,10 +1,45 @@
 import { Age, Prisma, PrismaClient } from '@prisma/client'
-import { normalizeCityName } from 'src/utils/normalizeCityName'
+import { normalizeCityName } from '../src/utils/normalizeCityName'
 import { randomUUID, UUID } from 'crypto'
+import { hash } from 'bcryptjs'
+
+const LOCAL_DB_HOSTS = ['localhost', '127.0.0.1', '::1', '[::1]']
+
+// O seed APAGA o banco. Para não apagar a produção por engano (ex.: um .env
+// local apontando para o banco da nuvem), ele só roda contra um banco local,
+// a não ser que ALLOW_REMOTE_SEED=true seja passado de propósito.
+function assertSeedTargetIsAllowed() {
+  const databaseUrl = process.env.DATABASE_URL
+  if (!databaseUrl) {
+    throw new Error('DATABASE_URL não está definida.')
+  }
+
+  const { hostname } = new URL(databaseUrl)
+  const isLocal = LOCAL_DB_HOSTS.includes(hostname)
+  const isRemoteAllowed = process.env.ALLOW_REMOTE_SEED === 'true'
+
+  if (!isLocal && !isRemoteAllowed) {
+    throw new Error(
+      `Seed bloqueado: o DATABASE_URL aponta para "${hostname}", que não é um banco local, ` +
+        'e o seed APAGA todos os dados. Se for isso mesmo, rode de novo com ALLOW_REMOTE_SEED=true.',
+    )
+  }
+
+  if (!isLocal) {
+    console.warn(
+      `⚠️  ALLOW_REMOTE_SEED=true: apagando e recriando o banco em "${hostname}".`,
+    )
+  }
+}
 
 const prisma = new PrismaClient()
 
 async function main() {
+  assertSeedTargetIsAllowed()
+
+  const SEED_PASSWORD = 'senha123'
+  const passwordHash = await hash(SEED_PASSWORD, 6)
+
   console.log('🌱 Starting seed...')
 
   console.log('🧹 Clearing database...')
@@ -19,7 +54,7 @@ async function main() {
       name: 'Amigos dos Animais',
       description: 'ONG dedicada ao resgate e adoção de animais.',
       email: 'contato@amigos.org',
-      password_hash: 'senha123',
+      password_hash: passwordHash,
       whatsapp: '11999999999',
       address: 'Rua das Flores, 123',
       city: normalizeCityName('São Paulo'),
@@ -31,7 +66,7 @@ async function main() {
       name: 'Patas Felizes',
       description: 'Acolhimento e adoção de cães e gatos.',
       email: 'contato@patasfelizes.org',
-      password_hash: 'senha123',
+      password_hash: passwordHash,
       whatsapp: '23999999999',
       address: 'Avenida Central, 456',
       city: normalizeCityName('Rio de Janeiro'),
@@ -43,7 +78,7 @@ async function main() {
       name: 'Mundo Animal',
       description: 'Cuidando dos animais que precisam de um lar.',
       email: 'contato@mundoanimal.org',
-      password_hash: 'senha123',
+      password_hash: passwordHash,
       whatsapp: '41999999999',
       address: 'Rua dos Bichos, 789',
       city: normalizeCityName('Curitiba'),
@@ -55,7 +90,7 @@ async function main() {
       name: 'SOS Pet',
       description: 'Resgate de animais em situação de risco.',
       email: 'contato@sospet.org',
-      password_hash: 'senha123',
+      password_hash: passwordHash,
       whatsapp: '31999990004',
       address: 'Rua Solidária, 321',
       city: normalizeCityName('Belo Horizonte'),
@@ -67,7 +102,7 @@ async function main() {
       name: 'Anjos de Patas',
       description: 'ONG dedicada ao bem-estar dos animais.',
       email: 'contato@anjosdepatas.org',
-      password_hash: 'senha123',
+      password_hash: passwordHash,
       whatsapp: '51999990005',
       address: 'Avenida Amor Animal, 654',
       city: normalizeCityName('Porto Alegre'),

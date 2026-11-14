@@ -1,17 +1,18 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import Navbar from '../components/layout/NavBar'
-import Footer from '../components/layout/Footer'
+import Navbar from '@/components/layout/NavBar'
+import Footer from '@/components/layout/Footer'
 import axiosInstance from '../axios'
-import { SuccessToast } from '../components/SuccessToast'
-import { ErrorToast } from '../components/ErrorToast'
+import { getApiErrorMessage } from '../utils/apiError'
+import { SuccessToast } from '@/components/SuccessToast'
+import { ErrorToast } from '@/components/ErrorToast'
 import {
   unmaskValue,
   validateStep1,
   validateStep2,
 } from '../utils/formValidation'
-import FormStep1 from '../components/signup/SignUpStep1'
-import FormStep2 from '../components/signup/SignUpStep2'
+import FormStep1 from '@/components/signup/SignUpStep1'
+import FormStep2 from '@/components/signup/SignUpStep2'
 
 const SignUp: React.FC = () => {
   const [step, setStep] = useState(1)
@@ -95,11 +96,12 @@ const SignUp: React.FC = () => {
           window.location.href = '/signin'
         }, 1000)
       }
-    } catch (error: any) {
+    } catch (error) {
       ErrorToast(
-        error.response?.status === 409
-          ? 'E-mail já está em uso.'
-          : 'Erro ao cadastrar organização.',
+        getApiErrorMessage(error, 'Erro ao cadastrar organização.', {
+          400: 'Dados inválidos. Verifique os campos.',
+          409: 'E-mail já está em uso.',
+        }),
       )
       console.error('Erro no cadastro', error)
     } finally {

@@ -10,11 +10,11 @@ let currentAccessToken: string | null = null
 let refreshTokenCallback: (() => Promise<string | null>) | null = null
 let isRefreshing = false
 let failedQueue: Array<{
-  resolve: (value?: any) => void
-  reject: (error?: any) => void
+  resolve: (value?: unknown) => void
+  reject: (error?: unknown) => void
 }> = []
 
-const processQueue = (error: any, token: string | null = null) => {
+const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.forEach(({ resolve, reject }) => {
     if (error) {
       reject(error)

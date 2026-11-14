@@ -78,9 +78,6 @@ const useAuthContext = () => {
     try {
       setIsLoading(true)
       await login(input)
-      navigate('/')
-    } catch (error) {
-      throw error
     } finally {
       setIsLoading(false)
     }
@@ -96,7 +93,7 @@ const useAuthContext = () => {
       await register(input)
       await new Promise((resolve) => setTimeout(resolve, 2000))
       navigate('/signin')
-    } catch (error) {
+    } catch {
       setError('email', {
         type: 'manual',
         message: 'Erro ao tentar registrar usuário.',

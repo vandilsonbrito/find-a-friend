@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { Button } from '../components/ui/button'
-import { Input } from '../components/ui/input'
-import { Label } from '../components/ui/label'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Link, useNavigate } from 'react-router-dom'
-import Navbar from '../components/layout/NavBar'
-import Footer from '../components/layout/Footer'
+import Navbar from '@/components/layout/NavBar'
+import Footer from '@/components/layout/Footer'
 import useAuthContext from '../hooks/useAuthContext'
 
 const SignIn: React.FC = () => {
@@ -20,13 +20,11 @@ const SignIn: React.FC = () => {
 
     try {
       await loginOrg({ email, password }, setIsLoading)
-    } catch (error) {
-      console.log(error)
-      setIsLoading(false)
-      return
+      navigate('/dashboard')
+    } catch {
+      // The error toast is already shown by AuthProvider.login; stay on the page.
     } finally {
       setIsLoading(false)
-      navigate('/dashboard');
     }
   }
 

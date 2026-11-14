@@ -245,7 +245,6 @@ export const editOrgSchema = {
                 format: 'date-time',
                 description: 'Creation timestamp',
               },
-              password_hash: { type: 'string', description: 'Hashed password' }, // Adiciona password_hash
             },
           },
         },

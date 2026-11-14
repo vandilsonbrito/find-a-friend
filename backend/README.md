@@ -46,3 +46,52 @@
 - [X] - O usuário deve ser identificado por um JWT (JSON Web Token);
 
 - [X] - Implementar Rate Limiting para proteger contra abusos na API;
+
+#### Como rodar localmente
+
+Pré-requisitos: Node.js 22+ e Docker (aberto).
+
+**Primeira vez** (na raiz do repositório):
+
+```bash
+cp backend/.env.example backend/.env     # ajuste JWT_SECRET e, para upload de fotos, as chaves do Cloudinary
+cp frontend/.env.example frontend/.env   # VITE_API_URL=http://localhost:3333
+npm run setup                            # instala dependências, sobe o banco e cria as tabelas
+npm run db:seed                          # opcional: APAGA o banco e cria ONGs e pets de exemplo
+```
+
+**No dia a dia:**
+
+```bash
+npm run dev    # sobe banco + API (http://localhost:3333) + frontend (http://localhost:5173) em um só terminal
+```
+
+| Comando              | O que faz                                                      |
+| -------------------- | -------------------------------------------------------------- |
+| `npm run setup`      | Instala dependências da raiz, backend e frontend; sobe o banco e aplica as migrations |
+| `npm run dev`        | Sobe o banco (se ainda não estiver de pé), a API e o frontend juntos |
+| `npm run db:up`      | Sobe o PostgreSQL no Docker e espera ele ficar pronto          |
+| `npm run db:down`    | Para o container do banco (os dados são perdidos)              |
+| `npm run db:migrate` | Aplica as migrations do Prisma                                 |
+| `npm run db:seed`    | Apaga o banco e recria os dados de exemplo                     |
+| `npm run db:studio`  | Abre o Prisma Studio, uma interface visual para ver/editar o banco |
+
+> **Trava do seed:** como o `db:seed` apaga o banco, ele só roda se o `DATABASE_URL` apontar para um banco local (`localhost`/`127.0.0.1`). Para rodar contra um banco remoto (ex.: repopular o demo em produção), passe a variável de propósito: `ALLOW_REMOTE_SEED=true npm run db:seed`.
+
+> O CORS da API só aceita `http://localhost:5173`, `http://localhost:3333` e o valor de `CLIENT_URL`. Se o Vite subir em outra porta, ajuste `CLIENT_URL` no `.env` do backend.
+
+#### Logins de teste
+
+Para testar a área administrativa da ONG (cadastrar, editar e remover pets), use uma das contas abaixo. **Todas usam a mesma senha: `senha123`.**
+
+| ONG                | E-mail                     | Senha      | Cidade         |
+| ------------------ | -------------------------- | ---------- | -------------- |
+| Amigos dos Animais | `contato@amigos.org`       | `senha123` | São Paulo      |
+| Patas Felizes      | `contato@patasfelizes.org` | `senha123` | Rio de Janeiro |
+| Mundo Animal       | `contato@mundoanimal.org`  | `senha123` | Curitiba       |
+| SOS Pet            | `contato@sospet.org`       | `senha123` | Belo Horizonte |
+| Anjos de Patas     | `contato@anjosdepatas.org` | `senha123` | Porto Alegre   |
+
+- **App publicado (demo):** os mesmos logins funcionam em https://find-a-friend-official.vercel.app. São contas de demonstração públicas: qualquer pessoa pode alterar esses dados, então não guarde nada importante nelas.
+- **Local:** as contas só existem depois de rodar `npm run db:seed`, que **apaga o banco** e recria as ONGs e os pets de exemplo. A fonte dos dados é `prisma/seed.ts`; se mudar algo lá, atualize esta tabela.
+- **Cypress:** os testes E2E usam `user@example.com` / `123456`, mas esse login é simulado (a resposta da API é falsa) e **não funciona** no app de verdade.

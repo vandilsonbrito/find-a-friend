@@ -32,25 +32,28 @@ describe('Edit Org Controller - E2E', () => {
       password: '123456',
     })
 
-    const accessToken = authResponse.body.access_token
+    const accessToken = authResponse.body.accessToken
+    expect(accessToken).toEqual(expect.any(String))
 
-    if (orgId && accessToken) {
-      const response = await request(app.server)
-        .patch(`/orgs/${orgId}/profile`)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send({
-          name: 'Org 2',
-          whatsapp: '11111111111',
-          address: 'Rua Teste2',
-        })
-      expect(response.statusCode).toEqual(200)
-      expect(response.body.org).toEqual({
-        id: orgId,
+    const response = await request(app.server)
+      .patch(`/orgs/${orgId}/profile`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({
         name: 'Org 2',
         whatsapp: '11111111111',
         address: 'Rua Teste 2',
       })
-    }
+
+    expect(response.statusCode).toEqual(200)
+    expect(response.body.org).toEqual(
+      expect.objectContaining({
+        id: orgId,
+        name: 'Org 2',
+        whatsapp: '11111111111',
+        address: 'Rua Teste 2',
+      }),
+    )
+    expect(response.body.org).not.toHaveProperty('password_hash')
   })
 
   test('Should not allow editing without authentication', async () => {

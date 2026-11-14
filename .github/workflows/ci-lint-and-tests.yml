@@ -7,7 +7,7 @@ on:
       - main
     paths:
       - 'backend/**'
-      - '.github/workflows/**'
+      - '.github/workflows/ci-lint-and-tests.yml'
 
 env:
   JWT_SECRET: testing

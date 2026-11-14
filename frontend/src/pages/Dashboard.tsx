@@ -1,23 +1,24 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
-import Navbar from '../components/layout/NavBar'
-import Footer from '../components/layout/Footer'
-import StatsCards from '../components/dashboard/StatsCards'
-import PetCard from '../components/dashboard/PetCard'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import Navbar from '@/components/layout/NavBar'
+import Footer from '@/components/layout/Footer'
+import StatsCards from '@/components/dashboard/StatsCards'
+import PetCard from '@/components/dashboard/PetCard'
 import AddPetDialog, {
   type PetType,
-} from '../components/dashboard/AddPetDialog'
-import OrganizationProfile from '../components/dashboard/OrganizationProfile'
-import EmptyPetsState from '../components/dashboard/EmptyPetsState'
+} from '@/components/dashboard/AddPetDialog'
+import OrganizationProfile from '@/components/dashboard/OrganizationProfile'
+import EmptyPetsState from '@/components/dashboard/EmptyPetsState'
 import useAuthContext from '../hooks/useAuthContext'
-import { ErrorToast } from '../components/ErrorToast'
-import { SuccessToast } from '../components/SuccessToast'
+import { ErrorToast } from '@/components/ErrorToast'
+import { SuccessToast } from '@/components/SuccessToast'
 import { useGetOrgPets } from '../services/hooks/useGetOrgPets'
-import PetSkeletonCardShimmer from '../components/dashboard/SkeletonLoadingPetCard'
-import StatsSkeleton from '../components/dashboard/SkeletonLoadingStatsCard'
+import PetSkeletonCardShimmer from '@/components/dashboard/SkeletonLoadingPetCard'
+import StatsSkeleton from '@/components/dashboard/SkeletonLoadingStatsCard'
 import { petService } from '../services/petService'
+import { getApiErrorMessage } from '../utils/apiError'
 import type {
   AgePT,
   EnergyLevelPT,
@@ -91,7 +92,11 @@ const Dashboard = () => {
         return false
       }
     } catch (error) {
-      ErrorToast('Erro ao adicionar pet.')
+      ErrorToast(
+        getApiErrorMessage(error, 'Erro ao adicionar pet.', {
+          400: 'Dados do pet inválidos. Verifique os campos.',
+        }),
+      )
       console.error(error)
       return false
     } finally {
@@ -119,7 +124,11 @@ const Dashboard = () => {
         return false
       }
     } catch (error) {
-      ErrorToast('Erro ao editar pet.')
+      ErrorToast(
+        getApiErrorMessage(error, 'Erro ao editar pet.', {
+          400: 'Dados do pet inválidos. Verifique os campos.',
+        }),
+      )
       console.error(error)
       return false
     }
@@ -131,7 +140,7 @@ const Dashboard = () => {
       SuccessToast('Pet excluído com sucesso!')
       refetch()
     } catch (error) {
-      ErrorToast('Erro ao excluir pet.')
+      ErrorToast(getApiErrorMessage(error, 'Erro ao excluir pet.'))
       console.error(error)
     }
   }

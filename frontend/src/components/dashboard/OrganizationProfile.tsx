@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button } from '../ui/button'
+import { Button } from '@/components/ui/button'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import {
@@ -17,6 +17,7 @@ import type { OrgFromAPI } from '../../@types'
 import axiosInstance from '../../axios'
 import { SuccessToast } from '../SuccessToast'
 import { ErrorToast } from '../ErrorToast'
+import { getApiErrorMessage } from '../../utils/apiError'
 import { formatCityName } from '../../utils/formatCityName'
 import { getChangedFields } from '../../utils/objectComparison'
 
@@ -90,7 +91,7 @@ const OrganizationProfile: React.FC = () => {
     }
 
     axiosInstance
-      .patch(`http://localhost:3333/orgs/${orgData?.id}/profile`, changedFields)
+      .patch(`/orgs/${orgData?.id}/profile`, changedFields)
       .then(async (response) => {
         if (response.status === 200) {
           SuccessToast('Dados salvos com sucesso!')
@@ -104,7 +105,11 @@ const OrganizationProfile: React.FC = () => {
         }
       })
       .catch((error) => {
-        ErrorToast('Erro ao salvar dados.')
+        ErrorToast(
+          getApiErrorMessage(error, 'Erro ao salvar dados.', {
+            400: 'Dados inválidos. Verifique os campos.',
+          }),
+        )
         console.error('Erro ao salvar dados:', error)
       })
   }

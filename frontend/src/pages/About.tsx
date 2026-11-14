@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react'
-import Navbar from '../components/layout/NavBar'
-import Footer from '../components/layout/Footer'
+import Navbar from '@/components/layout/NavBar'
+import Footer from '@/components/layout/Footer'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../components/ui/card'
-import { Button } from '../components/ui/button'
+} from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+
 import { Heart, Users, Shield, Sparkles } from 'lucide-react'
 import { motion } from 'framer-motion'
 
