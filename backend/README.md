@@ -76,6 +76,20 @@ npm run dev    # sobe banco + API (http://localhost:3333) + frontend (http://loc
 | `npm run db:seed`    | Apaga o banco e recria os dados de exemplo                     |
 | `npm run db:studio`  | Abre o Prisma Studio, uma interface visual para ver/editar o banco |
 
-ONGs do seed: login com qualquer e-mail de `prisma/seed.ts` (ex.: `contato@amigos.org`) e senha `senha123`.
-
 > O CORS da API só aceita `http://localhost:5173`, `http://localhost:3333` e o valor de `CLIENT_URL`. Se o Vite subir em outra porta, ajuste `CLIENT_URL` no `.env` do backend.
+
+#### Logins de teste
+
+Para testar a área administrativa da ONG (cadastrar, editar e remover pets), use uma das contas abaixo. **Todas usam a mesma senha: `senha123`.**
+
+| ONG                | E-mail                     | Senha      | Cidade         |
+| ------------------ | -------------------------- | ---------- | -------------- |
+| Amigos dos Animais | `contato@amigos.org`       | `senha123` | São Paulo      |
+| Patas Felizes      | `contato@patasfelizes.org` | `senha123` | Rio de Janeiro |
+| Mundo Animal       | `contato@mundoanimal.org`  | `senha123` | Curitiba       |
+| SOS Pet            | `contato@sospet.org`       | `senha123` | Belo Horizonte |
+| Anjos de Patas     | `contato@anjosdepatas.org` | `senha123` | Porto Alegre   |
+
+- **App publicado (demo):** os mesmos logins funcionam em https://find-a-friend-official.vercel.app. São contas de demonstração públicas: qualquer pessoa pode alterar esses dados, então não guarde nada importante nelas.
+- **Local:** as contas só existem depois de rodar `npm run db:seed`, que **apaga o banco** e recria as ONGs e os pets de exemplo. A fonte dos dados é `prisma/seed.ts`; se mudar algo lá, atualize esta tabela.
+- **Cypress:** os testes E2E usam `user@example.com` / `123456`, mas esse login é simulado (a resposta da API é falsa) e **não funciona** no app de verdade.
