@@ -1,0 +1,38 @@
+name: Wake API (Render free tier)
+
+# A instância gratuita do Render dorme após ~15 min sem tráfego, e o
+# cron-job.org (que pinga a API a cada 10 min das 08:00 às 20:00) recebe
+# 503 imediato quando ela está dormindo, sem conseguir acordá-la.
+# Este workflow faz uma requisição que espera o cold start antes do
+# primeiro ping do dia, para que o cron-job.org encontre a API acordada.
+
+on:
+  schedule:
+    # 10:45 UTC = 07:45 em America/Sao_Paulo (UTC-3, sem horário de verão)
+    - cron: '45 10 * * *'
+  workflow_dispatch:
+
+jobs:
+  wake:
+    name: ⏰ Wake API
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 📡 Request API until it responds 200
+        env:
+          API_URL: https://find-a-friend-d1qv.onrender.com/
+        run: |
+          for attempt in 1 2 3; do
+            echo "Attempt $attempt..."
+            status=$(curl -s -o /dev/null --max-time 120 \
+              -w '%{http_code} %{time_total}s' "$API_URL" || true)
+            echo "Response: $status"
+            if [[ "$status" == 200* ]]; then
+              echo "API is awake."
+              exit 0
+            fi
+            sleep 30
+          done
+          echo "API did not respond 200 after 3 attempts."
+          exit 1
