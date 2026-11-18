@@ -6,7 +6,7 @@ import { hash } from 'bcryptjs'
 import { InMemoryOrgsRepository } from '../../repositories/in-memory/in-memory-orgs-repository'
 import { GetPetsAvailableForAdoptionUseCase } from './get-available-for-adoption'
 import { IStorageProviderRepository } from '../../repositories/storage-provider-repository'
-import { FakeStorageProvider } from '../../tests/mocks/fake-storage-service'
+import { FakeStorageProvider } from '../../services/fake-storage-service'
 import { randomUUID } from 'node:crypto'
 
 let orgsRepository: InMemoryOrgsRepository

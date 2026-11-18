@@ -5,7 +5,7 @@ import { InMemoryPetPhotosRepository } from '../../repositories/in-memory/in-mem
 import { hash } from 'bcryptjs'
 import { InMemoryOrgsRepository } from '../../repositories/in-memory/in-memory-orgs-repository'
 import { IStorageProviderRepository } from '../../repositories/storage-provider-repository'
-import { FakeStorageProvider } from '../../tests/mocks/fake-storage-service'
+import { FakeStorageProvider } from '../../services/fake-storage-service'
 import { randomUUID } from 'node:crypto'
 import { PetsNotFoundError } from '../errors/pet-not-found-error'
 import { EdiPetUseCase } from './edit'

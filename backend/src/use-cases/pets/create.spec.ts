@@ -4,7 +4,7 @@ import { InMemoryPetsRepository } from '../../repositories/in-memory/in-memory-p
 import { InMemoryPetPhotosRepository } from '../../repositories/in-memory/in-memory-pet-photos-repository'
 import { hash } from 'bcryptjs'
 import { InMemoryOrgsRepository } from '../../repositories/in-memory/in-memory-orgs-repository'
-import { FakeStorageProvider } from '../../tests/mocks/fake-storage-service'
+import { FakeStorageProvider } from '../../services/fake-storage-service'
 import { IStorageProviderRepository } from '../../repositories/storage-provider-repository'
 import { OrgNotFoundError } from '../errors/org-not-found-error'
 import { CreatePetPhotosError } from '../errors/create-pet-photos-error'

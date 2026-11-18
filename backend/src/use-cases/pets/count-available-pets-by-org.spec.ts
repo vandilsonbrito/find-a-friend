@@ -5,7 +5,7 @@ import { InMemoryPetPhotosRepository } from '../../repositories/in-memory/in-mem
 import { CountAvailablePetsByOrgUseCase } from './count-available-pets-by-org'
 import { CreatePetUseCase } from './create'
 import { hash } from 'bcryptjs'
-import { FakeStorageProvider } from '../../tests/mocks/fake-storage-service'
+import { FakeStorageProvider } from '../../services/fake-storage-service'
 import { IStorageProviderRepository } from '../../repositories/storage-provider-repository'
 import { randomUUID } from 'node:crypto'
 
