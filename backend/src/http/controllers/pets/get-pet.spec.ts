@@ -1,6 +1,7 @@
 import { describe, test, expect, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import { app } from '@/app'
+import path from 'path'
 
 let petId: string
 
@@ -41,6 +42,10 @@ describe('Get Pet Controller - E2E', () => {
       .field('city', 'São Paulo')
       .field('state', 'SP')
       .field('org_id', orgResponse.body.org.id)
+      .attach(
+        'photos',
+        path.resolve(__dirname, '../../../utils/test-image.jpg'),
+      )
 
     petId = createPetResponse.body.pet.id
   })
