@@ -12,9 +12,8 @@ on:
 env:
   JWT_SECRET: testing
   DATABASE_URL: 'postgresql://docker:docker@localhost:5433/findafriend?schema=public'
-  CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
-  CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-  CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+  # No Cloudinary credentials on purpose: E2E tests force STORAGE_DRIVER=fake
+  # (prisma-test-environment.ts), so any test that still tries a real upload fails here.
 
 jobs:
   lint:
