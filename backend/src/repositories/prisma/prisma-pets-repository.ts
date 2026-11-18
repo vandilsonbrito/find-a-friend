@@ -222,4 +222,16 @@ export class PrismaPetsRepository implements IPetsRepository {
       total_pages: Math.ceil(total / 20),
     }
   }
+
+  async countPetsByOrgGroupedByStatus(orgId: string) {
+    const [availableCount, adoptedCount] = await Promise.all([
+      prisma.pet.count({ where: { org_id: orgId, is_adopted: false } }),
+      prisma.pet.count({ where: { org_id: orgId, is_adopted: true } }),
+    ])
+
+    return {
+      available: availableCount,
+      adopted: adoptedCount,
+    }
+  }
 }

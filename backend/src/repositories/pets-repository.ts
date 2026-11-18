@@ -24,4 +24,7 @@ export interface IPetsRepository {
     total_pages: number
   }>
   countAvailablePetsByOrg(orgId: string): Promise<number>
+  countPetsByOrgGroupedByStatus(
+    orgId: string,
+  ): Promise<{ available: number; adopted: number }>
 }

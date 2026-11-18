@@ -163,4 +163,19 @@ export class InMemoryPetsRepository implements IPetsRepository {
       total_pages: totalPages,
     }
   }
+
+  async countPetsByOrgGroupedByStatus(orgId: string) {
+    const availableCount = this.pets.filter(
+      (pet) => pet.org_id === orgId && !pet.is_adopted,
+    ).length
+
+    const adoptedCount = this.pets.filter(
+      (pet) => pet.org_id === orgId && pet.is_adopted,
+    ).length
+
+    return {
+      available: availableCount,
+      adopted: adoptedCount,
+    }
+  }
 }
