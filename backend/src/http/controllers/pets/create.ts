@@ -3,6 +3,7 @@ import { makeRegisterPetUseCase } from '../../../use-cases/factories/make-regist
 import { streamToBuffer } from '../../../utils/streamToBuffer'
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { ZodError } from 'zod'
+import { CreatePetPhotosError } from '@/use-cases/errors/create-pet-photos-error'
 
 export async function createPet(request: FastifyRequest, reply: FastifyReply) {
   const body: Record<string, string> = {}
@@ -65,6 +66,10 @@ export async function createPet(request: FastifyRequest, reply: FastifyReply) {
         message: 'Error on validation data on request',
         issues: err.errors,
       })
+    }
+
+    if (err instanceof CreatePetPhotosError) {
+      return reply.status(400).send({ message: err.message })
     }
 
     throw err
