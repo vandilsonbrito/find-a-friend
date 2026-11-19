@@ -8,6 +8,7 @@ import fastifyMultipart from '@fastify/multipart'
 import { petRoutes } from './http/controllers/pets/routes'
 import { PetsNotFoundError } from './use-cases/errors/pet-not-found-error'
 import { OrgNotFoundError } from './use-cases/errors/org-not-found-error'
+import { NotAllowedError } from './use-cases/errors/not-allowed-error'
 import fastifyRateLimit from '@fastify/rate-limit'
 import fastifyCors from '@fastify/cors'
 import fastifySwagger from '@fastify/swagger'
@@ -128,6 +129,10 @@ app.setErrorHandler((error, _request, reply) => {
 
   if (error instanceof PetsNotFoundError || error instanceof OrgNotFoundError) {
     return reply.status(404).send({ message: error.message })
+  }
+
+  if (error instanceof NotAllowedError) {
+    return reply.status(403).send({ message: error.message })
   }
 
   if (error.code === 'FST_ERR_CTP_EMPTY_JSON_BODY') {

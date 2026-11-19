@@ -90,7 +90,60 @@ describe('Edit Pet Controller - E2E', () => {
       .set('Authorization', `Bearer ${accessToken}`)
 
     expect(response.statusCode).toBe(404)
-    expect(response.body.message).toBe('Pet not found')
+    expect(response.body.message).toBe('Pet(s) not found.')
+  })
+
+  test('Should return 403 if try to remove pet from another org', async () => {
+    await request(app.server).post('/orgs').send({
+      name: 'Org Test 2',
+      email: 'orgtest2@example.com',
+      password: '123456',
+      whatsapp: '11999999999',
+      address: 'Rua Teste',
+      city: 'São Paulo',
+      description: 'Org description',
+      state: 'SP',
+      cep: '12345678',
+    })
+
+    const authResponse2 = await request(app.server).post('/sessions').send({
+      email: 'orgtest2@example.com',
+      password: '123456',
+    })
+    const accessToken2 = authResponse2.body.accessToken
+
+    const createPetResponse2 = await request(app.server)
+      .post('/pets')
+      .set('Authorization', `Bearer ${accessToken2}`)
+      .field('name', 'Pet da org 2')
+      .field('description', 'Descrição')
+      .field('age', 'adult')
+      .field('size', 'small')
+      .field('energy_level', 'medium')
+      .field('independence_level', 'medium')
+      .field('environment', 'small')
+      .field('sex', 'female')
+      .field('type', 'cat')
+      .field('breed', 'Breed 1')
+      .field('city', 'São Paulo')
+      .field('state', 'SP')
+      .attach(
+        'photos',
+        path.resolve(__dirname, '../../../utils/test-image.jpg'),
+      )
+    expect(createPetResponse2.statusCode).toBe(201)
+    const petIdFromOrg2 = createPetResponse2.body.pet.id
+
+    // Org 1 tries to delete org 2 pet
+    const response = await request(app.server)
+      .delete(`/pets/${petIdFromOrg2}`)
+      .set('Authorization', `Bearer ${accessToken}`)
+
+    expect(response.statusCode).toBe(403)
+    expect(response.body.message).toBe('Forbidden')
+
+    const getResponse = await request(app.server).get(`/pets/${petIdFromOrg2}`)
+    expect(getResponse.statusCode).toBe(200)
   })
 
   test('Should return 401 if not authenticated', async () => {

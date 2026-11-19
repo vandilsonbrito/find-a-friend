@@ -151,15 +151,17 @@ describe('Edit Pet Controller - E2E', () => {
   })
 
   test('Should return 403 if try to edit pet from another org', async () => {
-    if (accessToken) {
-      const response = await request(app.server)
-        .patch(`/pets/${petId2}`)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send({})
+    const response = await request(app.server)
+      .patch(`/pets/${petId2}`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({ name: 'Hacked' })
 
-      expect(response.statusCode).toBe(403)
-      expect(response.body.message).toBe('Forbidden')
-    }
+    expect(response.statusCode).toBe(403)
+    expect(response.body.message).toBe('Forbidden')
+
+    // The pet must be unchanged
+    const getResponse = await request(app.server).get(`/pets/${petId2}`)
+    expect(getResponse.body.pet.name).not.toBe('Hacked')
   })
 
   test('Should return 401 if no auth token', async () => {

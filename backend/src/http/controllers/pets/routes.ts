@@ -6,7 +6,6 @@ import { editPet } from './edit'
 import { removePet } from './remove'
 import { getOrgPets } from './org-pets'
 import { getPet } from './get-pet'
-import { checkPetOwner } from '@/http/middlewares/check-pet-owner'
 import {
   createPetSchema,
   deletePetSchema,
@@ -40,14 +39,15 @@ export async function petRoutes(app: FastifyInstance) {
     },
     createPet,
   )
+
   app.patch(
     '/pets/:petId',
-    { schema: editPetSchema.schema, onRequest: [verifyJWT, checkPetOwner] },
+    { schema: editPetSchema.schema, onRequest: [verifyJWT] },
     editPet,
   )
   app.delete(
     '/pets/:petId',
-    { schema: deletePetSchema.schema, onRequest: [verifyJWT, checkPetOwner] },
+    { schema: deletePetSchema.schema, onRequest: [verifyJWT] },
     removePet,
   )
 }
