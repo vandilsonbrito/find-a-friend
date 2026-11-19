@@ -32,10 +32,13 @@ export async function editPet(request: FastifyRequest, reply: FastifyReply) {
     })
   }
 
+  const { sub: orgId } = request.user as { sub: string }
+
   const editPetUseCase = makeEditPetUseCase()
 
   const { petUpdated } = await editPetUseCase.execute({
     petId,
+    orgId,
     ...data,
   })
 

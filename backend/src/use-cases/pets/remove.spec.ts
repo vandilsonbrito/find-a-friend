@@ -8,6 +8,7 @@ import { IStorageProviderRepository } from '../../repositories/storage-provider-
 import { FakeStorageProvider } from '../../services/fake-storage-service'
 import { randomUUID } from 'node:crypto'
 import { PetsNotFoundError } from '../errors/pet-not-found-error'
+import { NotAllowedError } from '../errors/not-allowed-error'
 import { RemovePetUseCase } from './remove'
 
 let orgsRepository: InMemoryOrgsRepository
@@ -66,6 +67,7 @@ describe('Remove Pet Use Case', () => {
 
     await sut.execute({
       petId: createdPet.id,
+      orgId: org.id,
     })
 
     expect(petsRepository.pets).toHaveLength(0)
@@ -75,7 +77,63 @@ describe('Remove Pet Use Case', () => {
     await expect(() =>
       sut.execute({
         petId: 'non-existing-id',
+        orgId: 'any-org-id',
       }),
     ).rejects.toBeInstanceOf(PetsNotFoundError)
+  })
+
+  it('should not be able to remove a pet from another org', async () => {
+    const ownerOrg = await orgsRepository.create({
+      name: 'Owner Org',
+      email: 'owner@example.com',
+      password_hash: await hash('123456', 6),
+      whatsapp: '11999999999',
+      address: 'Rua Teste',
+      city: 'São Paulo',
+      description: 'Org description',
+      state: 'SP',
+      cep: '12345678',
+      created_at: new Date(),
+    })
+
+    const otherOrg = await orgsRepository.create({
+      name: 'Other Org',
+      email: 'other@example.com',
+      password_hash: await hash('123456', 6),
+      whatsapp: '11888888888',
+      address: 'Rua Outra',
+      city: 'São Paulo',
+      description: 'Org description',
+      state: 'SP',
+      cep: '12345678',
+      created_at: new Date(),
+    })
+
+    const { pet: createdPet } = await createPetUseCase.execute({
+      id: randomUUID(),
+      name: 'Totó',
+      description: 'friendly golden retriever',
+      age: 'puppy',
+      size: 'medium',
+      energy_level: 'low',
+      independence_level: 'medium',
+      environment: 'medium',
+      breed: 'Golden Retriever',
+      sex: 'male',
+      type: 'dog',
+      org_id: ownerOrg.id,
+      city: 'São Paulo',
+      state: 'SP',
+      photos: [{ buffer: Buffer.from('fake-file-1.png') }],
+    })
+
+    await expect(() =>
+      sut.execute({
+        petId: createdPet.id,
+        orgId: otherOrg.id,
+      }),
+    ).rejects.toBeInstanceOf(NotAllowedError)
+
+    expect(petsRepository.pets).toHaveLength(1)
   })
 })

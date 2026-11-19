@@ -8,11 +8,13 @@ export async function removePet(request: FastifyRequest, reply: FastifyReply) {
   })
 
   const { petId } = removeParamsSchema.parse(request.params)
+  const { sub: orgId } = request.user as { sub: string }
 
   const removePetUseCase = makeRemovePetUseCase()
 
   await removePetUseCase.execute({
     petId,
+    orgId,
   })
 
   return reply.status(204).send()
