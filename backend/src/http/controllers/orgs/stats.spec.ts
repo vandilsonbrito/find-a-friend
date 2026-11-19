@@ -42,7 +42,6 @@ async function createPet(orgId: string, accessToken: string) {
     .field('breed', 'Breed')
     .field('city', 'São Paulo')
     .field('state', 'SP')
-    .field('org_id', orgId)
     .attach('photos', path.resolve(__dirname, '../../../utils/test-image.jpg'))
 
   return response.body.pet.id as string

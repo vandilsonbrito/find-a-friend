@@ -68,7 +68,7 @@ const basicPetSchema = {
 export const createPetSchema = {
   schema: {
     description:
-      'Create Pet with file upload. Body params (multipart/form-data): "name", "description", "age", "size", "energy_level", "independence_level", "environment", "sex", "type", "breed", "city", "state", "org_id", "photos"',
+      'Create Pet with file upload. Body params (multipart/form-data): "name", "description", "age", "size", "energy_level", "independence_level", "environment", "sex", "type", "breed", "city", "state", "photos". The pet always belongs to the authenticated organization (from the JWT).',
     tags: ['Pets'],
     summary: 'Create a new pet for adoption',
     consumes: ['multipart/form-data'],
@@ -80,11 +80,6 @@ export const createPetSchema = {
             type: 'object',
             properties: {
               ...basicPetSchema,
-              org_id: {
-                type: 'string',
-                format: 'uuid',
-                description: 'Organization ID',
-              },
               photos: {
                 type: 'array',
                 items: {
@@ -108,7 +103,6 @@ export const createPetSchema = {
               'breed',
               'city',
               'state',
-              'org_id',
               'photos',
             ],
           },

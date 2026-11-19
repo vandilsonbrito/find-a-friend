@@ -37,8 +37,9 @@ export async function createPet(request: FastifyRequest, reply: FastifyReply) {
       type,
       city,
       state,
-      org_id,
     } = registerPetBodySchema.parse(body)
+
+    const { sub: orgId } = request.user as { sub: string }
 
     const registerPetsUseCase = makeRegisterPetUseCase()
 
@@ -55,7 +56,7 @@ export async function createPet(request: FastifyRequest, reply: FastifyReply) {
       breed,
       city,
       state,
-      org_id,
+      org_id: orgId,
       photos: uploadedPhotos,
     })
 

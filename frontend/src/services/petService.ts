@@ -41,7 +41,7 @@ export const petService = {
     return response.data
   },
 
-  async addPet(newPet: NewPet, orgId: string) {
+  async addPet(newPet: NewPet) {
     const formData = new FormData()
 
     formData.append('name', newPet.name)
@@ -81,7 +81,6 @@ export const petService = {
     formData.append('city', newPet.city)
     formData.append('state', newPet.state)
     formData.append('is_adopted', String(newPet.is_adopted))
-    formData.append('org_id', orgId)
 
     if (newPet.photos.length > 0) {
       for (let i = 0; i < newPet.photos.length; i++) {

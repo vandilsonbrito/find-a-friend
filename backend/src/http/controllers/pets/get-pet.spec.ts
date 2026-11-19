@@ -9,7 +9,7 @@ describe('Get Pet Controller - E2E', () => {
   beforeAll(async () => {
     await app.ready()
 
-    const orgResponse = await request(app.server).post('/orgs').send({
+    await request(app.server).post('/orgs').send({
       name: 'Org Test',
       email: 'orgtest@example.com',
       password: '123456',
@@ -41,7 +41,6 @@ describe('Get Pet Controller - E2E', () => {
       .field('breed', 'Breed Test')
       .field('city', 'São Paulo')
       .field('state', 'SP')
-      .field('org_id', orgResponse.body.org.id)
       .attach(
         'photos',
         path.resolve(__dirname, '../../../utils/test-image.jpg'),
