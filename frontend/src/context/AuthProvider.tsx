@@ -36,7 +36,7 @@ export interface AuthContextProps {
   login: (input: LoginType) => Promise<void>
   logout: () => Promise<void>
   register: (input: RegisterType) => Promise<void>
-  refreshToken: () => Promise<boolean>
+  refreshToken: () => Promise<string | null>
   isLoggedIn: boolean
   loadingUser: boolean
 }
@@ -57,15 +57,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setCurrentAccessToken(accessToken)
   }, [accessToken])
 
-  // Define refresh callback to the interceptor
+  // Re-register on every render so the axios interceptor always calls the
+  // latest refreshToken (a callback registered once keeps the first render's values).
   useEffect(() => {
-    setRefreshTokenCallback(async () => {
-      const success = await refreshToken()
-      return success ? accessToken : null
-    })
-  }, [accessToken])
+    setRefreshTokenCallback(refreshToken)
+  })
 
-  const refreshToken = async (): Promise<boolean> => {
+  const refreshToken = async (): Promise<string | null> => {
     try {
       const response = await axiosInstance.patch('/token/refresh')
 
@@ -82,14 +80,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser(userData.data.org)
         }
 
-        return true
+        return newToken
       }
-      return false
+      return null
     } catch (error) {
       console.error('Erro ao renovar token:', error)
       setAccessToken(null)
       setUser(null)
-      return false
+      return null
     }
   }
 
@@ -97,9 +95,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const checkAuth = async () => {
       try {
         setLoadingUser(true)
-        const success = await refreshToken()
+        const newToken = await refreshToken()
 
-        if (!success) {
+        if (!newToken) {
           setUser(null)
           setAccessToken(null)
         }
@@ -113,6 +111,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     checkAuth()
+    // Runs once on mount to restore the session. Listing `refreshToken` would
+    // re-run it on every render (new function each time) and loop forever.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const login = async (input: LoginType) => {
