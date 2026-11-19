@@ -1,4 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
+import { AuthTokenPayload, signAuthTokens } from '../../utils/auth-tokens'
 
 export async function refresh(request: FastifyRequest, reply: FastifyReply) {
   try {
@@ -8,23 +9,20 @@ export async function refresh(request: FastifyRequest, reply: FastifyReply) {
       return reply.status(401).send({ message: 'Refresh token missing.' })
     }
 
-    let decoded: { sub: string }
+    let decoded: AuthTokenPayload
     try {
-      decoded = request.server.jwt.verify<{ sub: string }>(refreshToken)
+      decoded = request.server.jwt.verify<AuthTokenPayload>(refreshToken)
     } catch (err) {
       return reply.status(401).send({ message: 'Invalid refresh token.' })
     }
 
-    try {
-      const newAccessToken = await reply.jwtSign(
-        { sub: decoded.sub },
-        { expiresIn: '15m' },
-      )
+    if (decoded.type !== 'refresh') {
+      return reply.status(401).send({ message: 'Invalid refresh token.' })
+    }
 
-      const newRefreshToken = await reply.jwtSign(
-        { sub: decoded.sub },
-        { expiresIn: '7d' },
-      )
+    try {
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+        await signAuthTokens(reply, decoded.sub)
 
       console.log('New tokens generated successfully')
 
