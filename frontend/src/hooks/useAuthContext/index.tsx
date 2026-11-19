@@ -1,8 +1,8 @@
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { UseFormSetError } from 'react-hook-form'
 import { AuthContext } from '../../context/AuthProvider'
-import { setCurrentAccessToken, setRefreshTokenCallback } from '../../axios'
+import { setCurrentAccessToken } from '../../axios'
 
 interface LoginType {
   email: string
@@ -40,36 +40,6 @@ const useAuthContext = () => {
     isLoggedIn,
     loadingUser
   } = context
-
-  // Update token on axios when it changes
-  useEffect(() => {
-    setCurrentAccessToken(accessToken)
-  }, [accessToken])
-
-  // Configure refresh token callback to run once on component mount
-  useEffect(() => {
-    const handleRefreshToken = async (): Promise<string | null> => {
-      try {
-        const success = await refreshToken()
-        
-        if (success) {
-          await new Promise(resolve => setTimeout(resolve, 50))
-          return context.accessToken
-        }
-        
-        return null
-      } catch (error) {
-        console.error('Erro no refresh token:', error)
-        return null
-      }
-    }
-
-    setRefreshTokenCallback(handleRefreshToken)
-    
-    return () => {
-      setRefreshTokenCallback(async () => null)
-    }
-  }, []) 
 
   const loginOrg = async (
     input: LoginType,
