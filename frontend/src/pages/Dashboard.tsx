@@ -81,7 +81,7 @@ const Dashboard = () => {
   const handleAddPet = async (): Promise<boolean> => {
     try {
       setIsAddingPetLoading(true)
-      const response = await petService.addPet(newPet, user?.id as string)
+      const response = await petService.addPet(newPet)
       if (response.status === 201) {
         SuccessToast('Pet adicionado com sucesso!')
         refetch()
