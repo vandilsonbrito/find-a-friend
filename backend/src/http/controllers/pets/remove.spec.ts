@@ -10,7 +10,7 @@ describe('Edit Pet Controller - E2E', () => {
   beforeAll(async () => {
     await app.ready()
 
-    const orgResponse = await request(app.server).post('/orgs').send({
+    await request(app.server).post('/orgs').send({
       name: 'Org Test',
       email: 'orgtest@example.com',
       password: '123456',
@@ -44,12 +44,11 @@ describe('Edit Pet Controller - E2E', () => {
       .field('breed', 'Breed 3')
       .field('city', 'São Paulo')
       .field('state', 'SP')
-      .field('org_id', orgResponse.body.org.id)
       .attach(
         'photos',
         path.resolve(__dirname, '../../../utils/test-image.jpg'),
       )
-      
+
     expect(createPetResponse.statusCode).toBe(201)
 
     petId = createPetResponse.body.pet.id

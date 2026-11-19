@@ -58,7 +58,6 @@ describe('Create Pet Controller - E2E', () => {
         .field('breed', 'Breed 3')
         .field('city', 'São Paulo')
         .field('state', 'SP')
-        .field('org_id', orgId as string)
         .attach(
           'photos',
           path.resolve(__dirname, '../../../utils/test-image.jpg'),
@@ -85,7 +84,6 @@ describe('Create Pet Controller - E2E', () => {
         .field('breed', 'Breed 3')
         .field('city', 'São Paulo')
         .field('state', 'SP')
-        .field('org_id', orgId)
         .attach(
           'photos',
           path.resolve(__dirname, '../../../utils/test-image.jpg'),
@@ -98,53 +96,44 @@ describe('Create Pet Controller - E2E', () => {
     }
   })
 
-  test('Should not be able to create a pet without org ID or with invalid org ID', async () => {
-    if (accessToken) {
-      const createPetResponse1 = await request(app.server)
-        .post('/pets')
-        .set('Authorization', `Bearer ${accessToken}`)
-        .field('name', 'Pet com imagem')
-        .field('description', 'Descrição com imagem')
-        .field('age', 'puppy')
-        .field('size', 'small')
-        .field('energy_level', 'medium')
-        .field('independence_level', 'medium')
-        .field('environment', 'small')
-        .field('sex', 'male')
-        .field('type', 'dog')
-        .field('breed', 'Breed 3')
-        .field('city', 'São Paulo')
-        .field('state', 'SP')
-        .attach(
-          'photos',
-          path.resolve(__dirname, '../../../utils/test-image.jpg'),
-        )
+  test('Should create the pet for the authenticated org, ignoring org_id from the body', async () => {
+    const otherOrgResponse = await request(app.server).post('/orgs').send({
+      name: 'Org 2',
+      email: 'org2@example.com',
+      password: '123456',
+      whatsapp: '11999999999',
+      address: 'Rua Teste',
+      city: 'São Paulo',
+      description: 'Org description',
+      state: 'SP',
+      cep: '12345678',
+    })
+    const otherOrgId = otherOrgResponse.body.org.id
 
-      expect(createPetResponse1.statusCode).toEqual(400)
+    const response = await request(app.server)
+      .post('/pets')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .field('name', 'Pet intruso')
+      .field('description', 'Tentativa de criar pet em outra ONG')
+      .field('age', 'puppy')
+      .field('size', 'small')
+      .field('energy_level', 'medium')
+      .field('independence_level', 'medium')
+      .field('environment', 'small')
+      .field('sex', 'male')
+      .field('type', 'dog')
+      .field('breed', 'Breed 3')
+      .field('city', 'São Paulo')
+      .field('state', 'SP')
+      .field('org_id', otherOrgId)
+      .attach(
+        'photos',
+        path.resolve(__dirname, '../../../utils/test-image.jpg'),
+      )
 
-      const createPetResponse2 = await request(app.server)
-        .post('/pets')
-        .set('Authorization', `Bearer ${accessToken}`)
-        .field('name', 'Pet com imagem')
-        .field('description', 'Descrição com imagem')
-        .field('age', 'puppy')
-        .field('size', 'small')
-        .field('energy_level', 'medium')
-        .field('independence_level', 'medium')
-        .field('environment', 'small')
-        .field('sex', 'male')
-        .field('type', 'dog')
-        .field('breed', 'Breed 3')
-        .field('city', 'São Paulo')
-        .field('state', 'SP')
-        .field('org_id', 'invalid-org-id')
-        .attach(
-          'photos',
-          path.resolve(__dirname, '../../../utils/test-image.jpg'),
-        )
-
-      expect(createPetResponse2.statusCode).toEqual(400)
-    }
+    expect(response.statusCode).toBe(201)
+    expect(response.body.pet.org_id).toEqual(orgId)
+    expect(response.body.pet.org_id).not.toEqual(otherOrgId)
   })
 
   test('Should not be able to create a pet with wrong format data type (Content-Type: application/json)', async () => {
@@ -166,7 +155,6 @@ describe('Create Pet Controller - E2E', () => {
           city: 'São Paulo',
           state: 'SP',
           photos: [],
-          org_id: orgId,
         })
       // 406 vem do @fastify/multipart: a rota só aceita multipart/form-data
       expect(createPetResponse2.statusCode).toEqual(406)
@@ -180,7 +168,6 @@ describe('Create Pet Controller - E2E', () => {
         .field('name', 'Pet com imagem')
         .field('description', 'Descrição com imagem')
         .field('state', 'SP')
-        .field('org_id', orgId)
         .attach(
           'photos',
           path.resolve(__dirname, '../../../utils/test-image.jpg'),
@@ -206,7 +193,6 @@ describe('Create Pet Controller - E2E', () => {
       .field('breed', 'Breed 3')
       .field('city', 'Recife')
       .field('state', 'PE')
-      .field('org_id', orgId as string)
 
     for (let i = 0; i < photoCount; i++) {
       req.attach(
