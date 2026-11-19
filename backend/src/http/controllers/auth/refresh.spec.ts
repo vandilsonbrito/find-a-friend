@@ -30,18 +30,22 @@ describe('Refresh Token Controller - E2E', () => {
     })
 
     const cookies = response.get('Set-Cookie')
+    expect(cookies).toBeDefined()
 
-    if (cookies) {
-      const responseRefresh = await request(app.server)
-        .patch('/token/refresh')
-        .set('Cookie', cookies)
-        .send()
+    const responseRefresh = await request(app.server)
+      .patch('/token/refresh')
+      .set('Cookie', cookies as string[])
+      .send()
 
-      expect(responseRefresh.statusCode).toEqual(200)
-      expect(responseRefresh.body).toHaveProperty('accessToken')
-    } else {
-      console.error('No cookies found in response')
-    }
+    expect(responseRefresh.statusCode).toEqual(200)
+    expect(responseRefresh.body).toHaveProperty('accessToken')
+
+    const profileResponse = await request(app.server)
+      .get('/me')
+      .set('Authorization', `Bearer ${responseRefresh.body.accessToken}`)
+      .send()
+
+    expect(profileResponse.statusCode).toEqual(200)
   })
 
   test('Should not refresh token if refresh token is missing', async () => {

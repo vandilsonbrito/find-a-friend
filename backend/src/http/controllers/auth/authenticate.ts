@@ -2,6 +2,7 @@ import { InvalidCredentialsError } from '../../../use-cases/errors/invalid-crede
 import { makeAuthenticateOrgUseCase } from '../../../use-cases/factories/make-authenticate-org-use-case'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
+import { signAuthTokens } from '../../utils/auth-tokens'
 
 export async function authenticate(
   request: FastifyRequest,
@@ -21,15 +22,7 @@ export async function authenticate(
       password,
     })
 
-    const accessToken = await reply.jwtSign(
-      { sub: org.id },
-      { expiresIn: '15m' }
-    )
-
-    const refreshToken = await reply.jwtSign(
-      { sub: org.id },
-      { expiresIn: '7d' },
-    )
+    const { accessToken, refreshToken } = await signAuthTokens(reply, org.id)
 
     const isProduction = process.env.NODE_ENV === 'production'
 
@@ -44,7 +37,7 @@ export async function authenticate(
       .status(200)
       .send({
         message: 'Authentication successful.',
-        accessToken, 
+        accessToken,
       })
   } catch (err) {
     if (err instanceof Error) {
