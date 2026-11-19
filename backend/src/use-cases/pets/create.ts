@@ -15,6 +15,7 @@ import { OrgNotFoundError } from '../errors/org-not-found-error'
 import { IOrgsRepository } from '../../repositories/orgs-repository'
 import { normalizeCityName } from '../../utils/normalizeCityName'
 import { CreatePetPhotosError } from '../errors/create-pet-photos-error'
+import { randomUUID } from 'node:crypto'
 
 interface CreatePetUseCaseRequest {
   id?: string
@@ -31,7 +32,7 @@ interface CreatePetUseCaseRequest {
   city: string
   state: string
   org_id: string
-  photos: { buffer: Buffer; filename: string }[]
+  photos: { buffer: Buffer }[]
 }
 
 const MIN_PHOTOS = 1
@@ -63,7 +64,7 @@ export class CreatePetUseCase {
       // Promisse.all garante que se uma das fotos falhar, nenhum pet é criado (é jogado pro catch).
       const urls = await Promise.all(
         photos.map((photo) =>
-          this.storageService.uploadFile(photo.buffer, photo.filename),
+          this.storageService.uploadFile(photo.buffer, randomUUID()),
         ),
       )
 

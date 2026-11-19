@@ -61,8 +61,8 @@ describe('Get Available Pets For Adoption Use Case', () => {
       city: 'São Paulo',
       state: 'SP',
       photos: [
-        { buffer: Buffer.from('fake-file-1.png'), filename: 'fake-file-1.png' },
-        { buffer: Buffer.from('fake-file-2.png'), filename: 'fake-file-2.png' },
+        { buffer: Buffer.from('fake-file-1.png') },
+        { buffer: Buffer.from('fake-file-2.png') },
       ],
     })
     const pet2 = await createPetUseCase.execute({
@@ -81,8 +81,8 @@ describe('Get Available Pets For Adoption Use Case', () => {
       city: 'São Paulo',
       state: 'SP',
       photos: [
-        { buffer: Buffer.from('fake-file-1.png'), filename: 'fake-file-1.png' },
-        { buffer: Buffer.from('fake-file-2.png'), filename: 'fake-file-2.png' },
+        { buffer: Buffer.from('fake-file-1.png') },
+        { buffer: Buffer.from('fake-file-2.png') },
       ],
     })
 
@@ -131,8 +131,8 @@ describe('Get Available Pets For Adoption Use Case', () => {
       city: 'São Paulo',
       state: 'SP',
       photos: [
-        { buffer: Buffer.from('fake-file-1.png'), filename: 'fake-file-1.png' },
-        { buffer: Buffer.from('fake-file-2.png'), filename: 'fake-file-2.png' },
+        { buffer: Buffer.from('fake-file-1.png') },
+        { buffer: Buffer.from('fake-file-2.png') },
       ],
     })
     const pet2 = await createPetUseCase.execute({
@@ -143,15 +143,16 @@ describe('Get Available Pets For Adoption Use Case', () => {
       size: 'medium',
       energy_level: 'high',
       independence_level: 'medium',
-      environment: 'medium',breed: 'Golden Retriever',
+      environment: 'medium',
+      breed: 'Golden Retriever',
       sex: 'male',
       type: 'dog',
       org_id: org.id,
       city: 'São Paulo',
       state: 'SP',
       photos: [
-        { buffer: Buffer.from('fake-file-1.png'), filename: 'fake-file-1.png' },
-        { buffer: Buffer.from('fake-file-2.png'), filename: 'fake-file-2.png' },
+        { buffer: Buffer.from('fake-file-1.png') },
+        { buffer: Buffer.from('fake-file-2.png') },
       ],
     })
 
@@ -197,8 +198,8 @@ describe('Get Available Pets For Adoption Use Case', () => {
       city: 'São Paulo',
       state: 'SP',
       photos: [
-        { buffer: Buffer.from('fake-file-1.png'), filename: 'fake-file-1.png' },
-        { buffer: Buffer.from('fake-file-2.png'), filename: 'fake-file-2.png' },
+        { buffer: Buffer.from('fake-file-1.png') },
+        { buffer: Buffer.from('fake-file-2.png') },
       ],
     })
     const pet2 = await createPetUseCase.execute({
@@ -217,8 +218,8 @@ describe('Get Available Pets For Adoption Use Case', () => {
       city: 'São Paulo',
       state: 'SP',
       photos: [
-        { buffer: Buffer.from('fake-file-1.png'), filename: 'fake-file-1.png' },
-        { buffer: Buffer.from('fake-file-2.png'), filename: 'fake-file-2.png' },
+        { buffer: Buffer.from('fake-file-1.png') },
+        { buffer: Buffer.from('fake-file-2.png') },
       ],
     })
     expect(org.id).toEqual(expect.any(String))

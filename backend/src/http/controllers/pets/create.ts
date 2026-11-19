@@ -7,7 +7,7 @@ import { CreatePetPhotosError } from '@/use-cases/errors/create-pet-photos-error
 
 export async function createPet(request: FastifyRequest, reply: FastifyReply) {
   const body: Record<string, string> = {}
-  const uploadedPhotos: { buffer: Buffer; filename: string }[] = []
+  const uploadedPhotos: { buffer: Buffer }[] = []
 
   try {
     const parts = request.parts()
@@ -15,10 +15,7 @@ export async function createPet(request: FastifyRequest, reply: FastifyReply) {
     for await (const part of parts) {
       if (part.type === 'file') {
         const buf = await streamToBuffer(part.file)
-        uploadedPhotos.push({
-          buffer: buf,
-          filename: part.filename,
-        })
+        uploadedPhotos.push({ buffer: buf })
       } else {
         body[part.fieldname as string] = part.value as string
       }
