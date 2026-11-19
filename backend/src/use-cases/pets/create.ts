@@ -59,7 +59,7 @@ export class CreatePetUseCase {
         throw new CreatePetPhotosError()
       }
 
-      // Se o Cloudinary falhar nenhum pet é criado sem foto. 
+      // Se o Cloudinary falhar nenhum pet é criado sem foto.
       // Promisse.all garante que se uma das fotos falhar, nenhum pet é criado (é jogado pro catch).
       const urls = await Promise.all(
         photos.map((photo) =>
@@ -89,9 +89,7 @@ export class CreatePetUseCase {
       }
 
       return { pet: petWithPhotos }
-      
     } catch (error) {
-
       if (
         error instanceof OrgNotFoundError ||
         error instanceof CreatePetPhotosError
