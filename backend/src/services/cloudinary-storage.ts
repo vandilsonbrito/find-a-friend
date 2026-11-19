@@ -14,11 +14,11 @@ export class CloudinaryStorageService implements IStorageProviderRepository {
     throw new Error('Method not implemented.')
   }
 
-  async uploadFile(file: Buffer, filename: string): Promise<string> {
+  async uploadFile(file: Buffer, key: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
-          public_id: filename,
+          public_id: key,
           folder: 'pet-uploads',
         },
         (error, result) => {

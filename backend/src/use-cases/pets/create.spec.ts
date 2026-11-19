@@ -16,6 +16,9 @@ let petPhotosRepository: InMemoryPetPhotosRepository
 let storageProvider: IStorageProviderRepository
 let sut: CreatePetUseCase
 
+const UUID_REGEX =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 describe('Create Pet Use Case', () => {
   beforeEach(() => {
     orgsRepository = new InMemoryOrgsRepository()
@@ -59,8 +62,8 @@ describe('Create Pet Use Case', () => {
       city: 'John Doe',
       state: 'SP',
       photos: [
-        { buffer: Buffer.from('fake-file-1.png'), filename: 'fake-file-1.png' },
-        { buffer: Buffer.from('fake-file-2.png'), filename: 'fake-file-2.png' },
+        { buffer: Buffer.from('fake-file-1.png') },
+        { buffer: Buffer.from('fake-file-2.png') },
       ],
     })
 
@@ -86,7 +89,6 @@ describe('Create Pet Use Case', () => {
         photos: [
           {
             buffer: Buffer.from('fake-file-1.png'),
-            filename: 'fake-file-1.png',
           },
         ],
       }),
@@ -122,8 +124,8 @@ describe('Create Pet Use Case', () => {
       city: 'São Paulo',
       state: 'SP',
       photos: [
-        { buffer: Buffer.from('fake-file-1.png'), filename: 'fake-file-1.png' },
-        { buffer: Buffer.from('fake-file-2.png'), filename: 'fake-file-2.png' },
+        { buffer: Buffer.from('fake-file-1.png') },
+        { buffer: Buffer.from('fake-file-2.png') },
       ],
     })
 
@@ -206,35 +208,31 @@ describe('Create Pet Use Case', () => {
         photos: [
           {
             buffer: Buffer.from('fake-file-1.png'),
-            filename: 'fake-file-1.png',
           },
           {
             buffer: Buffer.from('fake-file-2.png'),
-            filename: 'fake-file-2.png',
           },
           {
             buffer: Buffer.from('fake-file-3.png'),
-            filename: 'fake-file-3.png',
           },
           {
             buffer: Buffer.from('fake-file-4.png'),
-            filename: 'fake-file-4.png',
           },
           {
             buffer: Buffer.from('fake-file-5.png'),
-            filename: 'fake-file-5.png',
           },
           {
             buffer: Buffer.from('fake-file-6.png'),
-            filename: 'fake-file-6.png',
           },
         ],
       }),
     ).rejects.toBeInstanceOf(CreatePetPhotosError)
   })
 
-  it('should upload each photo passed to the storage provider', async () => {
+  it('should upload each photo with a unique generated key', async () => {
     const uploadSpy = vi.spyOn(storageProvider, 'uploadFile')
+    const firstPhoto = Buffer.from('first-photo')
+    const secondPhoto = Buffer.from('second-photo')
 
     const org = await orgsRepository.create({
       name: 'Patinhas',
@@ -263,21 +261,18 @@ describe('Create Pet Use Case', () => {
       org_id: org.id,
       city: 'São Paulo',
       state: 'SP',
-      photos: [
-        { buffer: Buffer.from('fake-file-1'), filename: 'fake-file-1.png' },
-        { buffer: Buffer.from('fake-file-2'), filename: 'fake-file-2.png' },
-      ],
+      photos: [{ buffer: firstPhoto }, { buffer: secondPhoto }],
     })
 
     expect(uploadSpy).toHaveBeenCalledTimes(2)
-    expect(uploadSpy).toHaveBeenCalledWith(
-      expect.any(Buffer),
-      'fake-file-1.png',
-    )
-    expect(uploadSpy).toHaveBeenCalledWith(
-      expect.any(Buffer),
-      'fake-file-2.png',
-    )
+    const [[firstBuffer, firstKey], [secondBuffer, secondKey]] =
+      uploadSpy.mock.calls
+
+    expect(firstBuffer).toBe(firstPhoto)
+    expect(secondBuffer).toBe(secondPhoto)
+    expect(firstKey).toMatch(UUID_REGEX)
+    expect(secondKey).toMatch(UUID_REGEX)
+    expect(firstKey).not.toEqual(secondKey)
   })
 
   it('should throw if uploadFile fails for a photo', async () => {
@@ -313,7 +308,7 @@ describe('Create Pet Use Case', () => {
         org_id: org.id,
         city: 'São Paulo',
         state: 'SP',
-        photos: [{ buffer: Buffer.from('fail-file'), filename: 'fail.png' }],
+        photos: [{ buffer: Buffer.from('fail-file') }],
       }),
     ).rejects.toBeInstanceOf(CreatePetError)
   })

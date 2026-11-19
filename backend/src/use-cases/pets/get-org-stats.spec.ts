@@ -54,7 +54,7 @@ describe('Get Org Stats Use Case', () => {
       org_id: orgId,
       city: 'São Paulo',
       state: 'SP',
-      photos: [{ buffer: Buffer.from('photo'), filename: 'photo.png' }],
+      photos: [{ buffer: Buffer.from('photo') }],
     })
 
     if (isAdopted) {

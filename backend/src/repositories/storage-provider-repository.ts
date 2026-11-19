@@ -1,4 +1,4 @@
 export interface IStorageProviderRepository {
-  uploadFile(file: Buffer, filename: string): Promise<string>
+  uploadFile(file: Buffer, key: string): Promise<string>
   deleteFile(fileUrl: string): Promise<void>
 }

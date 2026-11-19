@@ -62,9 +62,7 @@ describe('Get Org Pets Use Case', () => {
       org_id: orgId,
       city: 'São Paulo',
       state: 'SP',
-      photos: [
-        { buffer: Buffer.from(`${name}-photo.png`), filename: `${name}-photo.png` },
-      ],
+      photos: [{ buffer: Buffer.from(`${name}-photo.png`) }],
     })
     return pet
   }
@@ -85,7 +83,7 @@ describe('Get Org Pets Use Case', () => {
       expect.arrayContaining([
         expect.objectContaining({ id: createdPet1.id }),
         expect.objectContaining({ id: createdPet2.id }),
-      ])
+      ]),
     )
   })
 
