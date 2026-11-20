@@ -132,15 +132,19 @@ export class PrismaPetsRepository implements IPetsRepository {
     }
   }
 
-  async countAvailablePetsByOrg(orgId: string) {
-    const count = await prisma.pet.count({
+  async countAvailablePetsByOrgs(orgIds: string[]) {
+    const groups = await prisma.pet.groupBy({
+      by: ['org_id'],
       where: {
-        org_id: orgId,
+        org_id: { in: orgIds },
         is_adopted: false,
       },
+      _count: { _all: true },
     })
 
-    return count
+    return Object.fromEntries(
+      groups.map((group) => [group.org_id, group._count._all]),
+    )
   }
 
   async findById(petId: string): Promise<PetWithPhoto | null> {
