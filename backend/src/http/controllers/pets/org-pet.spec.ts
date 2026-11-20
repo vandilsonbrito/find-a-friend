@@ -47,7 +47,6 @@ describe('Get Org Pets Controller - E2E', () => {
       .field('breed', 'Breed 3')
       .field('city', 'São Paulo')
       .field('state', 'SP')
-      .field('org_id', orgId)
       .attach(
         'photos',
         path.resolve(__dirname, '../../../utils/test-image.jpg'),

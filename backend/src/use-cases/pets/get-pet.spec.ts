@@ -5,7 +5,7 @@ import { InMemoryPetPhotosRepository } from '../../repositories/in-memory/in-mem
 import { hash } from 'bcryptjs'
 import { InMemoryOrgsRepository } from '../../repositories/in-memory/in-memory-orgs-repository'
 import { IStorageProviderRepository } from '../../repositories/storage-provider-repository'
-import { FakeStorageProvider } from '../../tests/mocks/fake-storage-service'
+import { FakeStorageProvider } from '../../services/fake-storage-service'
 import { randomUUID } from 'node:crypto'
 import { GetPetUseCase } from './get-pet'
 import { PetsNotFoundError } from '../errors/pet-not-found-error'
@@ -61,9 +61,7 @@ describe('Get Pet Use Case', () => {
       org_id: org.id,
       city: 'São Paulo',
       state: 'SP',
-      photos: [
-        { buffer: Buffer.from('fake-file-1.png'), filename: 'fake-file-1.png' },
-      ],
+      photos: [{ buffer: Buffer.from('fake-file-1.png') }],
     })
 
     const { pet } = await sut.execute({

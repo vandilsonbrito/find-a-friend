@@ -174,6 +174,34 @@ export const getOrgProfileDetailsSchema = {
   },
 }
 
+export const getOrgStatsSchema = {
+  schema: {
+    description: 'Get pet statistics of the authenticated organization',
+    tags: ['Orgs'],
+    summary: 'Get organization pet stats',
+    response: {
+      200: {
+        type: 'object',
+        properties: {
+          stats: {
+            type: 'object',
+            properties: {
+              total: { type: 'integer', description: 'Total of pets' },
+              available: {
+                type: 'integer',
+                description: 'Pets available for adoption',
+              },
+              adopted: { type: 'integer', description: 'Pets already adopted' },
+            },
+            required: ['total', 'available', 'adopted'],
+          },
+        },
+        required: ['stats'],
+      },
+    },
+  },
+}
+
 export const editOrgSchema = {
   schema: {
     description: 'Edit an organization profile',

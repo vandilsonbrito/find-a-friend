@@ -3,8 +3,6 @@ import { makeGetOrgProfileUseCase } from '../../../use-cases/factories/make-get-
 import { FastifyReply, FastifyRequest } from 'fastify'
 
 export async function orgProfile(request: FastifyRequest, reply: FastifyReply) {
-  await request.jwtVerify()
-
   const { sub } = request.user as { sub: string }
   const getOrgProfile = makeGetOrgProfileUseCase()
 

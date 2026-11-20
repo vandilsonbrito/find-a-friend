@@ -5,7 +5,7 @@ import { InMemoryPetPhotosRepository } from '../../repositories/in-memory/in-mem
 import { CountAvailablePetsByOrgUseCase } from './count-available-pets-by-org'
 import { CreatePetUseCase } from './create'
 import { hash } from 'bcryptjs'
-import { FakeStorageProvider } from '../../tests/mocks/fake-storage-service'
+import { FakeStorageProvider } from '../../services/fake-storage-service'
 import { IStorageProviderRepository } from '../../repositories/storage-provider-repository'
 import { randomUUID } from 'node:crypto'
 
@@ -70,15 +70,13 @@ describe('Count Available Pets By Org Use Case', () => {
       org_id: orgId,
       city: 'São Paulo',
       state: 'SP',
-      photos: [
-        { buffer: Buffer.from(`${name}-photo.png`), filename: `${name}-photo.png` },
-      ],
+      photos: [{ buffer: Buffer.from(`${name}-photo.png`) }],
     })
 
     if (isAdopted) {
-      const { is_adopted, photos, ...rest } = pet;
-      const petAdopted = { ...rest, is_adopted: !is_adopted };
-      await petsRepository.update(petAdopted);
+      const { is_adopted, photos, ...rest } = pet
+      const petAdopted = { ...rest, is_adopted: !is_adopted }
+      await petsRepository.update(petAdopted)
     }
 
     return pet
@@ -89,7 +87,7 @@ describe('Count Available Pets By Org Use Case', () => {
 
     await createPet({ orgId: org.id, name: 'Pet 1' })
     await createPet({ orgId: org.id, name: 'Pet 2' })
-    await createPet({ orgId: org.id, name: 'Pet 3', isAdopted: true }) 
+    await createPet({ orgId: org.id, name: 'Pet 3', isAdopted: true })
 
     const { count } = await sut.execute(org.id)
 

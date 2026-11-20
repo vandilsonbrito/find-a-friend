@@ -13,7 +13,6 @@ export const registerPetBodySchema = z.object({
   breed: z.string(),
   city: z.string(),
   state: z.string(),
-  org_id: z.string().uuid(),
 })
 
 export const getAvailablePetsForAdoptionQuerySchema = z.object({
@@ -41,15 +40,15 @@ export const PetResponseSchema = {
         size: { type: 'string', enum: ['small', 'medium', 'large'] },
         energy_level: {
           type: 'string',
-          enum: ['low', 'medium', 'high']
+          enum: ['low', 'medium', 'high'],
         },
         independence_level: {
           type: 'string',
-          enum: ['low', 'medium', 'high']
+          enum: ['low', 'medium', 'high'],
         },
         environment: {
           type: 'string',
-          enum: ['small', 'medium', 'large']
+          enum: ['small', 'medium', 'large'],
         },
         sex: { type: 'string', enum: ['male', 'female'] },
         type: { type: 'string', enum: ['dog', 'cat'] },
@@ -59,9 +58,9 @@ export const PetResponseSchema = {
         photos: { type: 'array', items: { type: 'string' } },
         is_adopted: { type: 'boolean' },
         org_id: { type: 'string' },
-        created_at: { type: 'string' }
+        created_at: { type: 'string' },
       },
       additionalProperties: true,
-    }
-  }
+    },
+  },
 }

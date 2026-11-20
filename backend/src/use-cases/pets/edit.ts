@@ -10,9 +10,11 @@ import {
   Type,
 } from '@prisma/client'
 import { PetsNotFoundError } from '../errors/pet-not-found-error'
+import { NotAllowedError } from '../errors/not-allowed-error'
 
 interface EdiPetUseCaseRequest {
   petId: string
+  orgId: string
   name?: string
   description?: string
   age?: Age
@@ -43,6 +45,10 @@ export class EdiPetUseCase {
 
     if (!pet) {
       throw new PetsNotFoundError()
+    }
+
+    if (pet.org_id !== data.orgId) {
+      throw new NotAllowedError()
     }
 
     const petUpdated = await this.petsRepository.update({

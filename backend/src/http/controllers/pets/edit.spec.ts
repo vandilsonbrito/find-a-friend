@@ -11,7 +11,7 @@ describe('Edit Pet Controller - E2E', () => {
   beforeAll(async () => {
     await app.ready()
 
-    const orgResponse1 = await request(app.server).post('/orgs').send({
+    await request(app.server).post('/orgs').send({
       name: 'Org Test',
       email: 'orgtest@example.com',
       password: '123456',
@@ -45,7 +45,6 @@ describe('Edit Pet Controller - E2E', () => {
       .field('breed', 'Breed 3')
       .field('city', 'São Paulo')
       .field('state', 'SP')
-      .field('org_id', orgResponse1.body.org.id)
       .attach(
         'photos',
         path.resolve(__dirname, '../../../utils/test-image.jpg'),
@@ -62,7 +61,7 @@ describe('Edit Pet Controller - E2E', () => {
       })
     expect(response.statusCode).toBe(200)
 
-    const orgResponse2 = await request(app.server).post('/orgs').send({
+    await request(app.server).post('/orgs').send({
       name: 'Org Tes2',
       email: 'orgtest2@example.com',
       password: '123456',
@@ -74,9 +73,14 @@ describe('Edit Pet Controller - E2E', () => {
       cep: '12345678',
     })
 
+    const authResponse2 = await request(app.server).post('/sessions').send({
+      email: 'orgtest2@example.com',
+      password: '123456',
+    })
+
     const createPetResponse2 = await request(app.server)
       .post('/pets')
-      .set('Authorization', `Bearer ${accessToken}`)
+      .set('Authorization', `Bearer ${authResponse2.body.accessToken}`)
       .field('name', 'Pet com imagem')
       .field('description', 'Descrição com imagem')
       .field('age', 'puppy')
@@ -90,7 +94,6 @@ describe('Edit Pet Controller - E2E', () => {
       .field('city', 'São Paulo')
       .field('state', 'SP')
       .field('is_adopted', true)
-      .field('org_id', orgResponse2.body.org.id)
       .attach(
         'photos',
         path.resolve(__dirname, '../../../utils/test-image.jpg'),
@@ -112,7 +115,7 @@ describe('Edit Pet Controller - E2E', () => {
           description: 'Descrição editada',
           is_adopted: true,
         })
-        
+
       expect(response.statusCode).toBe(200)
       expect(response.body.pet).toBeDefined()
       expect(response.body.pet.name).toBe('Pet Editado')
@@ -148,15 +151,17 @@ describe('Edit Pet Controller - E2E', () => {
   })
 
   test('Should return 403 if try to edit pet from another org', async () => {
-    if (accessToken) {
-      const response = await request(app.server)
-        .patch(`/pets/${petId2}`)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send({})
+    const response = await request(app.server)
+      .patch(`/pets/${petId2}`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({ name: 'Hacked' })
 
-      expect(response.statusCode).toBe(403)
-      expect(response.body.message).toBe('Forbidden')
-    }
+    expect(response.statusCode).toBe(403)
+    expect(response.body.message).toBe('Forbidden')
+
+    // The pet must be unchanged
+    const getResponse = await request(app.server).get(`/pets/${petId2}`)
+    expect(getResponse.body.pet.name).not.toBe('Hacked')
   })
 
   test('Should return 401 if no auth token', async () => {

@@ -14,6 +14,8 @@ import { CreatePetError } from '../errors/create-pet-error'
 import { OrgNotFoundError } from '../errors/org-not-found-error'
 import { IOrgsRepository } from '../../repositories/orgs-repository'
 import { normalizeCityName } from '../../utils/normalizeCityName'
+import { CreatePetPhotosError } from '../errors/create-pet-photos-error'
+import { randomUUID } from 'node:crypto'
 
 interface CreatePetUseCaseRequest {
   id?: string
@@ -30,8 +32,11 @@ interface CreatePetUseCaseRequest {
   city: string
   state: string
   org_id: string
-  photos: { buffer: Buffer; filename: string }[]
+  photos: { buffer: Buffer }[]
 }
+
+const MIN_PHOTOS = 1
+const MAX_PHOTOS = 5
 
 export class CreatePetUseCase {
   constructor(
@@ -51,6 +56,18 @@ export class CreatePetUseCase {
 
       const { city, photos, ...petData } = data
 
+      if (photos.length < MIN_PHOTOS || photos.length > MAX_PHOTOS) {
+        throw new CreatePetPhotosError()
+      }
+
+      // Se o Cloudinary falhar nenhum pet é criado sem foto.
+      // Promisse.all garante que se uma das fotos falhar, nenhum pet é criado (é jogado pro catch).
+      const urls = await Promise.all(
+        photos.map((photo) =>
+          this.storageService.uploadFile(photo.buffer, randomUUID()),
+        ),
+      )
+
       const pet = await this.petsRepository.create({
         city: normalizeCityName(city),
         ...petData,
@@ -58,16 +75,12 @@ export class CreatePetUseCase {
       })
 
       await Promise.all(
-        photos.map(async (photo) => {
-          const url = await this.storageService.uploadFile(
-            photo.buffer,
-            photo.filename,
-          )
-          await this.petPhotosRepository.create({
+        urls.map((url) =>
+          this.petPhotosRepository.create({
             pet_id: pet.id,
             url,
-          })
-        }),
+          }),
+        ),
       )
 
       const petWithPhotos = await this.petsRepository.findById(pet.id)
@@ -78,10 +91,14 @@ export class CreatePetUseCase {
 
       return { pet: petWithPhotos }
     } catch (error) {
-      console.error('[CreatePetUseCase] Unexpected error:', error)
-      if (error instanceof OrgNotFoundError) {
+      if (
+        error instanceof OrgNotFoundError ||
+        error instanceof CreatePetPhotosError
+      ) {
         throw error
       }
+
+      console.error('[CreatePetUseCase] Unexpected error:', error)
       throw new CreatePetError()
     }
   }

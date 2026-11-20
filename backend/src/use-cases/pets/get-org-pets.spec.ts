@@ -5,7 +5,7 @@ import { InMemoryPetPhotosRepository } from '../../repositories/in-memory/in-mem
 import { hash } from 'bcryptjs'
 import { InMemoryOrgsRepository } from '../../repositories/in-memory/in-memory-orgs-repository'
 import { IStorageProviderRepository } from '../../repositories/storage-provider-repository'
-import { FakeStorageProvider } from '../../tests/mocks/fake-storage-service'
+import { FakeStorageProvider } from '../../services/fake-storage-service'
 import { randomUUID } from 'node:crypto'
 import { GetOrgPetsUseCase } from './get-org-pets'
 
@@ -62,9 +62,7 @@ describe('Get Org Pets Use Case', () => {
       org_id: orgId,
       city: 'São Paulo',
       state: 'SP',
-      photos: [
-        { buffer: Buffer.from(`${name}-photo.png`), filename: `${name}-photo.png` },
-      ],
+      photos: [{ buffer: Buffer.from(`${name}-photo.png`) }],
     })
     return pet
   }
@@ -85,7 +83,7 @@ describe('Get Org Pets Use Case', () => {
       expect.arrayContaining([
         expect.objectContaining({ id: createdPet1.id }),
         expect.objectContaining({ id: createdPet2.id }),
-      ])
+      ]),
     )
   })
 

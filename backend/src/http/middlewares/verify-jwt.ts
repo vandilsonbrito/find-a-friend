@@ -1,4 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
+import { AuthTokenPayload } from '../utils/auth-tokens'
 
 export async function verifyJWT(request: FastifyRequest, reply: FastifyReply) {
   try {
@@ -18,7 +19,14 @@ export async function verifyJWT(request: FastifyRequest, reply: FastifyReply) {
       })
     }
 
-    const decoded = await request.jwtVerify<{ sub: string }>()
+    const decoded = await request.jwtVerify<AuthTokenPayload>()
+
+    if (decoded.type !== 'access') {
+      return reply.status(401).send({
+        message: 'Invalid or expired token.',
+      })
+    }
+
     request.user = { sub: decoded.sub }
   } catch (err) {
     return reply.status(401).send({
@@ -26,4 +34,3 @@ export async function verifyJWT(request: FastifyRequest, reply: FastifyReply) {
     })
   }
 }
-
