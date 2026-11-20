@@ -95,7 +95,7 @@ describe('Create Pet Use Case', () => {
     ).rejects.toBeInstanceOf(OrgNotFoundError)
   })
 
-  it('should save the uploaded url of each photo', async () => {
+  it('should save the uploaded url of each photo in a single call', async () => {
     const org = await orgsRepository.create({
       name: 'John Doe',
       email: 'Z6m4I@example.com',
@@ -108,6 +108,8 @@ describe('Create Pet Use Case', () => {
       cep: '12345678',
       created_at: new Date(),
     })
+
+    const createManySpy = vi.spyOn(petPhotosRepository, 'createMany')
 
     const { pet } = await sut.execute({
       name: 'Totó',
@@ -129,6 +131,8 @@ describe('Create Pet Use Case', () => {
       ],
     })
 
+    // All photos are saved in one call, not one call per photo.
+    expect(createManySpy).toHaveBeenCalledTimes(1)
     expect(petPhotosRepository.items).toHaveLength(2)
     expect(petPhotosRepository.items).toEqual([
       expect.objectContaining({

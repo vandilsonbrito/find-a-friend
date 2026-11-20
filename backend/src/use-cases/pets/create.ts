@@ -74,13 +74,8 @@ export class CreatePetUseCase {
         org: { connect: { id: petData.org_id } },
       })
 
-      await Promise.all(
-        urls.map((url) =>
-          this.petPhotosRepository.create({
-            pet_id: pet.id,
-            url,
-          }),
-        ),
+      await this.petPhotosRepository.createMany(
+        urls.map((url) => ({ pet_id: pet.id, url })),
       )
 
       const petWithPhotos = await this.petsRepository.findById(pet.id)

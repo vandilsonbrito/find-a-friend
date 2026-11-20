@@ -136,9 +136,15 @@ export class InMemoryPetsRepository implements IPetsRepository {
     }
   }
 
-  async countAvailablePetsByOrg(orgId: string) {
-    return this.pets.filter((pet) => pet.org_id === orgId && !pet.is_adopted)
-      .length
+  async countAvailablePetsByOrgs(orgIds: string[]) {
+    const counts: Record<string, number> = {}
+
+    for (const pet of this.pets) {
+      if (pet.is_adopted || !orgIds.includes(pet.org_id)) continue
+      counts[pet.org_id] = (counts[pet.org_id] ?? 0) + 1
+    }
+
+    return counts
   }
 
   async findManyByOrgId(
