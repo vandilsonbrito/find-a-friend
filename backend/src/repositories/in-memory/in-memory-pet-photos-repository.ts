@@ -5,15 +5,13 @@ import { randomUUID } from 'node:crypto'
 export class InMemoryPetPhotosRepository implements IPetPhotosRepository {
   public items: PetPhoto[] = []
 
-  async create(data: Prisma.PetPhotoUncheckedCreateInput) {
-    const petPhotoData = {
-      id: randomUUID(),
-      pet_id: data.pet_id,
-      url: data.url,
+  async createMany(data: Prisma.PetPhotoCreateManyInput[]) {
+    for (const photo of data) {
+      this.items.push({
+        id: randomUUID(),
+        pet_id: photo.pet_id,
+        url: photo.url,
+      })
     }
-
-    this.items.push(petPhotoData)
-
-    return petPhotoData
   }
 }
