@@ -29,14 +29,13 @@ describe('Logout Org Controller - E2E', () => {
       password: '123456',
     })
 
-    const accessToken = response.body.access_token
+    const accessToken = response.body.accessToken
+    expect(accessToken).toBeDefined()
 
-    if (accessToken) {
-      const response = await request(app.server)
-        .post('/logout')
-        .set('Authorization', `Bearer ${accessToken}`)
-      expect(response.statusCode).toEqual(200)
-    }
+    const logoutResponse = await request(app.server)
+      .post('/logout')
+      .set('Authorization', `Bearer ${accessToken}`)
+    expect(logoutResponse.statusCode).toEqual(200)
   })
 
   test('Should not be able to logout if access token is invalid', async () => {

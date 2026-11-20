@@ -2,7 +2,11 @@ import { InvalidCredentialsError } from '../../../use-cases/errors/invalid-crede
 import { makeAuthenticateOrgUseCase } from '../../../use-cases/factories/make-authenticate-org-use-case'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
-import { signAuthTokens } from '../../utils/auth-tokens'
+import {
+  refreshTokenCookieOptions,
+  signAuthTokens,
+} from '../../utils/auth-tokens'
+import { makeCreateSessionUseCase } from '../../../use-cases/factories/make-create-session-use-case'
 
 export async function authenticate(
   request: FastifyRequest,
@@ -22,18 +26,17 @@ export async function authenticate(
       password,
     })
 
-    const { accessToken, refreshToken } = await signAuthTokens(reply, org.id)
+    const createSessionUseCase = makeCreateSessionUseCase()
+    const { sessionId } = await createSessionUseCase.execute({ orgId: org.id })
 
-    const isProduction = process.env.NODE_ENV === 'production'
+    const { accessToken, refreshToken } = await signAuthTokens(
+      reply,
+      org.id,
+      sessionId,
+    )
 
     return reply
-      .setCookie('refreshToken', refreshToken, {
-        path: '/',
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: isProduction ? 'none' : 'lax',
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      })
+      .setCookie('refreshToken', refreshToken, refreshTokenCookieOptions())
       .status(200)
       .send({
         message: 'Authentication successful.',
